@@ -16,12 +16,23 @@ Students and teachers who need to figure out contents of courses
 
 **Must have(MVP)**
 - User authentication since users will already have a school account
-- Linking to important information within the course (Syllabus, course info and deadlines)
+- Linking to important information within the course in this case IBE160 (Syllabus, course info and deadlines)
 - answer user questions and give concise answers to simple questions
 - Make sure that the chatbot is always working with updated information
 - Guide users to contact teachers with their preffered ways of communication
 - All communication must be encrypted and no personal info is to be stored
 - Connect to canvas to pull information from
+- Ai has to bilingual and has to be able to interpret materials which often have english terms.
+- Ai has to have single session context availbility
+
+### Technology to use
+- The project is web based
+- Hosting: local
+- Frontend technology: React 18 and Tailwind
+- Backend technology: Node.js
+- database: supabase
+- Authentication: Oauth 2.0
+- Api design: Rest API
 
 ### Nice to Have (Optional Extensions)
 - suggestions for how to answer tasks, link to articles, tools necessary, etc
@@ -32,7 +43,15 @@ Students and teachers who need to figure out contents of courses
 ## Data Requirements
 - Users: username, email, password
 - Course: Syllabus, course info, deadlines
-- Metadata: User questions
+- What personal data will be stored and why: UserID and ChatID´s for each UserID
+- How long conversation history is retained: 1 year, longer than a semester for recalling specific stuff.
+- User rights (data export, deletion requests): Users can export a chat log for personal storage, later access etc.. Simple trashcan icon next to chats, easy deletion, full wipe
+- Data processing agreements if using third-party AI APIs
+- Cookie policy and consent mechanisms: cookie compliance from gdpr.eu https://gdpr.eu/cookies/
+- Testing with real course documents?: yes
+
+
+
 
 
 ## User Stories (Optional)
@@ -45,6 +64,10 @@ Students and teachers who need to figure out contents of courses
 - Users should only be able to access courses they are enrolled in
 - Must be online to access newest information for the course
 - Must always answer with sources 
+- How will you measure answer quality?: user feedback
+- Plan for handling incorrect answers?: place warnings about potential inaccuracy, and that answers should be double checked
+- implementing user feedback mechanisms (thumbs up/down)?: yes
+- Accuracy target for success criteria (e.g., "90% of answers rated helpful by users"): good metric
 
 
 ## Success Criteria
