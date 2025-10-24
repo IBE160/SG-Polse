@@ -62,6 +62,7 @@ Flow 2 Teacher updates chatbot
 - database: supabase
 - Authentication: Oauth 2.0
 - Api design: Rest API
+- Vector database: Pinecone
 
 ### Nice to Have (Optional Extensions)
 - suggestions for how to answer tasks, link to articles, tools necessary, etc
