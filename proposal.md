@@ -19,8 +19,8 @@ Flow 1 Student uses chatbot
  * User selects course
 2. Authentication
  * User sent to authentication if not logged in
- * User registers through with school email and password
- * Receives verification email and clicks it
+ * User registers with school email and password
+ * Receives verification email and clicks verification link
  * Redirected to chosen course after registering
 3. Chatbot for course
  * User is greeted by chatbot and prompted to ask questions
@@ -33,8 +33,8 @@ Flow 2 Teacher updates chatbot
  * User selects course
 2. Authentication
  * User sent to authentication if not logged in
- * User registers through school email and password
- * Receives verification email and clicks it
+ * User registers with school email and password
+ * Receives verification email and clicks verification link
  * Redirected to chosen course after registering
 3. Chatbot
  * User uploads text documents and presentations with information
