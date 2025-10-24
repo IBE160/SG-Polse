@@ -11,6 +11,35 @@ Less questions that teachers need to answer and students don't need to wait for 
 ## Target Users
 Students and teachers who need to figure out contents of courses
 
+##User flow
+
+Flow 1 Student uses chatbot
+1. Landing page
+ * User sees available courses 
+ * User selects course
+2. Authentication
+ * User sent to authentication if not logged in
+ * User registers through with school email and password
+ * Receives verification email and clicks it
+ * Redirected to chosen course after registering
+3. Chatbot for course
+ * User is greeted by chatbot and prompted to ask questions
+ * User asks questions and receives answers
+
+
+Flow 2 Teacher updates chatbot
+1. Landing page
+ * User sees available courses 
+ * User selects course
+2. Authentication
+ * User sent to authentication if not logged in
+ * User registers through school email and password
+ * Receives verification email and clicks it
+ * Redirected to chosen course after registering
+3. Chatbot
+ * User uploads text documents and presentations with information
+ * Chatbot verifies it has received the information 
+
 
 ## Core Functionality
 
@@ -54,7 +83,7 @@ Students and teachers who need to figure out contents of courses
 
 
 
-## User Stories (Optional)
+## User Stories
 1. As a student, I want deadline info for current assignments, so that i know how long i have.
 2. As a teacher, I want to know what the students have access to, so i don't need to spend a lot of time checking
 
