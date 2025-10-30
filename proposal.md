@@ -1,6 +1,9 @@
 ## Case Title
 Course-FAQ Chatbot
 
+library research : @docs\research-technical-2025-10-30.md
+library brainstorm: @docs\scamper-brainstorming-chatbot.md
+
 ## Background
 It can be difficult to find information needed for assignments and requirements, deadlines for assignements.
 To simplify the process and allow students to find information more effectively, to quickly look up information.
