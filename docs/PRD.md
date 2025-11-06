@@ -78,10 +78,10 @@ The current system makes it difficult for students to find essential course info
 
 **Flow:**
 1.  **Access Chatbot:** Student navigates to the chatbot landing page.
-    *   *Decision Point:* Is the student authenticated?
+    *   *Decision Point:* Is the student authenticated? (FR001)
         *   **No:** Proceed to Authentication.
         *   **Yes:** Skip to Course Selection.
-2.  **Authentication (if not logged in):**
+2.  **Authentication (if not logged in):** (FR001, FR013)
     *   Student is redirected to the authentication page.
     *   Student enters school email and password.
     *   *Decision Point:* Is authentication successful?
@@ -90,12 +90,12 @@ The current system makes it difficult for students to find essential course info
             *   *Edge Case:* First-time user?
                 *   **Yes:** Receives verification email, clicks link, redirected to chosen course.
                 *   **No:** Directly redirected to chosen course.
-3.  **Course Selection:**
+3.  **Course Selection:** (FR002, FR003)
     *   Student sees a list of available courses they are enrolled in.
     *   Student selects the relevant course (e.g., IBE160).
     *   *Edge Case:* Student attempts to select a course they are not enrolled in.
         *   **Action:** System prevents access, displays message "You are not enrolled in this course."
-4.  **Chatbot Interaction:**
+4.  **Chatbot Interaction:** (FR004, FR005, FR006, FR007, FR008, FR009, FR010, FR012)
     *   Chatbot greets the student and prompts for questions.
     *   Student asks a question (e.g., "What is the deadline for Assignment 3?").
     *   *Decision Point:* Can the chatbot answer the question from available course materials?
@@ -108,7 +108,7 @@ The current system makes it difficult for students to find essential course info
         *   **No:**
             *   Chatbot indicates it cannot answer the question.
             *   Chatbot guides the student on how to contact the teacher via preferred communication methods.
-5.  **Session End:** Student closes the chatbot or navigates away. Chatbot session context is cleared.
+5.  **Session End:** Student closes the chatbot or navigates away. Chatbot session context is cleared. (FR008)
 
 **User Journey 2: Teacher Updates Course Information**
 
@@ -117,10 +117,10 @@ The current system makes it difficult for students to find essential course info
 
 **Flow:**
 1.  **Access Chatbot Admin/Upload Interface:** Teacher navigates to the chatbot's administrative or upload page.
-    *   *Decision Point:* Is the teacher authenticated?
+    *   *Decision Point:* Is the teacher authenticated? (FR001)
         *   **No:** Proceed to Authentication.
         *   **Yes:** Skip to Course Selection.
-2.  **Authentication (if not logged in):**
+2.  **Authentication (if not logged in):** (FR001, FR013)
     *   Teacher is redirected to the authentication page.
     *   Teacher enters school email and password.
     *   *Decision Point:* Is authentication successful?
@@ -129,18 +129,18 @@ The current system makes it difficult for students to find essential course info
             *   *Edge Case:* First-time user?
                 *   **Yes:** Receives verification email, clicks link, redirected to chosen course.
                 *   **No:** Directly redirected to chosen course.
-3.  **Course Selection:**
+3.  **Course Selection:** (FR002, FR003)
     *   Teacher sees a list of courses they teach.
     *   Teacher selects the relevant course.
-4.  **Upload Materials:**
+4.  **Upload Materials:** (FR011, FR013)
     *   Teacher is presented with an interface to upload text documents and presentations.
     *   Teacher selects files from their local system.
     *   Teacher initiates the upload.
     *   *Decision Point:* Is the upload successful?
         *   **No:** Display error message (e.g., file format not supported, network error).
         *   **Yes:**
-            *   System processes the uploaded documents.
-            *   Chatbot verifies it has received and integrated the new information.
+            *   System processes the uploaded documents. (FR010)
+            *   Chatbot verifies it has received and integrated the new information. (FR010)
             *   System confirms to the teacher that the information has been updated and is available to the chatbot.
 5.  **Session End:** Teacher closes the interface or navigates away.
 
