@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UX Color Theme Visualizer - ibe160 Chatbot</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; background-color: #f4f7f6; color: #333; }
+        h1, h2, h3 { color: #2c3e50; }
+        .theme-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .theme-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            transition: transform 0.2s ease-in-out;
+        }
+        .theme-card:hover { transform: translateY(-5px); }
+        .color-swatch {
+            width: 100%;
+            height: 60px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        .color-label { font-size: 0.9em; color: #555; margin-bottom: 5px; }
+        .component-example { margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: background-color 0.2s;
+        }
+        .btn-primary { background-color: var(--primary-color); color: #fff; }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-secondary { background-color: var(--secondary-color); color: #fff; }
+        .btn-secondary:hover { background-color: var(--secondary-hover); }
+        .btn-success { background-color: var(--success-color); color: #fff; }
+        .btn-error { background-color: var(--error-color); color: #fff; }
+        .input-field {
+            padding: 8px 12px;
+            border: 1px solid var(--neutral-300);
+            border-radius: 5px;
+            width: calc(100% - 24px);
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .input-field:focus { outline: none; border-color: var(--primary-color); }
+        .description { font-size: 0.95em; line-height: 1.6; color: #666; margin-top: 15px; }
+
+        /* Theme 1: Professional & Trustworthy */
+        .theme-1 {
+            --primary-color: #3498db; /* Blue */
+            --primary-hover: #2980b9;
+            --secondary-color: #2ecc71; /* Green */
+            --secondary-hover: #27ae60;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --neutral-100: #f8f9fa;
+            --neutral-300: #dee2e6;
+            --neutral-500: #adb5bd;
+            --neutral-700: #495057;
+            --text-color: #333;
+        }
+        /* Theme 2: Modern & Approachable */
+        .theme-2 {
+            --primary-color: #6c5ce7; /* Purple */
+            --primary-hover: #5a4ae0;
+            --secondary-color: #00cec9; /* Teal */
+            --secondary-hover: #00b8b5;
+            --success-color: #20c997;
+            --error-color: #fd7e14;
+            --neutral-100: #fdfdfd;
+            --neutral-300: #e9ecef;
+            --neutral-500: #ced4da;
+            --neutral-700: #495057;
+            --text-color: #343a40;
+        }
+        /* Theme 3: Minimal & Focused */
+        .theme-3 {
+            --primary-color: #1a1a1a; /* Dark Gray */
+            --primary-hover: #000;
+            --secondary-color: #6c757d; /* Medium Gray */
+            --secondary-hover: #5a6268;
+            --success-color: #198754;
+            --error-color: #dc3545;
+            --neutral-100: #f8f9fa;
+            --neutral-300: #e9ecef;
+            --neutral-500: #ced4da;
+            --neutral-700: #495057;
+            --text-color: #212529;
+        }
+    </style>
+</head>
+<body>
+    <h1>UX Color Theme Visualizer - ibe160 Chatbot</h1>
+    <p>Explore different color themes for the ibe160 Course-FAQ Chatbot. Each theme reflects a distinct personality and visual style, applied to common UI components.</p>
+
+    <div class="theme-container">
+        <!-- Theme 1: Professional & Trustworthy -->
+        <div class="theme-card theme-1">
+            <h2>1. Professional & Trustworthy</h2>
+            <p class="description">**Personality:** Reliable, secure, efficient. <br> **Visual Style:** Clean, structured, calming. <br> **Best for:** Educational platforms, enterprise tools.</p>
+            <h3>Color Palette</h3>
+            <div class="color-label">Primary: <span style="color: var(--primary-color);">var(--primary-color)</span></div>
+            <div class="color-swatch" style="background-color: var(--primary-color);">#3498db</div>
+            <div class="color-label">Secondary: <span style="color: var(--secondary-color);">var(--secondary-color)</span></div>
+            <div class="color-swatch" style="background-color: var(--secondary-color);">#2ecc71</div>
+            <div class="color-label">Success: <span style="color: var(--success-color);">var(--success-color)</span></div>
+            <div class="color-swatch" style="background-color: var(--success-color);">#28a745</div>
+            <div class="color-label">Error: <span style="color: var(--error-color);">var(--error-color)</span></div>
+            <div class="color-swatch" style="background-color: var(--error-color);">#dc3545</div>
+            <div class="color-label">Neutral (Text/Background):</div>
+            <div class="color-swatch" style="background-color: var(--neutral-700); height: 30px;">#495057</div>
+            <div class="color-swatch" style="background-color: var(--neutral-500); height: 30px;">#adb5bd</div>
+            <div class="color-swatch" style="background-color: var(--neutral-300); height: 30px;">#dee2e6</div>
+            <div class="color-swatch" style="background-color: var(--neutral-100); height: 30px;">#f8f9fa</div>
+
+            <div class="component-example">
+                <h3>Components</h3>
+                <button class="btn btn-primary">Primary Button</button>
+                <button class="btn btn-secondary">Secondary Button</button>
+                <input type="text" class="input-field" placeholder="Text Input">
+                <p style="color: var(--text-color);">This is example text in the theme's primary text color.</p>
+            </div>
+        </div>
+
+        <!-- Theme 2: Modern & Approachable -->
+        <div class="theme-card theme-2">
+            <h2>2. Modern & Approachable</h2>
+            <p class="description">**Personality:** Intuitive, user-friendly, contemporary. <br> **Visual Style:** Vibrant accents, clean, inviting. <br> **Best for:** Consumer apps, modern web services.</p>
+            <h3>Color Palette</h3>
+            <div class="color-label">Primary: <span style="color: var(--primary-color);">var(--primary-color)</span></div>
+            <div class="color-swatch" style="background-color: var(--primary-color);">#6c5ce7</div>
+            <div class="color-label">Secondary: <span style="color: var(--secondary-color);">var(--secondary-color)</span></div>
+            <div class="color-swatch" style="background-color: var(--secondary-color);">#00cec9</div>
+            <div class="color-label">Success: <span style="color: var(--success-color);">var(--success-color)</span></div>
+            <div class="color-swatch" style="background-color: var(--success-color);">#20c997</div>
+            <div class="color-label">Error: <span style="color: var(--error-color);">var(--error-color)</span></div>
+            <div class="color-swatch" style="background-color: var(--error-color);">#fd7e14</div>
+            <div class="color-label">Neutral (Text/Background):</div>
+            <div class="color-swatch" style="background-color: var(--neutral-700); height: 30px;">#495057</div>
+            <div class="color-swatch" style="background-color: var(--neutral-500); height: 30px;">#ced4da</div>
+            <div class="color-swatch" style="background-color: var(--neutral-300); height: 30px;">#e9ecef</div>
+            <div class="color-swatch" style="background-color: var(--neutral-100); height: 30px;">#fdfdfd</div>
+
+            <div class="component-example">
+                <h3>Components</h3>
+                <button class="btn btn-primary">Primary Button</button>
+                <button class="btn btn-secondary">Secondary Button</button>
+                <input type="text" class="input-field" placeholder="Text Input">
+                <p style="color: var(--text-color);">This is example text in the theme's primary text color.</p>
+            </div>
+        </div>
+
+        <!-- Theme 3: Minimal & Focused -->
+        <div class="theme-card theme-3">
+            <h2>3. Minimal & Focused</h2>
+            <p class="description">**Personality:** Productive, efficient, distraction-free. <br> **Visual Style:** Clean, high contrast, content-first. <br> **Best for:** Productivity tools, dashboards, content consumption.</p>
+            <h3>Color Palette</h3>
+            <div class="color-label">Primary: <span style="color: var(--primary-color);">var(--primary-color)</span></div>
+            <div class="color-swatch" style="background-color: var(--primary-color);">#1a1a1a</div>
+            <div class="color-label">Secondary: <span style="color: var(--secondary-color);">var(--secondary-color)</span></div>
+            <div class="color-swatch" style="background-color: var(--secondary-color);">#6c757d</div>
+            <div class="color-label">Success: <span style="color: var(--success-color);">var(--success-color)</span></div>
+            <div class="color-swatch" style="background-color: var(--success-color);">#198754</div>
+            <div class="color-label">Error: <span style="color: var(--error-color);">var(--error-color)</span></div>
+            <div class="color-swatch" style="background-color: var(--error-color);">#dc3545</div>
+            <div class="color-label">Neutral (Text/Background):</div>
+            <div class="color-swatch" style="background-color: var(--neutral-700); height: 30px;">#495057</div>
+            <div class="color-swatch" style="background-color: var(--neutral-500); height: 30px;">#ced4da</div>
+            <div class="color-swatch" style="background-color: var(--neutral-300); height: 30px;">#e9ecef</div>
+            <div class="color-swatch" style="background-color: var(--neutral-100); height: 30px;">#f8f9fa</div>
+
+            <div class="component-example">
+                <h3>Components</h3>
+                <button class="btn btn-primary">Primary Button</button>
+                <button class="btn btn-secondary">Secondary Button</button>
+                <input type="text" class="input-field" placeholder="Text Input">
+                <p style="color: var(--text-color);">This is example text in the theme's primary text color.</p>
+            </div>
+        </div>
+    </div>
+
+    <p style="margin-top: 40px;">🎨 I've created a color theme visualizer!</p>
+    <p>Open this file in your browser: <a href="./ux-color-themes.html">ux-color-themes.html</a></p>
+    <p>You'll see 3 complete theme options with:</p>
+    <ul>
+        <li>Full color palettes</li>
+        <li>Actual UI components in each theme</li>
+        <li>Side-by-side comparison</li>
+        <li>Theme personality descriptions</li>
+    </ul>
+    <p>Take your time exploring. Which theme FEELS right for your vision?</p>
+
+    <p>Which color theme direction resonates most?</p>
+    <p>You can:</p>
+    <ul>
+        <li>Choose a number (1-3)</li>
+        <li>Combine elements: "I like the colors from #2 but the vibe of #3"</li>
+        <li>Request variations: "Can you make #1 more vibrant?"</li>
+        <li>Describe a custom direction</li>
+    </ul>
+    <p>What speaks to you?</p>
+
+</body>
+</html>

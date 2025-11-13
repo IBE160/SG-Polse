@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UX Design Direction Showcase - ibe160 Chatbot</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; margin: 0; background-color: #f8f9fa; color: #212529; }
+        .header { background-color: #fff; padding: 20px; border-bottom: 1px solid #e9ecef; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        h1 { color: #2c3e50; margin-top: 0; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .direction-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+        .direction-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease-in-out;
+        }
+        .direction-card:hover { transform: translateY(-8px); }
+        .direction-header { padding: 20px; border-bottom: 1px solid #e9ecef; }
+        .direction-header h2 { margin: 0; color: #34495e; }
+        .direction-header .personality { font-size: 0.9em; color: #6c757d; margin-top: 5px; }
+        .mockup-area {
+            flex-grow: 1;
+            background-color: #f0f2f5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            min-height: 400px; /* Ensure consistent height */
+            position: relative;
+        }
+        .chat-bubble {
+            background-color: #e0e0e0;
+            border-radius: 15px;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .chat-bubble.user { background-color: #6c5ce7; color: #fff; margin-left: auto; border-bottom-right-radius: 5px; }
+        .chat-bubble.bot { background-color: #f0f0f0; color: #333; margin-right: auto; border-bottom-left-radius: 5px; }
+        .chat-bubble.bot .source { font-size: 0.75em; color: #6c757d; margin-top: 5px; display: block; }
+        .chat-input {
+            display: flex;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+            background-color: #fff;
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+        .chat-input input {
+            flex-grow: 1;
+            border: 1px solid #ced4da;
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+        .chat-input button {
+            background-color: #6c5ce7;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .chat-input button:hover { background-color: #5a4ae0; }
+
+        /* Direction 2 Specifics */
+        .mockup-area.direction-2 { display: grid; grid-template-columns: 120px 1fr; gap: 15px; }
+        .sidebar { background-color: #e9ecef; border-radius: 8px; padding: 15px; font-size: 0.85em; color: #495057; }
+        .sidebar ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar li { margin-bottom: 8px; }
+        .sidebar a { text-decoration: none; color: #495057; display: block; padding: 5px 0; }
+        .sidebar a:hover { color: #6c5ce7; }
+        .main-chat-area { display: flex; flex-direction: column; justify-content: flex-end; }
+
+        /* Direction 3 Specifics */
+        .chat-bubble.bot.card {
+            background-color: #fff;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            max-width: 90%;
+            margin-right: auto;
+            border-bottom-left-radius: 10px; /* Resetting for card style */
+        }
+        .chat-bubble.bot.card .source { color: #6c757d; font-size: 0.8em; margin-top: 10px; }
+        .chat-bubble.bot.card .feedback-buttons { margin-top: 10px; }
+        .chat-bubble.bot.card .feedback-buttons button {
+            background: none;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin-right: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        .chat-bubble.bot.card .feedback-buttons button:hover { background-color: #f0f2f5; }
+
+        .direction-footer { padding: 20px; background-color: #f8f9fa; border-top: 1px solid #e9ecef; font-size: 0.9em; color: #6c757d; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>UX Design Direction Showcase - ibe160 Chatbot</h1>
+        <p>Explore different visual and interaction approaches for the ibe160 Course-FAQ Chatbot's key screens. Focus is on the Student Chatbot Interface.</p>
+    </div>
+
+    <div class="container">
+        <div class="direction-grid">
+
+            <!-- Direction 1: Minimal Chat (ChatGPT-inspired) -->
+            <div class="direction-card">
+                <div class="direction-header">
+                    <h2>1. Minimal Chat</h2>
+                    <p class="personality">**Personality:** Efficient & Focused <br> **Best for:** Direct interaction, content-first <br> **Key Characteristics:** Single column, spacious, text-focused.</p>
+                </div>
+                <div class="mockup-area">
+                    <div class="chat-bubble bot">Hello BIP! How can I help you with IBE160 today?</div>
+                    <div class="chat-bubble user">What's the deadline for Assignment 3?</div>
+                    <div class="chat-bubble bot">The deadline for Assignment 3 is November 20, 2025, at 11:59 PM. <span class="source">(Source: IBE160 Syllabus, Page 5)</span></div>
+                    <div class="chat-input">
+                        <input type="text" placeholder="Ask a question...">
+                        <button>Send</button>
+                    </div>
+                </div>
+                <div class="direction-footer">
+                    **Layout:** Single column, chat history centered. <br>
+                    **Density:** Spacious. <br>
+                    **Navigation:** Implicit (within chat). <br>
+                    **Primary action prominence:** High (send button).
+                </div>
+            </div>
+
+            <!-- Direction 2: Structured Chat with Sidebar (Teams/Canvas-inspired) -->
+            <div class="direction-card">
+                <div class="direction-header">
+                    <h2>2. Structured Chat with Sidebar</h2>
+                    <p class="personality">**Personality:** Organized & Contextual <br> **Best for:** Information-rich environments, quick access to resources <br> **Key Characteristics:** Two-column, clear separation, structured content.</p>
+                </div>
+                <div class="mockup-area direction-2">
+                    <div class="sidebar">
+                        <h3>IBE160</h3>
+                        <ul>
+                            <li><a href="#">Syllabus</a></li>
+                            <li><a href="#">Assignments</a></li>
+                            <li><a href="#">Deadlines</a></li>
+                            <li><a href="#">Contact Teacher</a></li>
+                        </ul>
+                    </div>
+                    <div class="main-chat-area">
+                        <div class="chat-bubble bot">Hello BIP! How can I help you with IBE160 today?</div>
+                        <div class="chat-bubble user">What's the deadline for Assignment 3?</div>
+                        <div class="chat-bubble bot">The deadline for Assignment 3 is November 20, 2025, at 11:59 PM. <span class="source">(Source: IBE160 Syllabus, Page 5)</span></div>
+                        <div class="chat-input">
+                            <input type="text" placeholder="Ask a question...">
+                            <button>Send</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="direction-footer">
+                    **Layout:** Two-column (chat + sidebar). <br>
+                    **Density:** Balanced. <br>
+                    **Navigation:** Explicit (sidebar). <br>
+                    **Primary action prominence:** High (send button).
+                </div>
+            </div>
+
+            <!-- Direction 3: Card-Based Conversational Flow -->
+            <div class="direction-card">
+                <div class="direction-header">
+                    <h2>3. Card-Based Conversational Flow</h2>
+                    <p class="personality">**Personality:** Engaging & Actionable <br> **Best for:** Rich feedback, suggested actions <br> **Key Characteristics:** Single column, distinct answer cards, interactive.</p>
+                </div>
+                <div class="mockup-area">
+                    <div class="chat-bubble bot card">
+                        Hello BIP! How can I help you with IBE160 today?
+                    </div>
+                    <div class="chat-bubble user">What's the deadline for Assignment 3?</div>
+                    <div class="chat-bubble bot card">
+                        The deadline for Assignment 3 is November 20, 2025, at 11:59 PM.
+                        <span class="source">Source: IBE160 Syllabus, Page 5</span>
+                        <div class="feedback-buttons">
+                            <button>👍 Helpful</button>
+                            <button>👎 Not Helpful</button>
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" placeholder="Ask a question...">
+                        <button>Send</button>
+                    </div>
+                </div>
+                <div class="direction-footer">
+                    **Layout:** Single column, answers as cards. <br>
+                    **Density:** Balanced. <br>
+                    **Navigation:** Implicit (within chat). <br>
+                    **Primary action prominence:** High (send button).
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <p style="margin-top: 40px; text-align: center;">🎨 Design Direction Mockups Generated!</p>
+    <p style="text-align: center;">I've created 3 different design approaches for your key screens. Open this file in your browser: <a href="./ux-design-directions.html">ux-design-directions.html</a></p>
+    <p style="text-align: center;">Each mockup shows a complete vision for your app's look and feel.</p>
+    <p style="text-align: center;">As you explore, look for:</p>
+    <ul style="text-align: center; list-style-position: inside;">
+        <li>✓ Which layout feels most intuitive for your users?</li>
+        <li>✓ Which information hierarchy matches your priorities?</li>
+        <li>✓ Which interaction style fits your core experience?</li>
+        <li>✓ Which visual weight feels right for your brand?</li>
+    </ul>
+    <p style="text-align: center;">You can:</p>
+    <ul style="text-align: center; list-style-position: inside;">
+        <li>Navigate through all directions</li>
+        <li>Compare them side-by-side (conceptually, by viewing the grid)</li>
+        <li>Toggle between desktop/mobile views (conceptually, by imagining responsiveness)</li>
+        <li>Add notes about what you like (mentally, or by telling me)</li>
+    </ul>
+    <p style="text-align: center;">Take your time - this is a crucial decision!</p>
+
+    <p style="text-align: center;">Which design direction(s) resonate most with your vision?</p>
+    <p style="text-align: center;">You can:</p>
+    <ul style="text-align: center; list-style-position: inside;">
+        <li>Pick a favorite by number: "Direction #3 is perfect!"</li>
+        <li>Combine elements: "The layout from #2 with the density of #5"</li>
+        <li>Request modifications: "I like #6 but can we make it less dense?"</li>
+        <li>Ask me to explore variations: "Can you show me more options like #4 but with side navigation?"</li>
+    </ul>
+    <p style="text-align: center;">What speaks to you?</p>
+
+</body>
+</html>

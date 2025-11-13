@@ -39,7 +39,10 @@ Each epic includes:
         1.  Git repository is initialized and configured.
         2.  Basic CI/CD pipeline is set up for automated builds and tests.
         3.  A simple "Hello World" web page can be deployed via the CI/CD pipeline.
+        4.  All communication between the user's browser and the system is encrypted (FR013).
+        5.  The system is designed not to store any personal user information (FR014).
     *   **Prerequisites:** None
+    *   **Covers:** (Foundational - enables all FRs)
 
 *   **Story 1.2: User Registration with School Email**
     *   As a new user, I want to register for the chatbot using my school email and password, so that I can create an account linked to my academic institution.
@@ -49,6 +52,7 @@ Each epic includes:
         3.  System sends a verification email to the provided school email address.
         4.  User receives a confirmation of successful registration.
     *   **Prerequisites:** Story 1.1
+    *   **Covers:** FR001 (User authentication)
 
 *   **Story 1.3: Email Verification & Account Activation**
     *   As a new user, I want to verify my email address by clicking a link, so that my account can be activated and I can log in.
@@ -58,6 +62,7 @@ Each epic includes:
         3.  User is redirected to a login page or a success message after verification.
         4.  Unverified accounts cannot log in.
     *   **Prerequisites:** Story 1.2
+    *   **Covers:** FR001 (User authentication)
 
 *   **Story 1.4: User Login with OAuth 2.0**
     *   As a registered user, I want to log in to the chatbot using OAuth 2.0 with my school credentials, so that I can securely access my account.
@@ -67,6 +72,7 @@ Each epic includes:
         3.  Successful authentication redirects user to the application dashboard.
         4.  Failed authentication displays an appropriate error message.
     *   **Prerequisites:** Story 1.3
+    *   **Covers:** FR001 (User authentication)
 
 *   **Story 1.5: Role-Based Access Control (Student/Teacher)**
     *   As an authenticated user, I want the system to recognize my role (student or teacher), so that I am granted appropriate access and permissions within the application.
@@ -76,6 +82,7 @@ Each epic includes:
         3.  Teachers are directed to their course management/upload view.
         4.  Unauthorized role access attempts are prevented.
     *   **Prerequisites:** Story 1.4
+    *   **Covers:** FR002 (Course enrollment verification), FR003 (Prevent unauthorized access)
 
 ## Epic 2: Core Chatbot Functionality & Information Retrieval
 
@@ -88,8 +95,8 @@ Each epic includes:
     *   **Acceptance Criteria:**
         1.  Chatbot successfully establishes a secure connection to Canvas LMS.
         2.  System can retrieve a list of courses and their associated documents (e.g., syllabus, assignment descriptions).
-        3.  Authentication with Canvas is handled securely.
     *   **Prerequisites:** Epic 1 (Authentication)
+    *   **Covers:** FR009 (Canvas LMS integration)
 
 *   **Story 2.2: Data Ingestion and Indexing from Canvas**
     *   As a system, I want to ingest and index course documents from Canvas into a vector database (Pinecone), so that the chatbot can efficiently search and retrieve information.
@@ -99,6 +106,7 @@ Each epic includes:
         3.  Embeddings are stored in Pinecone for efficient retrieval.
         4.  A mechanism exists to re-index updated documents from Canvas.
     *   **Prerequisites:** Story 2.1
+    *   **Covers:** FR010 (Up-to-date information mechanism)
 
 *   **Story 2.3: Chatbot User Interface (Student View)**
     *   As a student, I want to interact with a clear and intuitive chatbot interface, so that I can easily ask questions and receive answers.
@@ -108,6 +116,7 @@ Each epic includes:
         3.  Chatbot responses are displayed clearly in the interface.
         4.  The interface is responsive and user-friendly.
     *   **Prerequisites:** Epic 1 (Authentication)
+    *   **Covers:** Enables FR004, FR005, FR006, FR007, FR008, FR012 (Chatbot interaction UI)
 
 *   **Story 2.4: Natural Language Understanding & Response Generation**
     *   As a student, I want the chatbot to understand my questions and generate concise, relevant answers, so that I can quickly get the information I need.
@@ -117,6 +126,7 @@ Each epic includes:
         3.  Answers are concise and directly address the user's question.
         4.  Chatbot maintains single-session context for follow-up questions within the same session.
     *   **Prerequisites:** Story 2.2, Story 2.3
+    *   **Covers:** FR004 (Answer user questions), FR006 (Concise answers), FR008 (Limited session context)
 
 *   **Story 2.5: Answer Sourcing and Citation**
     *   As a student, I want the chatbot to provide sources for its answers, so that I can verify the information and delve deeper if needed.
@@ -124,6 +134,7 @@ Each epic includes:
         1.  Every chatbot answer includes a clear citation to the source document (e.g., "Source: Syllabus, Page 3").
         2.  Citations are accurate and link to the relevant part of the document if possible.
     *   **Prerequisites:** Story 2.4
+    *   **Covers:** FR005 (Cite source document)
 
 *   **Story 2.6: Bilingual Interpretation (English Terms)**
     *   As a student, I want the chatbot to accurately interpret questions that contain English terms within another language, so that I can ask questions naturally.
@@ -131,6 +142,7 @@ Each epic includes:
         1.  Chatbot successfully identifies and processes English terms embedded in non-English queries.
         2.  Responses are generated based on the correct interpretation of the mixed-language query.
     *   **Prerequisites:** Story 2.4
+    *   **Covers:** FR007 (Bilingual capability)
 
 *   **Story 2.7: Guidance for Teacher Contact**
     *   As a student, if the chatbot cannot answer my question, I want it to guide me on how to contact my teacher, so that I can get further assistance.
@@ -138,6 +150,7 @@ Each epic includes:
         1.  When the chatbot cannot provide an answer, it offers clear instructions on teacher contact methods.
         2.  The instructions are customizable by the teacher/institution.
     *   **Prerequisites:** Story 2.4
+    *   **Covers:** FR012 (Guide teacher contact)
 
 ---
 
@@ -156,6 +169,7 @@ Each epic includes:
         2.  Teacher can select a specific course from the list.
         3.  Only courses assigned to the teacher are visible.
     *   **Prerequisites:** Epic 1 (Authentication, Role-Based Access Control)
+    *   **Covers:** Enables FR011 (Teacher content management)
 
 *   **Story 3.2: Document Upload Interface for Teachers**
     *   As a teacher, I want to upload text documents and presentations for a selected course, so that the chatbot can use this information to answer student questions.
@@ -165,6 +179,7 @@ Each epic includes:
         3.  System provides visual feedback on upload progress.
         4.  Uploaded files are stored securely.
     *   **Prerequisites:** Story 3.1
+    *   **Covers:** FR011 (Teacher upload documents)
 
 *   **Story 3.3: Automated Document Processing & Indexing**
     *   As a system, I want to automatically process newly uploaded teacher documents and integrate them into the chatbot's knowledge base, so that the information is immediately available to students.
@@ -174,6 +189,7 @@ Each epic includes:
         3.  The chatbot's knowledge base is updated to reflect the new information.
         4.  System handles potential errors during processing and notifies the teacher if necessary.
     *   **Prerequisites:** Story 3.2, Epic 2 (Data Ingestion and Indexing)
+    *   **Covers:** FR010 (Up-to-date information mechanism)
 
 *   **Story 3.4: Document Management & Versioning (Basic)**
     *   As a teacher, I want to view a list of documents I have uploaded for a course and manage them, so that I can ensure the chatbot uses the correct and most up-to-date materials.
@@ -182,6 +198,7 @@ Each epic includes:
         2.  Teacher can delete existing documents.
         3.  Uploading a new version of an existing document replaces the old version in the knowledge base.
     *   **Prerequisites:** Story 3.3
+    *   **Covers:** Supports FR010 (Up-to-date information mechanism), FR011 (Teacher upload documents)
 
 **Story Format:**
 

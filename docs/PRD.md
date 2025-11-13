@@ -2,8 +2,8 @@
 
 **Author:** BIP
 **Date:** 2025-11-06
-**Project Level:** {{project_level}}
-**Target Scale:** {{target_scale}}
+**Project Level:** 3
+**Target Scale:** Personal/individual
 
 ---
 
