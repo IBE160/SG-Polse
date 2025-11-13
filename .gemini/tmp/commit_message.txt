@@ -1,0 +1,23 @@
+feat: Complete UX Design Specification for Course-FAQ Chatbot
+
+This commit finalizes the UX design for the ibe160 Course-FAQ Chatbot,
+incorporating user feedback and establishing core design principles.
+
+Key deliverables include:
+- UX Design Specification document outlining all design decisions.
+- Interactive HTML visualizers for color themes and design directions.
+
+Design decisions cover:
+- Selection of "Modern & Approachable" color theme.
+- Adoption of "Card-Based Conversational Flow" design direction.
+- Detailed user journey flows for student and teacher interactions.
+- Definition of custom components (Chat Bubble, File Management, Course Selector).
+- Establishment of consistent UX patterns for feedback, buttons, forms,
+  confirmations, and navigation.
+- Responsive design strategy focused on desktop.
+- WCAG 2.1 Level AA accessibility compliance target.
+
+Updates to existing documents reflect variable resolutions and workflow status:
+- docs/PRD.md: Updated project level and target scale.
+- docs/epics.md: Enriched with FR coverage for stories.
+- docs/bmm-workflow-status.yaml: Updated with 'create-design' workflow completion.
