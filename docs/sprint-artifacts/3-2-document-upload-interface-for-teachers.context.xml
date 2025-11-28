@@ -1,0 +1,239 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>3</epicId>
+    <storyId>2</storyId>
+    <title>Document Upload Interface for Teachers</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-28</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/3-2-document-upload-interface-for-teachers.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a teacher</asA>
+    <iWant>to upload text documents and presentations for a selected course</iWant>
+    <soThat>the chatbot can use this information to answer student questions.</soThat>
+    <tasks>
+- [ ] **Backend (API)**
+  - [ ] Create a tRPC procedure to generate a presigned URL for uploading a file to Supabase Storage. (AC: #4)
+  - [ ] This procedure should be protected to ensure only the assigned teacher can upload documents for a course.
+  - [ ] Add subtask for testing the presigned URL generation.
+- [ ] **Frontend (UI)**
+  - [ ] Create a content management page for a course at `/teacher/course/{courseId}`. (AC: #1)
+  - [ ] On this page, implement a file upload component. (AC: #2)
+  - [ ] The component should use the tRPC procedure to get a presigned URL and then upload the file directly to Supabase Storage.
+  - [ ] Display the upload progress to the user. (AC: #3)
+  - [ ] Display a success or error message after the upload is complete.
+  - [ ] Add subtask for testing the file upload UI and process.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1. The teacher can access a dedicated upload interface for a selected course.
+2. The interface supports uploading common document formats (e.g., PDF, DOCX, PPTX, TXT).
+3. The system provides visual feedback on upload progress.
+4. Uploaded files are stored securely in Supabase Storage.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR011: Data &amp; Content Management</section>
+        <snippet>Teachers must be able to upload text documents and presentations for the chatbot to process.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>File Storage</section>
+        <snippet>Use Supabase Storage for all file uploads, simplifying architecture and integrating well with the chosen stack.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>Epic to Architecture Mapping (Epic 3)</section>
+        <snippet>3. Teacher Content Management: `src/server/api/routers/`, `src/app/_components/`, Supabase Storage.</snippet>
+      </doc>
+      <doc>
+        <path>docs/ux-design-specification.md</path>
+        <title>UX Design Specification</title>
+        <section>User Journey 2: Teacher Updates Course Information</section>
+        <snippet>Teacher uploads new or updated course materials for the chatbot to process.</snippet>
+      </doc>
+      <doc>
+        <path>docs/ux-design-specification.md</path>
+        <title>UX Design Specification</title>
+        <section>Custom Components: File Upload/Management Component (Teacher)</section>
+        <snippet>This component will give teachers control over the chatbot's knowledge base by managing course files.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epics</title>
+        <section>Story 3.2: Document Upload Interface for Teachers</section>
+        <snippet>As a teacher, I want to upload text documents and presentations for a selected course, so that the chatbot can use this information to answer student questions.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/server/api/routers/teacher.ts</path>
+        <kind>api-router</kind>
+        <symbol>generatePresignedUrlProcedure</symbol>
+        <lines>N/A (New procedure in existing teacher router)</lines>
+        <reason>A new tRPC procedure is needed to securely generate presigned URLs for Supabase Storage uploads.</reason>
+      </artifact>
+      <artifact>
+        <path>src/app/teacher/course/[courseId]/page.tsx</path>
+        <kind>page</kind>
+        <symbol>CourseContentManagementPage</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>The main page for managing content for a specific course, including file uploads.</reason>
+      </artifact>
+      <artifact>
+        <path>src/app/_components/teacher/FileUpload.tsx</path>
+        <kind>ui-component</kind>
+        <symbol>FileUploadComponent</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>A reusable UI component to handle file selection, display upload progress, and perform the upload to Supabase Storage.</reason>
+      </artifact>
+      <artifact>
+        <path>src/server/services/supabase.ts</path>
+        <kind>service</kind>
+        <symbol>SupabaseService</symbol>
+        <lines>N/A (New file/modification)</lines>
+        <reason>Encapsulates interactions with Supabase services, including Storage for file uploads.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <dependency ecosystem="node">
+        <name>next</name>
+        <version>^15.2.3</version>
+        <reason>Core application framework.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>react</name>
+        <version>^19.0.0</version>
+        <reason>UI library for building components.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>next-auth</name>
+        <version>5.0.0-beta.25</version>
+        <reason>Authentication library for Next.js.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@prisma/client</name>
+        <version>^6.6.0</version>
+        <reason>O/RM for database interaction.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@trpc/server</name>
+        <version>^11.0.0</version>
+        <reason>Framework for creating type-safe APIs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>zod</name>
+        <version>^3.24.2</version>
+        <reason>Schema validation library for tRPC inputs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>google-gemini-generative-ai</name>
+        <version>~0.0.0</version>
+        <reason>Client library for interacting with the Google Gemini Large Language Model.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>zustand</name>
+        <version>~0.0.0</version>
+        <reason>Client-side state management library for conversation history.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>react-email</name>
+        <version>~0.0.0</version>
+        <reason>Library for creating email templates using React components.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>cld3-wasm</name>
+        <version>~0.0.0</version>
+        <reason>Potential library for client-side language detection.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>pdf-parse</name>
+        <version>~0.0.0</version>
+        <reason>Library for parsing PDF documents.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>mammoth</name>
+        <version>~0.0.0</version>
+        <reason>Library for parsing DOCX documents.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>openai</name>
+        <version>~0.0.0</version>
+        <reason>Client library for interacting with OpenAI (or similar) embedding models.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@supabase/supabase-js</name>
+        <version>^2.x.x</version>
+        <reason>Client library for interacting with Supabase services, including Storage.</reason>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>All course documents must be stored securely using Supabase Storage.</constraint>
+    <constraint>File uploads from the client-side must utilize presigned URLs generated by the backend to ensure security and proper authorization.</constraint>
+    <constraint>The tRPC procedure for generating presigned URLs must be protected to ensure only authenticated and assigned teachers can initiate document uploads for their courses.</constraint>
+    <constraint>The content management page for a course will be located at `/teacher/course/{courseId}`.</constraint>
+    <constraint>The UI must provide clear visual feedback on upload progress and status (success/error).</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>Generate Presigned URL tRPC Procedure</name>
+      <kind>tRPC-procedure</kind>
+      <signature>
+        generatePresignedUrl: teacherProcedure
+          .input(z.object({
+            fileName: z.string(),
+            fileType: z.string(),
+            courseId: z.string(),
+          }))
+          .mutation(async ({ ctx, input }) => {
+            return {
+              uploadUrl: string;
+              filePath: string; // The path in Supabase Storage
+            };
+          });
+      </signature>
+      <path>src/server/api/routers/teacher.ts</path>
+      <reason>API for securely obtaining a URL to upload files directly to Supabase Storage.</reason>
+    </interface>
+    <interface>
+      <name>Supabase Storage Service</name>
+      <kind>External Service Client</kind>
+      <signature>
+        class SupabaseStorageService {
+          constructor(supabaseClient: any); // Supabase client instance
+          createSignedUploadUrl(bucket: string, path: string, options?: object): Promise<{ signedUrl: string; path: string }>;
+          // Other storage operations (e.g., delete)
+        }
+      </signature>
+      <path>src/server/services/supabase.ts</path>
+      <reason>Service to abstract interactions with Supabase Storage, including generating presigned URLs.</reason>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      A pragmatic testing approach will be used.
+      - **Unit Tests:** Jest and React Testing Library will be used for unit testing critical UI components and business logic.
+      - **Integration Tests:** Integration tests will be written for tRPC API procedures to ensure they interact with the database correctly.
+    </standards>
+    <locations>
+      Test files should be co-located with the source files they are testing (e.g., `MyComponent.tsx` and `MyComponent.test.tsx` in the same folder).
+    </locations>
+    <ideas>
+      <idea for="AC1">Write an end-to-end test to verify an authenticated teacher can successfully navigate to `/teacher/course/{courseId}` and access the document upload interface.</idea>
+      <idea for="AC2">Write a unit test for the file upload component to ensure it correctly handles various document types (PDF, DOCX, PPTX, TXT) and displays appropriate prompts/feedback.</idea>
+      <idea for="AC3">Write an integration test to simulate a file upload and verify that the UI displays accurate upload progress and completion status.</idea>
+      <idea for="AC4">Write an integration test for the `generatePresignedUrl` tRPC procedure, ensuring it returns a valid, authorized presigned URL for Supabase Storage, and that a file can then be successfully uploaded using this URL. Test authorization for the procedure.</idea>
+    </ideas>
+  </tests>
+</story-context>

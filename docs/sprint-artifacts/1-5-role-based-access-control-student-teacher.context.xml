@@ -1,0 +1,198 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>5</storyId>
+    <title>Role-Based Access Control (Student/Teacher)</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-28</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-5-role-based-access-control-student-teacher.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>an authenticated user</asA>
+    <iWant>the system to recognize my role (student or teacher)</iWant>
+    <soThat>I am granted appropriate access and permissions within the application.</soThat>
+    <tasks>
+- [ ] **Backend (API &amp; Auth)**
+  - [ ] Add a `role` field (e.g., an enum with 'STUDENT' and 'TEACHER' values) to the `User` model in `schema.prisma`. (AC: #1)
+  - [ ] Generate and apply the database migration.
+  - [ ] Modify the `NextAuth.js` session callback to include the user's role in the session object. (AC: #1)
+  - [ ] Create middleware to protect routes based on user role. (AC: #4)
+  - [ ] Add subtask for testing that the session contains the user role and that middleware correctly protects routes.
+- [ ] **Frontend (UI)**
+  - [ ] Implement a redirect mechanism after login that directs users to the correct page based on their role from the session. (AC: #2, #3)
+  - [ ] Create a placeholder page for the student dashboard (course selection view).
+  - [ ] Create a placeholder page for the teacher dashboard (course management view).
+  - [ ] Add subtask for testing the redirect logic.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1. The system identifies the user's role (e.g., 'student' or 'teacher') upon successful login.
+2. Students are directed to the course selection view after login.
+3. Teachers are directed to their course management/upload view after login.
+4. Unauthorized access to role-specific pages is prevented (e.g., a student cannot access the teacher dashboard).
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR002: User &amp; Authentication</section>
+        <snippet>The system must verify that a user is enrolled in a specific course before granting access to its information.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR003: User &amp; Authentication</section>
+        <snippet>The system must prevent access to course information for users who are not enrolled in that course.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>Epic to Architecture Mapping (Epic 1)</section>
+        <snippet>Authentication logic, user session management, database models for users.</snippet>
+      </doc>
+      <doc>
+        <path>docs/ux-design-specification.md</path>
+        <title>UX Design Specification</title>
+        <section>Core Screens/Views</section>
+        <snippet>Landing Page (Course Selection), Teacher Upload Interface.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epics</title>
+        <section>Story 1.5: Role-Based Access Control (Student/Teacher)</section>
+        <snippet>As an authenticated user, I want the system to recognize my role (student or teacher), so that I am granted appropriate access and permissions within the application.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>prisma/schema.prisma</path>
+        <kind>schema</kind>
+        <symbol>User, Role</symbol>
+        <lines>Relevant lines for User model and a new Role enum.</lines>
+        <reason>The User model needs a 'role' field, typically an enum, to store the user's role (student/teacher).</reason>
+      </artifact>
+      <artifact>
+        <path>src/server/auth.ts</path>
+        <kind>config</kind>
+        <symbol>sessionCallback</symbol>
+        <lines>N/A (Modification to existing config)</lines>
+        <reason>The NextAuth.js session callback needs to be modified to include the user's role in the session object.</reason>
+      </artifact>
+      <artifact>
+        <path>src/middleware.ts</path>
+        <kind>middleware</kind>
+        <symbol>middleware</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>A new middleware file is needed to protect routes based on the user's role.</reason>
+      </artifact>
+      <artifact>
+        <path>src/app/student/dashboard/page.tsx</path>
+        <kind>ui-component</kind>
+        <symbol>StudentDashboardPage</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>A placeholder page for the student dashboard (course selection view).</reason>
+      </artifact>
+      <artifact>
+        <path>src/app/teacher/dashboard/page.tsx</path>
+        <kind>ui-component</kind>
+        <symbol>TeacherDashboardPage</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>A placeholder page for the teacher dashboard (course management/upload view).</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <dependency ecosystem="node">
+        <name>next</name>
+        <version>^15.2.3</version>
+        <reason>Core application framework, particularly for middleware.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>react</name>
+        <version>^19.0.0</version>
+        <reason>UI library for building components.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>next-auth</name>
+        <version>5.0.0-beta.25</version>
+        <reason>Authentication library, crucial for session management and role propagation.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@prisma/client</name>
+        <version>^6.6.0</version>
+        <reason>O/RM for database interaction, specifically for the User model's 'role' field.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@trpc/server</name>
+        <version>^11.0.0</version>
+        <reason>Framework for creating type-safe APIs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>zod</name>
+        <version>^3.24.2</version>
+        <reason>Schema validation library for tRPC inputs.</reason>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>The user's role must be the single source of truth for authorization, managed in the database and propagated to the NextAuth.js session.</constraint>
+    <constraint>Next.js Middleware must be used to protect routes based on the user's session and role.</constraint>
+    <constraint>The User model in `prisma/schema.prisma` will require a new `role` field, preferably an enum.</constraint>
+    <constraint>A default role of 'STUDENT' can be assigned on user registration.</constraint>
+    <constraint>Middleware should be implemented in a `middleware.ts` file at the root of the `src` directory.</constraint>
+    <constraint>Placeholder dashboards for students and teachers should be created at `/student/dashboard` and `/teacher/dashboard` respectively.</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>NextAuth.js Session Object</name>
+      <kind>Authentication/Authorization API</kind>
+      <signature>
+        interface Session {
+          user: {
+            id: string;
+            name?: string | null;
+            email?: string | null;
+            image?: string | null;
+            role?: 'STUDENT' | 'TEACHER'; // New role field
+          };
+          expires: string;
+        }
+      </signature>
+      <path>N/A (NextAuth.js library)</path>
+      <reason>The session object will be extended to include the user's role for frontend access control and routing.</reason>
+    </interface>
+    <interface>
+      <name>Next.js Middleware API</name>
+      <kind>Framework API</kind>
+      <signature>
+        import { NextResponse } from 'next/server';
+        import type { NextRequest } from 'next/server';
+
+        export function middleware(request: NextRequest) { /* ... */ }
+        export const config = { /* ... */ };
+      </signature>
+      <path>src/middleware.ts</path>
+      <reason>Used for intercepting requests and protecting routes based on user authentication and role.</reason>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      A pragmatic testing approach will be used.
+      - **Unit Tests:** Jest and React Testing Library will be used for unit testing critical UI components and business logic.
+      - **Integration Tests:** Integration tests will be written for tRPC API procedures to ensure they interact with the database correctly.
+    </standards>
+    <locations>
+      Test files should be co-located with the source files they are testing (e.g., `MyComponent.tsx` and `MyComponent.test.tsx` in the same folder).
+    </locations>
+    <ideas>
+      <idea for="AC1">Write an integration test to verify that the `NextAuth.js` session object correctly includes the user's role (e.g., 'STUDENT', 'TEACHER') after successful authentication.</idea>
+      <idea for="AC2, AC3">Write end-to-end (or integration) tests to confirm that after login, students are redirected to the course selection view and teachers are redirected to their course management/upload view.</idea>
+      <idea for="AC4">Write integration tests for the Next.js middleware to ensure unauthorized users (e.g., students trying to access teacher-only pages, unauthenticated users accessing protected pages) are correctly redirected or blocked.</idea>
+    </ideas>
+  </tests>
+</story-context>

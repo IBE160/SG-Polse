@@ -1,0 +1,151 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>4</storyId>
+    <title>User Login with OAuth 2.0</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-28</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-4-user-login-with-oauth-2-0.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a registered user</asA>
+    <iWant>to log in to the chatbot using OAuth 2.0 with my school credentials</iWant>
+    <soThat>I can securely access my account.</soThat>
+    <tasks>
+- [ ] **Backend (NextAuth.js)**
+  - [ ] Configure `NextAuth.js` to use an OAuth provider (e.g., Google, Azure AD, or a generic OAuth 2.0 provider). (AC: #2)
+  - [ ] Implement the `signIn` and `callback` logic for the OAuth provider. (AC: #2)
+  - [ ] Ensure that the user's profile information from the provider is correctly mapped to the `User` model in the database.
+  - [ ] Add subtask for testing the OAuth login flow.
+- [ ] **Frontend (UI)**
+  - [ ] Create a login page at `/auth/login` if it doesn't already exist. (AC: #1)
+  - [ ] Add a "Login with School Account" button to the login page. (AC: #2)
+  - [ ] Implement the logic to initiate the `NextAuth.js` OAuth flow when the button is clicked.
+  - [ ] Ensure the user is redirected to the dashboard on successful login. (AC: #3)
+  - [ ] Display an error message if the OAuth flow fails or is cancelled. (AC: #4)
+  - [ ] Add subtask for testing the login page UI and interactions.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1. User can access a login page.
+2. User can initiate OAuth 2.0 flow with the school's identity provider.
+3. Successful authentication redirects the user to the application dashboard.
+4. Failed authentication displays an appropriate error message on the login page.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR001: User &amp; Authentication</section>
+        <snippet>Users must be able to authenticate using their school-provided email accounts via OAuth 2.0.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>ADR 1: Data Persistence</section>
+        <snippet>Supabase (PostgreSQL) provides a robust PostgreSQL database with integrated authentication and file storage.</snippet>
+      </doc>
+      <doc>
+        <path>docs/ux-design-specification.md</path>
+        <title>UX Design Specification</title>
+        <section>Authentication UI</section>
+        <snippet>Login form, OAuth buttons.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epics</title>
+        <section>Story 1.4: User Login with OAuth 2.0</section>
+        <snippet>As a registered user, I want to log in to the chatbot using OAuth 2.0 with my school credentials, so that I can securely access my account.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/server/auth.ts</path>
+        <kind>config</kind>
+        <symbol>authOptions</symbol>
+        <lines>N/A (Configuration file)</lines>
+        <reason>This file will contain the NextAuth.js configuration, including the setup for the OAuth provider.</reason>
+      </artifact>
+      <artifact>
+        <path>src/app/auth/login/page.tsx</path>
+        <kind>ui-component</kind>
+        <symbol>LoginPage</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>A new page component needs to be created for the user login form with OAuth initiation.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <dependency ecosystem="node">
+        <name>next</name>
+        <version>^15.2.3</version>
+        <reason>Core application framework.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>react</name>
+        <version>^19.0.0</version>
+        <reason>UI library for building components.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>next-auth</name>
+        <version>5.0.0-beta.25</version>
+        <reason>Authentication library for Next.js.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@prisma/client</name>
+        <version>^6.6.0</version>
+        <reason>O/RM for database interaction.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@trpc/server</name>
+        <version>^11.0.0</version>
+        <reason>Framework for creating type-safe APIs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>zod</name>
+        <version>^3.24.2</version>
+        <reason>Schema validation library for tRPC inputs.</reason>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>The core implementation of the user login must use the NextAuth.js OAuth flow.</constraint>
+    <constraint>A specific OAuth provider (e.g., Google, Azure AD, or generic) needs to be configured in NextAuth.js.</constraint>
+    <constraint>The Prisma adapter for NextAuth.js will handle the creation or linking of user accounts in the User model.</constraint>
+    <constraint>Most of the login logic will be handled by NextAuth.js pages and callbacks, rather than custom tRPC procedures.</constraint>
+    <constraint>The NextAuth.js configuration should be located at 'src/server/auth.ts'.</constraint>
+    <constraint>The login page should be created at 'src/app/auth/login'.</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>NextAuth.js signIn</name>
+      <kind>Authentication API</kind>
+      <signature>
+        signIn(providerId?: string, options?: SignInOptions, authorizationParams?: Record<string, string>): Promise<undefined | string>;
+      </signature>
+      <path>N/A (NextAuth.js library)</path>
+      <reason>The primary interface for initiating the OAuth 2.0 login flow.</reason>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      A pragmatic testing approach will be used.
+      - **Unit Tests:** Jest and React Testing Library will be used for unit testing critical UI components and business logic.
+      - **Integration Tests:** Integration tests will be written for tRPC API procedures to ensure they interact with the database correctly.
+    </standards>
+    <locations>
+      Test files should be co-located with the source files they are testing (e.g., `MyComponent.tsx` and `MyComponent.test.tsx` in the same folder).
+    </locations>
+    <ideas>
+      <idea for="AC1">Write a test to ensure the login page component renders correctly at the '/auth/login' route and displays the "Login with School Account" button.</idea>
+      <idea for="AC2">Write a unit test to verify that clicking the OAuth login button correctly invokes the NextAuth.js `signIn` function with the appropriate provider.</idea>
+      <idea for="AC3">Write an end-to-end test (or integration test with mocks) to confirm that a successful OAuth authentication flow redirects the user to the application dashboard.</idea>
+      <idea for="AC4">Write a unit/integration test to verify that if the OAuth authentication fails or is cancelled, an appropriate error message is displayed on the login page.</idea>
+    </ideas>
+  </tests>
+</story-context>

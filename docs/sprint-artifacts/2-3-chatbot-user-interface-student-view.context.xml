@@ -1,0 +1,202 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>3</storyId>
+    <title>Chatbot User Interface (Student View)</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-28</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/2-3-chatbot-user-interface-student-view.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a student</asA>
+    <iWant>to interact with a clear and intuitive chatbot interface</iWant>
+    <soThat>I can easily ask questions and receive answers.</soThat>
+    <tasks>
+- [ ] **Frontend (UI)**
+  - [ ] Create the main chatbot page at `/chat`. (AC: #1)
+  - [ ] Implement the chat interface layout using Tailwind CSS, following the card-based conversational flow from the UX spec. (AC: #4)
+  - [ ] Create a component for the text input field and send button. (AC: #2)
+  - [ ] Create a component for displaying chat messages (both user questions and bot answers). (AC: #3)
+  - [ ] Implement state management (e.g., using `Zustand` or React Context) to manage the conversation history for the session.
+  - [ ] Add a loading indicator that is displayed while the chatbot is processing a question.
+  - [ ] Add subtask for testing the chat UI components and interactions.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1. A web-based chat interface is available for authenticated students.
+2. Students can type questions into a text input field.
+3. Chatbot responses are displayed clearly in the interface.
+4. The interface is responsive and user-friendly, following the UX design specification.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Functional Requirements (Chatbot Core)</section>
+        <snippet>Enables various functional requirements related to chatbot interaction, such as answering questions, citing sources, and bilingual interpretation.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>Implementation Patterns</section>
+        <snippet>Component Structure: Components should be organized by feature within the `src/app/_components/` directory. Styling: Tailwind CSS. State Management: Use `Zustand` for managing client-side state.</snippet>
+      </doc>
+      <doc>
+        <path>docs/ux-design-specification.md</path>
+        <title>UX Design Specification</title>
+        <section>Design Direction: Card-Based Conversational Flow (Direction 3)</section>
+        <snippet>The design emphasizes an engaging &amp; actionable interface with a single column and distinct answer cards.</snippet>
+      </doc>
+      <doc>
+        <path>docs/ux-design-specification.md</path>
+        <title>UX Design Specification</title>
+        <section>Component Library Strategy &amp; Custom Component Design</section>
+        <snippet>Defines the anatomy, states, variants, and behavior of the Chat Bubble/Card Component.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epics</title>
+        <section>Story 2.3: Chatbot User Interface (Student View)</section>
+        <snippet>As a student, I want to interact with a clear and intuitive chatbot interface, so that I can easily ask questions and receive answers.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/app/chat/page.tsx</path>
+        <kind>page</kind>
+        <symbol>ChatPage</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>The main page for the student chatbot interface.</reason>
+      </artifact>
+      <artifact>
+        <path>src/app/_components/chatbot/ChatInterface.tsx</path>
+        <kind>ui-component</kind>
+        <symbol>ChatInterface</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>The primary component for the chatbot UI layout, following UX spec.</reason>
+      </artifact>
+      <artifact>
+        <path>src/app/_components/chatbot/TextInput.tsx</path>
+        <kind>ui-component</kind>
+        <symbol>TextInput</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>Component for the user's text input field and send button.</reason>
+      </artifact>
+      <artifact>
+        <path>src/app/_components/chatbot/ChatMessage.tsx</path>
+        <kind>ui-component</kind>
+        <symbol>ChatMessage</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>Component for displaying individual chat messages (user questions or bot responses).</reason>
+      </artifact>
+      <artifact>
+        <path>src/lib/stores/chatStore.ts</path>
+        <kind>state-management</kind>
+        <symbol>useChatStore</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>Zustand store for managing the client-side conversation history.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <dependency ecosystem="node">
+        <name>next</name>
+        <version>^15.2.3</version>
+        <reason>Core application framework.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>react</name>
+        <version>^19.0.0</version>
+        <reason>UI library for building components.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>next-auth</name>
+        <version>5.0.0-beta.25</version>
+        <reason>Authentication library for Next.js.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@prisma/client</name>
+        <version>^6.6.0</version>
+        <reason>O/RM for database interaction.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@trpc/server</name>
+        <version>^11.0.0</version>
+        <reason>Framework for creating type-safe APIs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>zod</name>
+        <version>^3.24.2</version>
+        <reason>Schema validation library for tRPC inputs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>zustand</name>
+        <version>~0.0.0</version>
+        <reason>Client-side state management library for conversation history.</reason>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>All chat-related UI components must be organized within `src/app/_components/chatbot/`.</constraint>
+    <constraint>All styling must utilize Tailwind CSS utility classes and adhere strictly to the color theme and spacing defined in the UX design specification.</constraint>
+    <constraint>Client-side conversation history and related UI state must be managed using `Zustand` or React Context.</constraint>
+    <constraint>Server-side data fetching (e.g., getting chatbot responses) will be handled by `React Query` via `tRPC`.</constraint>
+    <constraint>The main chatbot interface page will be accessible at the `/chat` route.</constraint>
+    <constraint>The chat interface should follow a card-based conversational flow as per the UX design specification.</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>Chat Message Data Structure</name>
+      <kind>Frontend Data Model</kind>
+      <signature>
+        interface ChatMessage {
+          id: string;
+          text: string;
+          sender: 'user' | 'bot';
+          timestamp: Date;
+          isError?: boolean;
+          isLoading?: boolean;
+          source?: string[]; // For bot responses with sources
+        }
+      </signature>
+      <path>src/lib/types/chat.ts</path>
+      <reason>Defines the structure of messages displayed in the chat interface.</reason>
+    </interface>
+    <interface>
+      <name>Zustand Chat Store</name>
+      <kind>State Management API</kind>
+      <signature>
+        interface ChatStore {
+          messages: ChatMessage[];
+          addMessage: (message: ChatMessage) => void;
+          updateMessage: (id: string, updates: Partial<ChatMessage>) => void;
+          clearConversation: () => void;
+        }
+      </signature>
+      <path>src/lib/stores/chatStore.ts</path>
+      <reason>API for managing the client-side conversation history and state.</reason>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      A pragmatic testing approach will be used.
+      - **Unit Tests:** Jest and React Testing Library will be used for unit testing critical UI components and business logic.
+      - **Integration Tests:** Integration tests will be written for tRPC API procedures to ensure they interact with the database correctly.
+    </standards>
+    <locations>
+      Test files should be co-located with the source files they are testing (e.g., `MyComponent.tsx` and `MyComponent.test.tsx` in the same folder).
+    </locations>
+    <ideas>
+      <idea for="AC1">Write an integration test to ensure that the `/chat` route renders the main chatbot interface components for an authenticated user.</idea>
+      <idea for="AC2">Write a unit test for the `TextInput` component to verify user input handling, and that the send button enables/disables correctly.</idea>
+      <idea for="AC3">Write a unit test for the `ChatMessage` component to verify correct rendering of user and bot messages, including loading states and source citations (when implemented).</idea>
+      <idea for="AC4">Perform manual and automated visual regression tests to ensure the chat interface is responsive and adheres to the card-based layout and styling defined in the UX design specification.</idea>
+      <idea for="State Management">Write unit tests for the `useChatStore` Zustand store to verify `addMessage`, `updateMessage`, and `clearConversation` functionalities.</idea>
+    </ideas>
+  </tests>
+</story-context>

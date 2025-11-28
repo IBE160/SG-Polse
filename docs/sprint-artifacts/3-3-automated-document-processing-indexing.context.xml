@@ -1,0 +1,209 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>3</epicId>
+    <storyId>3</storyId>
+    <title>Automated Document Processing &amp; Indexing</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-28</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/3-3-automated-document-processing-indexing.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a system</asA>
+    <iWant>to automatically process newly uploaded teacher documents and integrate them into the chatbot's knowledge base</iWant>
+    <soThat>the information is immediately available to students.</soThat>
+    <tasks>
+- [ ] **Backend (Data Pipeline)**
+  - [ ] Create a trigger or webhook that fires after a file is successfully uploaded to Supabase Storage.
+  - [ ] The trigger should invoke a serverless function or a tRPC procedure to start the ingestion process.
+  - [ ] Re-use the data ingestion and indexing pipeline created in Story 2.2 to process the new document. (AC: #1, #2, #3)
+  - [ ] Implement error handling and a notification mechanism (e.g., an email or a status update on the dashboard) to inform the teacher of the processing outcome. (AC: #4)
+  - [ ] Add subtask for testing the automated processing pipeline.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1. Upon successful upload, documents are automatically parsed and content is extracted.
+2. Extracted content is converted into embeddings and added to the Pinecone vector database.
+3. The chatbot's knowledge base is updated to reflect the new information.
+4. The system handles potential errors during processing and notifies the teacher if necessary.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR010: Data &amp; Content Management</section>
+        <snippet>The system must have a mechanism to ensure the chatbot is always working with the most up-to-date information from Canvas (extends to teacher-uploaded content).</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>File Storage</section>
+        <snippet>All course documents are stored securely using Supabase Storage.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>Integration Points</section>
+        <snippet>Pinecone: A service client will be created to interact with the Pinecone vector database for indexing and querying.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epics</title>
+        <section>Story 3.3: Automated Document Processing &amp; Indexing</section>
+        <snippet>As a system, I want to automatically process newly uploaded teacher documents and integrate them into the chatbot's knowledge base, so that the information is immediately available to students.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/server/webhooks/supabase-storage-trigger.ts</path>
+        <kind>serverless-function</kind>
+        <symbol>handleStorageUpload</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>A serverless function or API route to be triggered by Supabase Storage events, initiating the document processing pipeline.</reason>
+      </artifact>
+      <artifact>
+        <path>src/server/ingestion.ts</path>
+        <kind>script/service</kind>
+        <symbol>processDocument</symbol>
+        <lines>Relevant methods</lines>
+        <reason>Re-use and integrate the existing data ingestion and indexing pipeline from Story 2.2 to process newly uploaded documents.</reason>
+      </artifact>
+      <artifact>
+        <path>src/server/services/notification.ts</path>
+        <kind>service</kind>
+        <symbol>NotificationService</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>A new service to handle sending notifications (e.g., email to teacher) about the document processing outcome, especially in case of errors.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <dependency ecosystem="node">
+        <name>next</name>
+        <version>^15.2.3</version>
+        <reason>Core application framework.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>react</name>
+        <version>^19.0.0</version>
+        <reason>UI library for building components.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>next-auth</name>
+        <version>5.0.0-beta.25</version>
+        <reason>Authentication library for Next.js.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@prisma/client</name>
+        <version>^6.6.0</version>
+        <reason>O/RM for database interaction.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@trpc/server</name>
+        <version>^11.0.0</version>
+        <reason>Framework for creating type-safe APIs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>zod</name>
+        <version>^3.24.2</version>
+        <reason>Schema validation library for tRPC inputs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>google-gemini-generative-ai</name>
+        <version>~0.0.0</version>
+        <reason>Client library for interacting with the Google Gemini Large Language Model.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>zustand</name>
+        <version>~0.0.0</version>
+        <reason>Client-side state management library for conversation history.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>react-email</name>
+        <version>~0.0.0</version>
+        <reason>Library for creating email templates using React components.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>cld3-wasm</name>
+        <version>~0.0.0</version>
+        <reason>Potential library for client-side language detection.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>pdf-parse</name>
+        <version>~0.0.0</version>
+        <reason>Library for parsing PDF documents.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>mammoth</name>
+        <version>~0.0.0</version>
+        <reason>Library for parsing DOCX documents.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>openai</name>
+        <version>~0.0.0</version>
+        <reason>Client library for interacting with OpenAI (or similar) embedding models.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@supabase/supabase-js</name>
+        <version>^2.x.x</version>
+        <reason>Client library for interacting with Supabase services, including Storage.</reason>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>The document processing and indexing must be automatically triggered upon successful file upload to Supabase Storage, leveraging an event-driven architecture (webhooks/triggers).</constraint>
+    <constraint>Serverless functions (e.g., Vercel Functions or Supabase Functions) are the preferred execution environment for the processing pipeline due to their ability to run asynchronously and for longer durations.</constraint>
+    <constraint>The existing data ingestion and indexing pipeline (from Story 2.2) must be re-used and integrated seamlessly into this automated workflow.</constraint>
+    <constraint>Robust error handling and notification mechanisms must be implemented to inform teachers of any issues during document processing.</constraint>
+    <constraint>The serverless function for processing uploads can be created in the `pages/api/webhooks` directory.</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>Supabase Storage Webhook</name>
+      <kind>External Service Webhook</kind>
+      <signature>
+        HTTP POST /api/webhooks/supabase-storage-event
+        Headers: { 'X-Supabase-Event': 'STORAGE_OBJECT_CREATED' }
+        Body: {
+          bucketId: string;
+          objectId: string;
+          name: string; // Full path of the uploaded file
+        }
+      </signature>
+      <path>src/server/webhooks/supabase-storage-trigger.ts</path>
+      <reason>Webhook interface to receive notifications from Supabase Storage upon file upload.</reason>
+    </interface>
+    <interface>
+      <name>Notification Service</name>
+      <kind>Internal Service</kind>
+      <signature>
+        class NotificationService {
+          sendEmail(recipient: string, subject: string, body: string): Promise<void>;
+          // Potentially other notification methods (e.g., in-app message)
+        }
+      </signature>
+      <path>src/server/services/notification.ts</path>
+      <reason>Provides a standardized way to send notifications to users, especially teachers, regarding document processing status.</reason>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      A pragmatic testing approach will be used.
+      - **Unit Tests:** Jest and React Testing Library will be used for unit testing critical UI components and business logic.
+      - **Integration Tests:** Integration tests will be written for tRPC API procedures to ensure they interact with the database correctly.
+    </standards>
+    <locations>
+      Test files should be co-located with the source files they are testing (e.g., `MyComponent.tsx` and `MyComponent.test.tsx` in the same folder).
+    </locations>
+    <ideas>
+      <idea for="AC1">Write an integration test that simulates a file upload to Supabase Storage, triggers the processing webhook, and verifies that the document is correctly parsed and its content extracted.</idea>
+      <idea for="AC2">Write an integration test to confirm that the extracted content is accurately converted into embeddings and successfully added to the Pinecone vector database.</idea>
+      <idea for="AC3">Write an end-to-end test to verify that the chatbot's knowledge base is updated to reflect the newly processed information from an uploaded document.</idea>
+      <idea for="AC4">Design an integration test to simulate various error conditions during document processing (e.g., unsupported file format, parsing failure) and verify that the system handles these errors gracefully and sends appropriate notifications to the teacher.</idea>
+    </ideas>
+  </tests>
+</story-context>

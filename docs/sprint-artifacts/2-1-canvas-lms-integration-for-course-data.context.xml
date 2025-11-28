@@ -1,0 +1,152 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>1</storyId>
+    <title>Canvas LMS Integration for Course Data</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-28</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/2-1-canvas-lms-integration-for-course-data.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a system administrator</asA>
+    <iWant>the chatbot to securely connect to the Canvas LMS</iWant>
+    <soThat>it can access course information like syllabi, assignments, and deadlines for IBE160.</soThat>
+    <tasks>
+- [ ] **Backend (API Client)**
+  - [ ] Create a new service module for the Canvas API client at `src/server/services/canvas.ts`. (AC: #4)
+  - [ ] Implement a function to establish a secure connection to the Canvas API using an API token stored in environment variables. (AC: #1)
+  - [ ] Implement a function to fetch a list of courses. (AC: #2)
+  - [ ] Implement a function to fetch a list of files/documents for a given course ID. (AC: #3)
+  - [ ] Add subtask for testing the Canvas API client functions (using mock data).
+- [ ] **Configuration**
+  - [ ] Add environment variables for the Canvas API endpoint and API token to `.env` and `env.mjs` for validation. (AC: #1)
+- [ ] **tRPC (Optional)**
+  - [ ] Create a tRPC procedure to expose the course list or document list if needed for an admin interface (out of scope for this story, but consider the possibility).
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1. The system can securely connect to the Canvas LMS API using an API token.
+2. The system can retrieve a list of courses for the authenticated user (or a system-level user).
+3. The system can retrieve a list of documents (e.g., syllabus, assignment descriptions) for a specific course (IBE160).
+4. The connection and data retrieval are handled in a dedicated service module.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR009: Data &amp; Content Management</section>
+        <snippet>The system must connect to the Canvas LMS to pull course information, including syllabus, course info, and deadlines for IBE160.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>Integration Points</section>
+        <snippet>Canvas LMS: An API client will be created to fetch course data. This will likely live in a dedicated `src/server/services/canvas.ts` module.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epics</title>
+        <section>Story 2.1: Canvas LMS Integration for Course Data</section>
+        <snippet>As a system administrator, I want the chatbot to securely connect to the Canvas LMS, so that it can access course information like syllabi, assignments, and deadlines for IBE160.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/server/services/canvas.ts</path>
+        <kind>service</kind>
+        <symbol>CanvasApiClient</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>A new service module is required to encapsulate all interactions with the Canvas LMS API.</reason>
+      </artifact>
+      <artifact>
+        <path>src/env.js</path>
+        <kind>config</kind>
+        <symbol>envSchema</symbol>
+        <lines>N/A (Modification to existing file)</lines>
+        <reason>Environment variables for the Canvas API endpoint and API token need to be defined and validated here.</reason>
+      </artifact>
+      <artifact>
+        <path>.env</path>
+        <kind>config</kind>
+        <symbol>CANVAS_API_URL, CANVAS_API_TOKEN</symbol>
+        <lines>N/A (New entries)</lines>
+        <reason>Secure storage of Canvas API credentials.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <dependency ecosystem="node">
+        <name>next</name>
+        <version>^15.2.3</version>
+        <reason>Core application framework.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>react</name>
+        <version>^19.0.0</version>
+        <reason>UI library for building components.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>next-auth</name>
+        <version>5.0.0-beta.25</version>
+        <reason>Authentication library for Next.js.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@prisma/client</name>
+        <version>^6.6.0</version>
+        <reason>O/RM for database interaction.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@trpc/server</name>
+        <version>^11.0.0</version>
+        <reason>Framework for creating type-safe APIs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>zod</name>
+        <version>^3.24.2</version>
+        <reason>Schema validation library for tRPC inputs.</reason>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>All external API interactions with Canvas LMS must be encapsulated within a dedicated service module (e.g., `src/server/services/canvas.ts`).</constraint>
+    <constraint>The Canvas API token is a sensitive secret and must be stored securely in environment variables (e.g., `.env`, `env.mjs`). It must never be exposed to the client-side.</constraint>
+    <constraint>The Canvas API client should handle potential errors (e.g., network errors, authentication errors, invalid responses) gracefully and provide informative error messages.</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>Canvas API Client</name>
+      <kind>External API Client</kind>
+      <signature>
+        class CanvasApiClient {
+          constructor(apiUrl: string, apiToken: string);
+          getAuthHeaders(): { Authorization: string };
+          fetchCourses(): Promise<CanvasCourse[]>;
+          fetchCourseDocuments(courseId: string): Promise<CanvasDocument[]>;
+        }
+      </signature>
+      <path>src/server/services/canvas.ts</path>
+      <reason>Abstraction layer for interacting with the Canvas LMS API.</reason>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      A pragmatic testing approach will be used.
+      - **Unit Tests:** Jest and React Testing Library will be used for unit testing critical UI components and business logic.
+      - **Integration Tests:** Integration tests will be written for tRPC API procedures to ensure they interact with the database correctly.
+    </standards>
+    <locations>
+      Test files should be co-located with the source files they are testing (e.g., `MyComponent.tsx` and `MyComponent.test.tsx` in the same folder).
+    </locations>
+    <ideas>
+      <idea for="AC1">Write a unit test for the Canvas API client to verify that it constructs the correct API request headers and URL, using mock environment variables.</idea>
+      <idea for="AC2">Write an integration test (with mocked external API calls) for the `fetchCourses` function to ensure it correctly parses and returns a list of courses from a simulated Canvas API response.</idea>
+      <idea for="AC3">Write an integration test (with mocked external API calls) for the `fetchCourseDocuments` function to ensure it retrieves and parses documents for a specified course ID from a simulated Canvas API response.</idea>
+      <idea for="AC4">Write a test to ensure that the Canvas API environment variables are correctly loaded and validated by `src/env.js`.</idea>
+    </ideas>
+  </tests>
+</story-context>
