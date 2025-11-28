@@ -1,0 +1,192 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>4</storyId>
+    <title>Natural Language Understanding &amp; Response Generation</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-28</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/2-4-natural-language-understanding-response-generation.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a student</asA>
+    <iWant>the chatbot to understand my questions and generate concise, relevant answers</iWant>
+    <soThat>I can quickly get the information I need.</soThat>
+    <tasks>
+- [ ] **Backend (API)**
+  - [ ] Create a new tRPC procedure to handle chatbot queries. (AC: #1)
+  - [ ] In the tRPC procedure, take the user's query and convert it into an embedding. (AC: #1)
+  - [ ] Use the Pinecone service to query the vector database with the query embedding to find the most relevant text chunks. (AC: #2)
+  - [ ] Implement a prompt engineering strategy to combine the user's query and the retrieved text chunks into a prompt for a large language model (LLM).
+  - [ ] Integrate with an LLM (e.g., via Hugging Face, OpenAI) to generate a concise answer based on the prompt. (AC: #3)
+  - [ ] Implement a simple mechanism to handle conversation history for single-session context. (AC: #4)
+  - [ ] Add subtask for testing the entire query-to-answer pipeline.
+- [ ] **Frontend (UI)**
+  - [ ] Integrate the chatbot UI with the new tRPC procedure, sending the user's query and receiving the generated answer.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1. The chatbot can process natural language queries from the user.
+2. The chatbot generates answers based on the indexed course data in Pinecone.
+3. The answers are concise and directly address the user's question.
+4. The chatbot maintains single-session context for follow-up questions within the same session.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Functional Requirements (Chatbot Core)</section>
+        <snippet>FR004: The chatbot must be able to answer user questions about course assignments, requirements, and deadlines. FR006: The chatbot must provide concise and direct answers to user queries. FR008: The chatbot's context should be limited to the current user session.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>Integration Points</section>
+        <snippet>Pinecone: A service client will be created to interact with the Pinecone vector database for indexing and querying.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epics</title>
+        <section>Story 2.4: Natural Language Understanding &amp; Response Generation</section>
+        <snippet>As a student, I want the chatbot to understand my questions and generate concise, relevant answers, so that I can quickly get the information I need.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/server/api/routers/chatbot.ts</path>
+        <kind>api-router</kind>
+        <symbol>chatbotRouter</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>A new tRPC router is needed to handle chatbot queries from the frontend.</reason>
+      </artifact>
+      <artifact>
+        <path>src/server/prompts/answerGenerationPrompt.ts</path>
+        <kind>utility</kind>
+        <symbol>answerGenerationPrompt</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>This file will contain the prompt templates used for generating answers with the LLM.</reason>
+      </artifact>
+      <artifact>
+        <path>src/server/services/pinecone.ts</path>
+        <kind>service</kind>
+        <symbol>PineconeClient</symbol>
+        <lines>Relevant methods (queryVectors)</lines>
+        <reason>The existing Pinecone service will be used to query relevant text chunks from the vector database.</reason>
+      </artifact>
+      <artifact>
+        <path>src/server/services/embedding.ts</path>
+        <kind>service</kind>
+        <symbol>EmbeddingModel</symbol>
+        <lines>Relevant methods (generateEmbedding)</lines>
+        <reason>The existing embedding service will be used to convert user queries into vector embeddings.</reason>
+      </artifact>
+      <artifact>
+        <path>src/server/services/llm.ts</path>
+        <kind>service</kind>
+        <symbol>LLMClient</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>A new service to integrate with the chosen Large Language Model for generating responses.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <dependency ecosystem="node">
+        <name>next</name>
+        <version>^15.2.3</version>
+        <reason>Core application framework.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>react</name>
+        <version>^19.0.0</version>
+        <reason>UI library for building components.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>next-auth</name>
+        <version>5.0.0-beta.25</version>
+        <reason>Authentication library for Next.js.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@prisma/client</name>
+        <version>^6.6.0</version>
+        <reason>O/RM for database interaction.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@trpc/server</name>
+        <version>^11.0.0</version>
+        <reason>Framework for creating type-safe APIs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>zod</name>
+        <version>^3.24.2</version>
+        <reason>Schema validation library for tRPC inputs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>google-gemini-generative-ai</name>
+        <version>~0.0.0</version>
+        <reason>Client library for interacting with the Google Gemini Large Language Model.</reason>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>The chatbot's core functionality must implement a Retrieval-Augmented Generation (RAG) pattern.</constraint>
+    <constraint>The integration with the Large Language Model (LLM) must be modular to allow for easy swapping of models.</constraint>
+    <constraint>The entire query-to-answer process must be encapsulated within a single tRPC procedure.</constraint>
+    <constraint>The chatbot must maintain single-session context for follow-up questions; no persistent conversation history across sessions.</constraint>
+    <constraint>The tRPC router for chatbot interactions should be located at `src/server/api/routers/chatbot.ts`.</constraint>
+    <constraint>Prompt templates should be stored in a dedicated directory, e.g., `src/server/prompts/`.</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>Chatbot Query tRPC Procedure</name>
+      <kind>tRPC-procedure</kind>
+      <signature>
+        queryChatbot: publicProcedure
+          .input(z.object({
+            message: z.string(),
+            conversationHistory?: z.array(z.object({
+              sender: z.enum(['user', 'bot']),
+              text: z.string()
+            }))
+          }))
+          .query(async ({ ctx, input }) => {
+            // Implementation to process query and generate response
+          });
+      </signature>
+      <path>src/server/api/routers/chatbot.ts</path>
+      <reason>API for sending user questions to the chatbot and receiving generated responses.</reason>
+    </interface>
+    <interface>
+      <name>LLM Client</name>
+      <kind>External Service Client</kind>
+      <signature>
+        class LLMClient {
+          constructor(apiKey?: string);
+          generateResponse(prompt: string): Promise<string>;
+        }
+      </signature>
+      <path>src/server/services/llm.ts</path>
+      <reason>Client for interacting with the Large Language Model to generate answers.</reason>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      A pragmatic testing approach will be used.
+      - **Unit Tests:** Jest and React Testing Library will be used for unit testing critical UI components and business logic.
+      - **Integration Tests:** Integration tests will be written for tRPC API procedures to ensure they interact with the database correctly.
+    </standards>
+    <locations>
+      Test files should be co-located with the source files they are testing (e.g., `MyComponent.tsx` and `MyComponent.test.tsx` in the same folder).
+    </locations>
+    <ideas>
+      <idea for="AC1">Write a unit test for the `queryChatbot` tRPC procedure to ensure it correctly converts user queries to embeddings (using mocked embedding service) and initiates a Pinecone query (using mocked Pinecone service).</idea>
+      <idea for="AC2">Write an integration test for the RAG pipeline: simulate a user query, mock Pinecone's text chunk retrieval, and verify that the LLM service receives a well-formed prompt incorporating the retrieved context.</idea>
+      <idea for="AC3">Write a unit test for the `LLMClient` service to verify that it generates concise and relevant answers given a specific prompt, using mocked LLM API responses.</idea>
+      <idea for="AC4">Write an integration test for the `queryChatbot` tRPC procedure that includes conversation history, ensuring that the prompt sent to the LLM correctly incorporates the single-session context for follow-up questions.</idea>
+      <idea for="Frontend Integration">Write an end-to-end test to verify that the chatbot UI correctly sends queries to the tRPC endpoint and displays the generated answers.</idea>
+    </ideas>
+  </tests>
+</story-context>

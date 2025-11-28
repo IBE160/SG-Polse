@@ -1,0 +1,210 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>2</storyId>
+    <title>Data Ingestion and Indexing from Canvas</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-28</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/2-2-data-ingestion-and-indexing-from-canvas.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a system</asA>
+    <iWant>to ingest and index course documents from Canvas into a vector database (Pinecone)</iWant>
+    <soThat>the chatbot can efficiently search and retrieve information.</soThat>
+    <tasks>
+- [ ] **Backend (Data Pipeline)**
+  - [ ] Implement a document parsing service that can handle different file formats (PDF, DOCX, TXT). (AC: #1)
+  - [ ] Integrate an embedding model (e.g., from Hugging Face, OpenAI, or a similar service) to convert text content into vector embeddings. (AC: #2)
+  - [ ] Create a Pinecone service module at `src/server/services/pinecone.ts` to handle interactions with the Pinecone API. (AC: #3)
+  - [ ] Implement a function in the Pinecone service to upsert embeddings and metadata into a Pinecone index. (AC: #3)
+  - [ ] Create a main ingestion script or service that orchestrates the process: fetching documents from Canvas (using the service from story 2.1), parsing them, creating embeddings, and storing them in Pinecone. (AC: #1, #2, #3)
+  - [ ] Design and implement the re-indexing mechanism. (AC: #4)
+  - [ ] Add subtask for testing the entire data ingestion and indexing pipeline.
+- [ ] **Configuration**
+  - [ ] Add environment variables for the Pinecone API key, environment, and index name.
+  - [ ] Add environment variables for the chosen embedding model service if applicable.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1. The system can parse various document formats (e.g., PDF, DOCX, TXT) retrieved from Canvas.
+2. Content from parsed documents is extracted and converted into embeddings using an embedding model.
+3. The generated embeddings and the original text content are stored in a Pinecone index for efficient retrieval.
+4. A mechanism (e.g., a scheduled job or a manual trigger) exists to re-index updated documents from Canvas.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR010: Data &amp; Content Management</section>
+        <snippet>The system must have a mechanism to ensure the chatbot is always working with the most up-to-date information from Canvas.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>Integration Points</section>
+        <snippet>Pinecone: A service client will be created to interact with the Pinecone vector database for indexing and querying. This will likely live in `src/server/services/pinecone.ts`.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epics</title>
+        <section>Story 2.2: Data Ingestion and Indexing from Canvas</section>
+        <snippet>As a system, I want to ingest and index course documents from Canvas into a vector database (Pinecone), so that the chatbot can efficiently search and retrieve information.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/server/services/parser.ts</path>
+        <kind>service</kind>
+        <symbol>DocumentParser</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>A service for parsing various document formats (PDF, DOCX, TXT).</reason>
+      </artifact>
+      <artifact>
+        <path>src/server/services/pinecone.ts</path>
+        <kind>service</kind>
+        <symbol>PineconeClient</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>A service for interacting with the Pinecone vector database API.</reason>
+      </artifact>
+      <artifact>
+        <path>src/server/services/embedding.ts</path>
+        <kind>service</kind>
+        <symbol>EmbeddingModel</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>A service to integrate with an embedding model for converting text to vectors.</reason>
+      </artifact>
+      <artifact>
+        <path>src/server/ingestion.ts</path>
+        <kind>script/service</kind>
+        <symbol>IngestionPipeline</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>An orchestrator script/service to manage the data ingestion and indexing pipeline.</reason>
+      </artifact>
+      <artifact>
+        <path>src/env.js</path>
+        <kind>config</kind>
+        <symbol>envSchema</symbol>
+        <lines>N/A (Modification to existing file)</lines>
+        <reason>Environment variables for Pinecone API key/environment/index name and embedding model service need to be defined and validated here.</reason>
+      </artifact>
+      <artifact>
+        <path>.env</path>
+        <kind>config</kind>
+        <symbol>PINECONE_API_KEY, PINECONE_ENVIRONMENT, PINECONE_INDEX, EMBEDDING_MODEL_KEY</symbol>
+        <lines>N/A (New entries)</lines>
+        <reason>Secure storage of Pinecone and embedding model API credentials.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <dependency ecosystem="node">
+        <name>next</name>
+        <version>^15.2.3</version>
+        <reason>Core application framework.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>react</name>
+        <version>^19.0.0</version>
+        <reason>UI library for building components.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>next-auth</name>
+        <version>5.0.0-beta.25</version>
+        <reason>Authentication library for Next.js.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@prisma/client</name>
+        <version>^6.6.0</version>
+        <reason>O/RM for database interaction.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@trpc/server</name>
+        <version>^11.0.0</version>
+        <reason>Framework for creating type-safe APIs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>zod</name>
+        <version>^3.24.2</version>
+        <reason>Schema validation library for tRPC inputs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@pinecone-database/pinecone</name>
+        <version>~0.0.0</version>
+        <reason>Client library for interacting with the Pinecone vector database.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>openai</name>
+        <version>~0.0.0</version>
+        <reason>Client library for interacting with OpenAI (or similar) embedding models.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>pdf-parse</name>
+        <version>~0.0.0</version>
+        <reason>Library for parsing PDF documents.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>mammoth</name>
+        <version>~0.0.0</version>
+        <reason>Library for parsing DOCX documents.</reason>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>The process of fetching, parsing, embedding, and storing documents should be designed as a scalable data pipeline, even if starting as a simple script.</constraint>
+    <constraint>The embedding model chosen should be easily swappable in the future.</constraint>
+    <constraint>All interactions with the Pinecone vector database must be encapsulated within a dedicated service module (`src/server/services/pinecone.ts`).</constraint>
+    <constraint>The data ingestion process must be idempotent, preventing duplicate entries on re-runs with the same input.</constraint>
+    <constraint>API keys/tokens for Pinecone and any embedding model service are sensitive and must be stored securely in environment variables, never exposed client-side.</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>Pinecone API Client</name>
+      <kind>External API Client</kind>
+      <signature>
+        class PineconeClient {
+          constructor(apiKey: string, environment: string, indexName: string);
+          upsertVectors(vectors: Vector[]): Promise<void>;
+          queryVectors(vector: number[], topK: number): Promise<QueryResult>;
+        }
+        interface Vector { id: string; values: number[]; metadata?: object; }
+        interface QueryResult { matches: any[]; }
+      </signature>
+      <path>src/server/services/pinecone.ts</path>
+      <reason>Abstraction layer for interacting with the Pinecone vector database.</reason>
+    </interface>
+    <interface>
+      <name>Embedding Model Client</name>
+      <kind>External Service Client</kind>
+      <signature>
+        class EmbeddingModel {
+          constructor(apiKey?: string);
+          generateEmbedding(text: string): Promise<number[]>;
+        }
+      </signature>
+      <path>src/server/services/embedding.ts</path>
+      <reason>Client for converting text content into vector embeddings.</reason>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      A pragmatic testing approach will be used.
+      - **Unit Tests:** Jest and React Testing Library will be used for unit testing critical UI components and business logic.
+      - **Integration Tests:** Integration tests will be written for tRPC API procedures to ensure they interact with the database correctly.
+    </standards>
+    <locations>
+      Test files should be co-located with the source files they are testing (e.g., `MyComponent.tsx` and `MyComponent.test.tsx` in the same folder).
+    </locations>
+    <ideas>
+      <idea for="AC1">Write unit tests for the document parsing service to verify correct text extraction from mocked PDF, DOCX, and TXT content.</idea>
+      <idea for="AC2">Write an integration test for the embedding model client to ensure it correctly generates vector embeddings from text input using a mocked external service.</idea>
+      <idea for="AC3">Write an integration test for the Pinecone service to verify successful upsertion of a batch of embeddings and metadata into a mocked Pinecone index, and subsequent successful retrieval.</idea>
+      <idea for="AC4">Design an integration test for the re-indexing mechanism that simulates an updated document from Canvas and verifies its re-processing and update in the Pinecone index.</idea>
+      <idea for="End-to-End">Implement an end-to-end test for the entire data ingestion pipeline, from fetching a mocked Canvas document to its final storage as an embedding in Pinecone.</idea>
+    </ideas>
+  </tests>
+</story-context>

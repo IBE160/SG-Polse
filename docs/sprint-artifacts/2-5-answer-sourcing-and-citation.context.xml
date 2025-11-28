@@ -1,0 +1,185 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>5</storyId>
+    <title>Answer Sourcing and Citation</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-28</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/2-5-answer-sourcing-and-citation.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a student</asA>
+    <iWant>the chatbot to provide sources for its answers</iWant>
+    <soThat>I can verify the information and delve deeper if needed.</soThat>
+    <tasks>
+- [ ] **Backend (API)**
+  - [ ] Modify the Pinecone service to store metadata (e.g., document name, page number) along with the embeddings. (AC: #1)
+  - [ ] When querying Pinecone, retrieve the metadata for the most relevant text chunks. (AC: #1)
+  - [ ] Include the source information in the prompt to the LLM, and instruct it to cite its sources in the answer.
+  - [ ] Modify the tRPC procedure to return the generated answer along with a list of source citations. (AC: #1, #2)
+  - [ ] Add subtask for testing that the API response includes accurate source information.
+- [ ] **Frontend (UI)**
+  - [ ] Update the chat message component to display the source citations below the chatbot's answer. (AC: #1)
+  - [ ] If possible, make the citations clickable links that could open the source document. (AC: #2)
+  - [ ] Add subtask for testing that citations are correctly displayed.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1. Every chatbot answer includes a clear citation to the source document (e.g., "Source: Syllabus, Page 3").
+2. Citations are accurate and link to the relevant part of the document if possible.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR005: Information Retrieval &amp; Chatbot Core</section>
+        <snippet>All chatbot answers must cite the source document or location from which the information was retrieved.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epics</title>
+        <section>Story 2.5: Answer Sourcing and Citation</section>
+        <snippet>As a student, I want the chatbot to provide sources for its answers, so that I can verify the information and delve deeper if needed.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/server/services/pinecone.ts</path>
+        <kind>service</kind>
+        <symbol>PineconeClient</symbol>
+        <lines>Relevant methods (upsertVectors, queryVectors)</lines>
+        <reason>Modification to store and retrieve metadata (document name, page number) alongside embeddings for citation.</reason>
+      </artifact>
+      <artifact>
+        <path>src/server/api/routers/chatbot.ts</path>
+        <kind>api-router</kind>
+        <symbol>queryChatbot</symbol>
+        <lines>Relevant methods (queryChatbot)</lines>
+        <reason>Modification to include source information in the LLM prompt and return source citations in the API response.</reason>
+      </artifact>
+      <artifact>
+        <path>src/app/_components/chatbot/ChatMessage.tsx</path>
+        <kind>ui-component</kind>
+        <symbol>ChatMessage</symbol>
+        <lines>Relevant methods (render)</lines>
+        <reason>Modification to display source citations below the chatbot's answer, potentially as clickable links.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <dependency ecosystem="node">
+        <name>next</name>
+        <version>^15.2.3</version>
+        <reason>Core application framework.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>react</name>
+        <version>^19.0.0</version>
+        <reason>UI library for building components.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>next-auth</name>
+        <version>5.0.0-beta.25</version>
+        <reason>Authentication library for Next.js.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@prisma/client</name>
+        <version>^6.6.0</version>
+        <reason>O/RM for database interaction.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@trpc/server</name>
+        <version>^11.0.0</version>
+        <reason>Framework for creating type-safe APIs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>zod</name>
+        <version>^3.24.2</version>
+        <reason>Schema validation library for tRPC inputs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>google-gemini-generative-ai</name>
+        <version>~0.0.0</version>
+        <reason>Client library for interacting with the Google Gemini Large Language Model.</reason>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>The Pinecone service must be modified to store rich metadata (e.g., document name, page number, URL) along with the embeddings to enable accurate source citation.</constraint>
+    <constraint>The prompt sent to the LLM must be carefully engineered to encourage it to use and accurately cite the provided source information in its answer.</constraint>
+    <constraint>The frontend should handle displaying source citations in a clear and user-friendly manner, potentially making them interactive (e.g., clickable links to documents).</constraint>
+    <constraint>The system must ensure that no sensitive information is inadvertently exposed through metadata or citations.</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>Pinecone API Client (Modified)</name>
+      <kind>External API Client</kind>
+      <signature>
+        class PineconeClient {
+          // ... existing methods
+          queryVectors(vector: number[], topK: number): Promise<QueryResult & { matches: Array<{ metadata: { documentName: string; pageNumber?: number; url?: string; } }> }>;
+        }
+        // ... existing interfaces like Vector
+      </signature>
+      <path>src/server/services/pinecone.ts</path>
+      <reason>Modification to retrieve metadata containing source information when querying the vector database.</reason>
+    </interface>
+    <interface>
+      <name>Chatbot Query tRPC Procedure (Modified)</name>
+      <kind>tRPC-procedure</kind>
+      <signature>
+        queryChatbot: publicProcedure
+          .input(z.object({
+            message: z.string(),
+            conversationHistory?: z.array(z.object({ sender: z.enum(['user', 'bot']), text: z.string() }))
+          }))
+          .query(async ({ ctx, input }) => {
+            return {
+              answer: string;
+              sources: Array<{ documentName: string; pageNumber?: number; url?: string; }>; // New return field
+            };
+          });
+      </signature>
+      <path>src/server/api/routers/chatbot.ts</path>
+      <reason>Modification to return generated answer along with a list of source citations.</reason>
+    </interface>
+    <interface>
+      <name>Chat Message Data Structure (Modified)</name>
+      <kind>Frontend Data Model</kind>
+      <signature>
+        interface ChatMessage {
+          id: string;
+          text: string;
+          sender: 'user' | 'bot';
+          timestamp: Date;
+          isError?: boolean;
+          isLoading?: boolean;
+          sources?: Array<{ documentName: string; pageNumber?: number; url?: string; }>; // Modified to include sources
+        }
+      </signature>
+      <path>src/lib/types/chat.ts</path>
+      <reason>Modification to display source citations below the chatbot's answer in the UI.</reason>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      A pragmatic testing approach will be used.
+      - **Unit Tests:** Jest and React Testing Library will be used for unit testing critical UI components and business logic.
+      - **Integration Tests:** Integration tests will be written for tRPC API procedures to ensure they interact with the database correctly.
+    </standards>
+    <locations>
+      Test files should be co-located with the source files they are testing (e.g., `MyComponent.tsx` and `MyComponent.test.tsx` in the same folder).
+    </locations>
+    <ideas>
+      <idea for="AC1">Write an integration test for the Pinecone service to confirm that metadata (document name, page number/URL) is correctly stored alongside embeddings during ingestion and retrieved during querying.</idea>
+      <idea for="AC1, AC2">Write an integration test for the `queryChatbot` tRPC procedure: simulate a user query, mock Pinecone's retrieval including metadata, and verify that the prompt sent to the LLM includes instructions for citing sources, and that the API response contains accurate source citations.</idea>
+      <idea for="AC1">Write a unit test for the `ChatMessage` UI component to verify that it correctly renders and formats source citations below the bot's answer.</idea>
+      <idea for="AC2">Write an end-to-end test to confirm that clickable source links are displayed in the UI and that clicking them would (if implemented) correctly navigate to or display the relevant source document.</idea>
+    </ideas>
+  </tests>
+</story-context>

@@ -1,0 +1,171 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>7</storyId>
+    <title>Guidance for Teacher Contact</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-28</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/2-7-guidance-for-teacher-contact.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a student</asA>
+    <iWant>it to guide me on how to contact my teacher</iWant>
+    <soThat>I can get further assistance.</soThat>
+    <tasks>
+- [ ] **Backend (API)**
+  - [ ] In the chatbot tRPC procedure, add a condition to check the confidence score or relevance of the retrieved documents from Pinecone.
+  - [ ] If the confidence is below a certain threshold, instead of generating an answer, return a predefined "I can't answer that" message along with the teacher contact information. (AC: #1)
+  - [ ] Create a mechanism to store and retrieve the customizable contact information (e.g., from a database table or a configuration file). (AC: #2)
+  - [ ] Add subtask for testing the fallback mechanism.
+- [ ] **Frontend (UI)**
+  - [ ] Update the chat message component to display the formatted "I can't answer that" message and the teacher contact information. (AC: #1)
+  - [ ] Add subtask for testing that the contact information is displayed correctly.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1. When the chatbot cannot provide a relevant answer from the knowledge base, it offers clear instructions on teacher contact methods.
+2. The contact instructions are customizable by the teacher or institution.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR012: User Guidance &amp; Communication</section>
+        <snippet>The chatbot must guide users on how to contact their teachers through the school's preferred communication channels when it cannot answer a question.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epics</title>
+        <section>Story 2.7: Guidance for Teacher Contact</section>
+        <snippet>As a student, if the chatbot cannot answer my question, I want it to guide me on how to contact my teacher, so that I can get further assistance.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/server/api/routers/chatbot.ts</path>
+        <kind>api-router</kind>
+        <symbol>queryChatbot</symbol>
+        <lines>Relevant methods (queryChatbot)</lines>
+        <reason>Modification to check confidence score/relevance and return teacher contact information if the answer confidence is low.</reason>
+      </artifact>
+      <artifact>
+        <path>prisma/schema.prisma</path>
+        <kind>schema</kind>
+        <symbol>TeacherContactInfo (New Model)</symbol>
+        <lines>N/A (New entries)</lines>
+        <reason>A new database model might be needed to store customizable teacher contact information.</reason>
+      </artifact>
+      <artifact>
+        <path>src/server/services/pinecone.ts</path>
+        <kind>service</kind>
+        <symbol>PineconeClient</symbol>
+        <lines>Relevant methods (queryVectors)</lines>
+        <reason>Used to assess the relevance/confidence of retrieved documents to determine if a fallback to teacher contact is needed.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <dependency ecosystem="node">
+        <name>next</name>
+        <version>^15.2.3</version>
+        <reason>Core application framework.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>react</name>
+        <version>^19.0.0</version>
+        <reason>UI library for building components.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>next-auth</name>
+        <version>5.0.0-beta.25</version>
+        <reason>Authentication library for Next.js.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@prisma/client</name>
+        <version>^6.6.0</version>
+        <reason>O/RM for database interaction.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@trpc/server</name>
+        <version>^11.0.0</version>
+        <reason>Framework for creating type-safe APIs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>zod</name>
+        <version>^3.24.2</version>
+        <reason>Schema validation library for tRPC inputs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>google-gemini-generative-ai</name>
+        <version>~0.0.0</version>
+        <reason>Client library for interacting with the Google Gemini Large Language Model.</reason>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>The chatbot's ability to offer teacher contact guidance depends on a well-tuned confidence score or relevance threshold for retrieved documents. This threshold will require careful calibration.</constraint>
+    <constraint>Teacher contact information must be easily customizable by the teacher or institution, preferably stored in a database or a configuration file to avoid code changes for updates.</constraint>
+    <constraint>The fallback message and contact instructions should be clear and user-friendly, aligning with UX principles.</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>Chatbot Query tRPC Procedure (Modified)</name>
+      <kind>tRPC-procedure</kind>
+      <signature>
+        queryChatbot: publicProcedure
+          .input(z.object({
+            message: z.string(),
+            conversationHistory?: z.array(z.object({ sender: z.enum(['user', 'bot']), text: z.string() })),
+            detectedLanguage?: z.string(),
+          }))
+          .query(async ({ ctx, input }) => {
+            return {
+              answer: string | null; // Can be null if no confident answer
+              sources: Array<{ documentName: string; pageNumber?: number; url?: string; }>;
+              teacherContactInfo?: { // New field for teacher contact
+                method: string;
+                details: string;
+              };
+              confidenceScore?: number; // New field for confidence
+            };
+          });
+      </signature>
+      <path>src/server/api/routers/chatbot.ts</path>
+      <reason>Modification to return teacher contact information and confidence score when the chatbot cannot provide a confident answer.</reason>
+    </interface>
+    <interface>
+      <name>Prisma Model: TeacherContactInfo</name>
+      <kind>Database Model</kind>
+      <signature>
+        model TeacherContactInfo {
+          id          String @id @default(cuid())
+          courseId    String @unique // Link to a specific course
+          contactMethod String
+          contactDetails String // e.g., email address, office hours, LMS link
+        }
+      </signature>
+      <path>prisma/schema.prisma</path>
+      <reason>New Prisma model to store customizable teacher contact information.</reason>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      A pragmatic testing approach will be used.
+      - **Unit Tests:** Jest and React Testing Library will be used for unit testing critical UI components and business logic.
+      - **Integration Tests:** Integration tests will be written for tRPC API procedures to ensure they interact with the database correctly.
+    </standards>
+    <locations>
+      Test files should be co-located with the source files they are testing (e.g., `MyComponent.tsx` and `MyComponent.test.tsx` in the same folder).
+    </locations>
+    <ideas>
+      <idea for="AC1">Write an integration test for the `queryChatbot` tRPC procedure: simulate a scenario where the chatbot cannot provide a confident answer, and verify that it returns the predefined "I can't answer that" message along with teacher contact information.</idea>
+      <idea for="AC2">Write unit tests for the mechanism storing and retrieving customizable teacher contact information, ensuring it handles updates and retrieval correctly from the database or configuration.</idea>
+      <idea for="Frontend">Write a unit test for the `ChatMessage` UI component to verify that it correctly displays the "I can't answer that" message and the formatted teacher contact details.</idea>
+    </ideas>
+  </tests>
+</story-context>

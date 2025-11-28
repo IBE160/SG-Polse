@@ -1,0 +1,183 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>6</storyId>
+    <title>Bilingual Interpretation (English Terms)</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-28</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/2-6-bilingual-interpretation-english-terms.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a student</asA>
+    <iWant>the chatbot to accurately interpret questions that contain English terms within another language</iWant>
+    <soThat>I can ask questions naturally.</soThat>
+    <tasks>
+- [ ] **Backend (API)**
+  - [ ] Research and select a language detection library or service. (AC: #1)
+  - [ ] In the chatbot tRPC procedure, before generating the embedding for the user's query, pass the query through the language detection service.
+  - [ ] If the query is detected as mixed-language, consider a strategy to handle it. This could involve:
+    -   Translating the non-English parts of the query to English before creating the embedding.
+    -   Using a multilingual embedding model that can handle mixed-language queries directly.
+  - [ ] Update the prompt to the LLM to specify the language of the user's query and instruct it to respond in the same language. (AC: #2)
+  - [ ] Add subtask for testing with a variety of mixed-language queries.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1. The chatbot successfully identifies and processes English terms embedded in non-English queries.
+2. Responses are generated based on the correct interpretation of the mixed-language query.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR007: Information Retrieval &amp; Chatbot Core</section>
+        <snippet>The chatbot must be able to interpret and respond to queries that mix English terms within another language (bilingual capability).</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epics</title>
+        <section>Story 2.6: Bilingual Interpretation (English Terms)</section>
+        <snippet>As a student, I want the chatbot to accurately interpret questions that contain English terms within another language, so that I can ask questions naturally.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/server/api/routers/chatbot.ts</path>
+        <kind>api-router</kind>
+        <symbol>queryChatbot</symbol>
+        <lines>Relevant methods (queryChatbot)</lines>
+        <reason>Modification to integrate language detection/translation and adapt LLM prompting for mixed-language queries.</reason>
+      </artifact>
+      <artifact>
+        <path>src/server/services/embedding.ts</path>
+        <kind>service</kind>
+        <symbol>EmbeddingModel</symbol>
+        <lines>Relevant methods (generateEmbedding)</lines>
+        <reason>Potential modification or replacement if a multilingual embedding model is chosen.</reason>
+      </artifact>
+      <artifact>
+        <path>src/server/services/language.ts</path>
+        <kind>service</kind>
+        <symbol>LanguageService</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>A new service to handle language detection or translation if a dedicated library/service is used.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <dependency ecosystem="node">
+        <name>next</name>
+        <version>^15.2.3</version>
+        <reason>Core application framework.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>react</name>
+        <version>^19.0.0</version>
+        <reason>UI library for building components.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>next-auth</name>
+        <version>5.0.0-beta.25</version>
+        <reason>Authentication library for Next.js.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@prisma/client</name>
+        <version>^6.6.0</version>
+        <reason>O/RM for database interaction.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@trpc/server</name>
+        <version>^11.0.0</version>
+        <reason>Framework for creating type-safe APIs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>zod</name>
+        <version>^3.24.2</version>
+        <reason>Schema validation library for tRPC inputs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>google-gemini-generative-ai</name>
+        <version>~0.0.0</version>
+        <reason>Client library for interacting with the Google Gemini Large Language Model.</reason>
+      </dependency>
+      <!-- Potential new dependency for language detection/translation based on research -->
+      <dependency ecosystem="node">
+        <name>cld3-wasm</name>
+        <version>~0.0.0</version>
+        <reason>Potential library for client-side language detection.</reason>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>The most robust solution for bilingual interpretation is to use a multilingual embedding model capable of handling multiple languages and code-switching.</constraint>
+    <constraint>If a multilingual embedding model is not feasible, a translation service can be used as a fallback, but developers must be aware of potential latency and translation errors.</constraint>
+    <constraint>The LLM prompt within the `queryChatbot` procedure must be explicitly engineered to specify the detected language of the user's query and instruct the LLM to respond in the same language.</constraint>
+    <constraint>Any new service for language detection or translation should be placed in `src/server/services/`.</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>Chatbot Query tRPC Procedure (Modified)</name>
+      <kind>tRPC-procedure</kind>
+      <signature>
+        queryChatbot: publicProcedure
+          .input(z.object({
+            message: z.string(),
+            conversationHistory?: z.array(z.object({ sender: z.enum(['user', 'bot']), text: z.string() })),
+            detectedLanguage?: z.string(), // New input for detected language
+          }))
+          .query(async ({ ctx, input }) => {
+            return {
+              answer: string;
+              sources: Array<{ documentName: string; pageNumber?: number; url?: string; }>;
+            };
+          });
+      </signature>
+      <path>src/server/api/routers/chatbot.ts</path>
+      <reason>Modification to pass detected language information to the backend for improved LLM prompting.</reason>
+    </interface>
+    <interface>
+      <name>Language Service</name>
+      <kind>Internal Service</kind>
+      <signature>
+        class LanguageService {
+          detectLanguage(text: string): Promise<string>;
+          translate(text: string, targetLanguage: string, sourceLanguage?: string): Promise<string>;
+        }
+      </signature>
+      <path>src/server/services/language.ts</path>
+      <reason>Provides functionality for language detection and optional translation of text.</reason>
+    </interface>
+    <interface>
+      <name>Embedding Model Client (Potentially Modified)</name>
+      <kind>External Service Client</kind>
+      <signature>
+        class EmbeddingModel {
+          constructor(apiKey?: string);
+          generateEmbedding(text: string, language?: string): Promise<number[]>; // Optional language parameter
+        }
+      </signature>
+      <path>src/server/services/embedding.ts</path>
+      <reason>Modification to support multilingual embeddings if a multilingual model is adopted.</reason>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      A pragmatic testing approach will be used.
+      - **Unit Tests:** Jest and React Testing Library will be used for unit testing critical UI components and business logic.
+      - **Integration Tests:** Integration tests will be written for tRPC API procedures to ensure they interact with the database correctly.
+    </standards>
+    <locations>
+      Test files should be co-located with the source files they are testing (e.g., `MyComponent.tsx` and `MyComponent.test.tsx` in the same folder).
+    </locations>
+    <ideas>
+      <idea for="AC1">Write a unit test for the `LanguageService` (or integrated language detection logic) to verify its accuracy in identifying languages, particularly for queries containing English terms within another language.</idea>
+      <idea for="AC1, AC2">Write an integration test for the `queryChatbot` tRPC procedure: simulate a mixed-language query, verify that the non-English portions are correctly handled (translated or processed by a multilingual embedding model), and that the LLM's prompt is adjusted to generate a response in the appropriate language.</idea>
+      <idea for="AC2">Conduct functional tests with a variety of mixed-language queries to ensure the chatbot's generated responses are accurate, coherent, and reflect a correct interpretation of the original query.</idea>
+    </ideas>
+  </tests>
+</story-context>

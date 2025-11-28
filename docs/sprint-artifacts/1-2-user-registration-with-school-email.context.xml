@@ -1,0 +1,169 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>2</storyId>
+    <title>User Registration with School Email</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-28</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-2-user-registration-with-school-email.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a new user</asA>
+    <iWant>to register for the chatbot using my school email and password</iWant>
+    <soThat>I can create an account linked to my academic institution.</soThat>
+    <tasks>
+- **Backend (API)**
+  - [ ] Create a new tRPC procedure for user registration (AC: #2)
+  - [ ] Add input validation for email and password fields.
+  - [ ] Implement logic to create a new `User` record in the database using Prisma.
+  - [ ] Integrate the `Resend` email service to send a verification email (AC: #3)
+  - [ ] Add subtask for testing the registration procedure.
+- [ ] **Frontend (UI)**
+  - [ ] Create a new registration page/component at `/auth/register` (AC: #1)
+  - [ ] Build the registration form with email and password fields.
+  - [ ] Implement client-side validation for the form.
+  - [ ] Call the tRPC registration procedure on form submission.
+  - [ ] Display a success message upon successful registration (AC: #4)
+  - [ ] Display any errors returned from the API.
+  - [ ] Add subtask for testing the registration form UI and interactions.
+- [ ] **Database**
+  - [ ] Update the `schema.prisma` file to include necessary fields on the `User` model (e.g., `email`, `passwordHash`, `emailVerified`).
+  - [ ] Generate and apply the database migration. (AC: #2)
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1. User can access a registration page.
+2. User can input school email and password.
+3. System sends a verification email to the provided school email address using the Resend service.
+4. User receives a confirmation of successful registration on the UI.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR001: User & Authentication</section>
+        <snippet>Users must be able to authenticate using their school-provided email accounts via OAuth 2.0.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>Implementation Patterns - Authentication</section>
+        <snippet>Use `NextAuth.js` with the `CredentialsProvider`. The registration logic will be custom, but it should integrate with the existing NextAuth setup.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>ADR 4: Email Service</section>
+        <snippet>We will use Resend for sending all transactional emails.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epics</title>
+        <section>Story 1.2: User Registration with School Email</section>
+        <snippet>As a new user, I want to register for the chatbot using my school email and password, so that I can create an account linked to my academic institution.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>prisma/schema.prisma</path>
+        <kind>schema</kind>
+        <symbol>User</symbol>
+        <lines>90-97</lines>
+        <reason>The User model needs to be updated to include a 'passwordHash' field to store the user's encrypted password.</reason>
+      </artifact>
+      <artifact>
+        <path>src/server/api/routers/auth.ts</path>
+        <kind>api-router</kind>
+        <symbol>authRouter</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>A new tRPC router needs to be created to handle authentication procedures, including the new registration procedure.</reason>
+      </artifact>
+      <artifact>
+        <path>src/app/auth/register/page.tsx</path>
+        <kind>ui-component</kind>
+        <symbol>RegisterPage</symbol>
+        <lines>N/A (New file)</lines>
+        <reason>A new page component needs to be created for the user registration form.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <dependency ecosystem="node">
+        <name>next</name>
+        <version>^15.2.3</version>
+        <reason>Core application framework.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>react</name>
+        <version>^19.0.0</version>
+        <reason>UI library for building components.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>next-auth</name>
+        <version>5.0.0-beta.25</version>
+        <reason>Authentication library for Next.js.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@prisma/client</name>
+        <version>^6.6.0</version>
+        <reason>O/RM for database interaction.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>@trpc/server</name>
+        <version>^11.0.0</version>
+        <reason>Framework for creating type-safe APIs.</reason>
+      </dependency>
+      <dependency ecosystem="node">
+        <name>zod</name>
+        <version>^3.24.2</version>
+        <reason>Schema validation library for tRPC inputs.</reason>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>Authentication must use NextAuth.js with the CredentialsProvider for custom registration.</constraint>
+    <constraint>All backend logic must be exposed via tRPC procedures.</constraint>
+    <constraint>Database interactions must use the PrismaClient.</constraint>
+    <constraint>Transactional emails for verification must be sent using the Resend service.</constraint>
+    <constraint>The registration page should be created within the 'src/app/auth/' directory.</constraint>
+    <constraint>The tRPC router for authentication should be located at 'src/server/api/routers/auth.ts'.</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>register</name>
+      <kind>tRPC-procedure</kind>
+      <signature>
+        register: publicProcedure
+          .input(z.object({
+            email: z.string().email(),
+            password: z.string().min(8)
+          }))
+          .mutation(async ({ ctx, input }) => {
+            // Implementation to be added
+          });
+      </signature>
+      <path>src/server/api/routers/auth.ts</path>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      A pragmatic testing approach will be used.
+      - **Unit Tests:** Jest and React Testing Library will be used for unit testing critical UI components and business logic.
+      - **Integration Tests:** Integration tests will be written for tRPC API procedures to ensure they interact with the database correctly.
+    </standards>
+    <locations>
+      Test files should be co-located with the source files they are testing (e.g., `MyComponent.tsx` and `MyComponent.test.tsx` in the same folder).
+    </locations>
+    <ideas>
+      <idea for="AC1">Write a test to ensure the registration page component renders correctly at the '/auth/register' route.</idea>
+      <idea for="AC2">Write a unit test for the registration form to check for client-side validation logic (e.g., invalid email format, password too short).</idea>
+      <idea for="AC2, AC4">Write a test to simulate form submission and verify that the tRPC mutation is called and a success message is displayed.</idea>
+      <idea for="AC3">Write an integration test for the 'register' tRPC procedure to verify that a new user is created in the database and that the email service is invoked.</idea>
+    </ideas>
+  </tests>
+</story-context>
