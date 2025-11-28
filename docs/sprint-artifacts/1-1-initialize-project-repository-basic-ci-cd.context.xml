@@ -1,0 +1,114 @@
+<story-context id="{bmad_folder}/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>1.1</storyId>
+    <title>Initialize Project Repository &amp; Basic CI/CD</title>
+    <status>ready-for-dev</status>
+    <generatedAt>fredag 28. november 2025</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>C:\Users\jaske\github\SG-Polse\docs\sprint-artifacts\1-1-initialize-project-repository-basic-ci-cd.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a developer</asA>
+    <iWant>to set up the project repository and a basic CI/CD pipeline</iWant>
+    <soThat>development can begin with automated testing and deployment processes</soThat>
+    <tasks>
+      - [ ] **Task 1: Initialize T3 Application** (AC: 1)
+        - [ ] Run `npm create t3-app@latest` with the project name.
+        - [ ] Select Next.js, Tailwind CSS, tRPC, Prisma, and NextAuth.js during setup.
+        - [ ] Initialize a git repository.
+        - [ ] Commit the initial T3 application structure.
+      - [ ] **Task 2: Configure Vercel for CI/CD** (AC: 2, 3)
+        - [ ] Create a new project on Vercel and link it to the git repository.
+        - [ ] Configure Vercel to automatically build and deploy on pushes to the main branch.
+        - [ ] Verify that the initial "Hello World" or T3 default page is successfully deployed to a Vercel URL.
+      - [ ] **Task 3: Verify Foundational Security** (AC: 4, 5)
+        - [ ] Confirm the Vercel deployment uses HTTPS.
+        - [ ] Review the default T3 setup to ensure no personal user information is stored by default.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1.  Git repository is initialized and configured.
+    2.  Basic CI/CD pipeline is set up for automated builds and tests.
+    3.  A simple "Hello World" web page can be deployed via the CI/CD pipeline.
+    4.  All communication between the user's browser and the system is encrypted (FR013).
+    5.  The system is designed not to store any personal user information (FR014).
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>Starter Template Decision</section>
+        <snippet>Based on the project requirements for a full-stack web application with React, the T3 Stack was selected as the foundational starter template. ... The project should be initialized with the following command... `npm create t3-app@latest <your-project-name>`</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>Deployment Architecture</section>
+        <snippet>The application will be deployed to Vercel. Every push to the `main` branch will trigger an automatic build and deployment.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/sprint-artifacts/tech-spec-epic-epic-1.md</path>
+        <title>Epic Technical Specification: Project Foundation & User Authentication</title>
+        <section>Objectives and Scope</section>
+        <snippet>In-Scope: Repository Setup: Initialize the Git repository using the T3 Stack starter template (`npm create t3-app@latest`). CI/CD Pipeline: Configure a basic CI/CD pipeline on Vercel for automated builds, linting, and testing on every push to the main branch.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Security & Privacy</section>
+        <snippet>FR013: All communication between the user's browser and the system must be encrypted. FR014: The system must not store any personal user information.</snippet>
+      </artifact>
+    </docs>
+    <code>
+      <!-- No existing code artifacts. This story creates the initial source tree. -->
+    </code>
+    <dependencies>
+      <ecosystem name="Node.js">
+        <package name="next" version="^14.0.0" />
+        <package name="react" version="^18.2.0" />
+        <package name="typescript" version="^5.3.0" />
+        <package name="@prisma/client" version="^5.7.0" />
+        <package name="@trpc/client" version="^10.45.0" />
+        <package name="@trpc/server" version="^10.45.0" />
+        <package name="@trpc/react-query" version="^10.45.0" />
+        <package name="next-auth" version="^4.24.5" />
+        <package name="tailwindcss" version="^3.4.0" />
+        <package name="@supabase/supabase-js" version="^2.86.0" />
+        <package name="resend" version="^6.5.2" />
+      </ecosystem>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    - The project MUST be initialized using the T3 Stack as defined in the architecture.
+    - Deployment MUST be done via Vercel.
+    - Naming Conventions: Database Tables: PascalCase, singular; Database Columns: camelCase; Components: PascalCase; Variables & Functions: camelCase.
+    - State Management: Use React Query for server state and Zustand/useState for client state.
+    - API Communication: All communication between frontend and backend MUST go through tRPC.
+  </constraints>
+  <interfaces>
+      <!-- No existing interfaces to reuse. This story creates the initial project structure. -->
+  </interfaces>
+  <tests>
+    <standards>
+      A pragmatic testing approach will be used, focusing on a balance of speed and confidence.
+      - Unit Tests: Jest and React Testing Library for critical UI components and business logic.
+      - Integration Tests: Jest with testing utilities for tRPC and Prisma to ensure API procedures interact with the database correctly.
+      - E2E Tests: Out of scope for initial MVP, but can be added later with Cypress or Playwright.
+      - Manual Testing: Manual verification will be conducted on Vercel preview deployments before merging.
+    </standards>
+    <locations>
+      - Test files should be co-located with the source files they are testing (e.g., `MyComponent.tsx` and `MyComponent.test.tsx` in the same folder).
+    </locations>
+    <ideas>
+      - Run `npm create t3-app`, initialize a git repo, create a Vercel project, and verify the first deployment succeeds.
+      - Inspect the Vercel deployment URL in a browser to confirm it uses HTTPS.
+      - Review the `User` model in the Prisma schema to ensure no fields for storing sensitive personal data are present.
+    </ideas>
+  </tests>
+</story-context>
