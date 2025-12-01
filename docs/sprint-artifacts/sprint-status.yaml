@@ -15,12 +15,12 @@ sprint_goal: "Establish project foundation, implement user authentication, and b
 
 development_status:
   1-1-initialize-project-repository-basic-ci-cd: drafted
-  1-2-user-registration-with-school-email: ready-for-dev
-  1-3-email-verification-account-activation: ready-for-dev
-  1-4-user-login-with-oauth-2-0: ready-for-dev
-  1-5-role-based-access-control-student-teacher: ready-for-dev
-  2-1-canvas-lms-integration-for-course-data: ready-for-dev
-  2-2-data-ingestion-and-indexing-from-canvas: ready-for-dev
+  1-2-user-registration-with-school-email: review
+  1-3-email-verification-account-activation: review
+  1-4-user-login-with-oauth-2-0: review
+  1-5-role-based-access-control-student-teacher: review
+  2-1-canvas-lms-integration-for-course-data: in-progress
+  2-2-data-ingestion-and-indexing-from-canvas: in-progress
   2-3-chatbot-user-interface-student-view: ready-for-dev
   2-4-natural-language-understanding-response-generation: ready-for-dev
   2-5-answer-sourcing-and-citation: ready-for-dev

@@ -14,6 +14,12 @@ export const env = createEnv({
     AUTH_DISCORD_ID: z.string(),
     AUTH_DISCORD_SECRET: z.string(),
     DATABASE_URL: z.string().url(),
+    CANVAS_API_URL: z.string().url(),
+    CANVAS_API_TOKEN: z.string(),
+    PINECONE_API_KEY: z.string(),
+    PINECONE_ENVIRONMENT: z.string(),
+    PINECONE_INDEX_NAME: z.string(),
+    OPENAI_API_KEY: z.string(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -38,6 +44,12 @@ export const env = createEnv({
     AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
+    CANVAS_API_URL: process.env.CANVAS_API_URL,
+    CANVAS_API_TOKEN: process.env.CANVAS_API_TOKEN,
+    PINECONE_API_KEY: process.env.PINECONE_API_KEY,
+    PINECONE_ENVIRONMENT: process.env.PINECONE_ENVIRONMENT,
+    PINECONE_INDEX_NAME: process.env.PINECONE_INDEX_NAME,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
