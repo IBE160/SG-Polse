@@ -10,6 +10,9 @@ Routing guidance:
 
 | Date | Story | Epic | Type | Severity | Owner | Status | Notes |
 | ---- | ----- | ---- | ---- | -------- | ----- | ------ | ----- |
+| 2025-12-02 | 2.5 | 2 | TechDebt | Low | TBD | Open | Update outdated test assertions in `src/server/api/routers/chatbot.test.ts` to reflect the `{ answer, sources }` return type. |
+| 2025-12-02 | 2.5 | 2 | TechDebt | Low | TBD | Open | Wrap external service calls in `src/server/api/routers/chatbot.ts` in try-catch blocks for more specific error handling and logging. |
+| 2025-12-02 | 2.5 | 2 | TechDebt | Low | TBD | Open | Define and use a specific type for the `RecordMetadata` object from Pinecone in `src/server/prompts/answerGenerationPrompt.ts` to avoid repeated type assertions. |
 | 2025-12-01 | 1.3 | 1 | Bug | High | TBD | Open | Persistent SyntaxError during Jest test execution for both backend and frontend tests. Blocks automated verification. |
 | 2025-12-01 | 1.3 | 1 | TechDebt | Low | TBD | Open | Redundant (await import('crypto')).createHash call. [file: ibe160/src/server/api/routers/auth.ts:77] |
 | 2025-12-01 | 2.2 | 2 | Bug | High | TBD | Open | Implement all missing files as listed in the "Dev Agent Record -> File List" of Story 2.2. |

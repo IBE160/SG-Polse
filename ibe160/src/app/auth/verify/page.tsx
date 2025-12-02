@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { api } from '~/trpc/react'; // Assuming tRPC client setup
+import { api } from '~/utils/api'; // Corrected tRPC client import
 import { TRPCClientError } from '@trpc/client';
 
 export default function VerifyEmailPage() {

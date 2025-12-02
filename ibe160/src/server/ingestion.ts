@@ -1,7 +1,14 @@
 import { DocumentParser } from './services/parser';
-import { EmbeddingModel } from './services/embedding';
-import { PineconeService, Vector } from './services/pinecone';
+import { embeddingService } from './services/embedding';
+import { PineconeService /*, Vector*/ } from './services/pinecone'; // Commented out Vector import
 import { env } from '../env';
+
+// Temporary local definition for Vector to bypass Jest module resolution issue
+interface Vector {
+  id: string;
+  values: number[];
+  metadata: Record<string, any>;
+}
 
 interface Document {
   id: string;
@@ -16,16 +23,16 @@ interface Document {
 
 export class IngestionService {
   private documentParser: DocumentParser;
-  private embeddingModel: EmbeddingModel;
+  private embeddingService: typeof embeddingService;
   private pineconeService: PineconeService;
 
   constructor() {
     this.documentParser = new DocumentParser();
-    this.embeddingModel = new EmbeddingModel(env.SERVER.OPENAI_API_KEY); // Using OPENAI for now
+    this.embeddingService = embeddingService;
     this.pineconeService = new PineconeService(
-      env.SERVER.PINECONE_API_KEY,
-      env.SERVER.PINECONE_ENVIRONMENT,
-      env.SERVER.PINECONE_INDEX_NAME
+      env.PINECONE_API_KEY,
+      env.PINECONE_ENVIRONMENT,
+      env.PINECONE_INDEX_NAME
     );
   }
 
@@ -34,20 +41,7 @@ export class IngestionService {
     console.log(`Fetching documents for course: ${courseId} from Canvas (placeholder)`);
     // In a real scenario, this would call the Canvas integration service (Story 2.1)
     // For now, return mock documents
-    return [
-      // {
-      //   id: 'doc1_courseA',
-      //   filePath: '/path/to/courseA_syllabus.pdf',
-      //   fileType: 'pdf',
-      //   metadata: { courseId: 'courseA', documentName: 'Syllabus' },
-      // },
-      // {
-      //   id: 'doc2_courseA',
-      //   filePath: '/path/to/courseA_assignment.docx',
-      //   fileType: 'docx',
-      //   metadata: { courseId: 'courseA', documentName: 'Assignment 1' },
-      // },
-    ];
+    return [];
   }
 
   async ingestCourseDocuments(courseId: string): Promise<void> {
@@ -59,7 +53,7 @@ export class IngestionService {
         const textContent = await this.documentParser.parse(doc.filePath, doc.fileType);
 
         console.log(`Generating embedding for document: ${doc.documentName}`);
-        const embedding = await this.embeddingModel.generateEmbedding(textContent);
+        const embedding = await this.embeddingService.generateEmbedding(textContent);
 
         if (embedding.length > 0) {
           const vector: Vector = {
@@ -83,5 +77,47 @@ export class IngestionService {
       }
     }
     console.log(`Ingestion process for course ${courseId} completed.`);
+  }
+
+  // New method to process a single document from buffer
+  public async processDocument(
+    buffer: Buffer,
+    fileType: string,
+    filePath: string,
+    courseId: string
+  ): Promise<void> {
+    try {
+      console.log(`Processing document: ${filePath} (${fileType})`);
+      // 1. Parse document
+      const textContent = await this.documentParser.parseFromBuffer(buffer, fileType); // Assuming parseFromBuffer exists or modify parse
+
+      // 2. Generate embeddings
+      const embedding = await this.embeddingService.generateEmbedding(textContent);
+
+      // 3. Prepare metadata
+      // TODO: Generate a unique ID for the document - perhaps using the filePath and a hash?
+      const documentId = 'doc_' + Math.random().toString(36).substring(7); // Placeholder for unique ID
+
+      const metadata = {
+        source: "Teacher Upload", // Or derive from filePath/bucket
+        courseId: courseId,
+        documentName: filePath.split('/').pop(), // Extract filename
+        fileType: fileType,
+        textContent: textContent.substring(0, 500), // Store first 500 chars of text for context
+      };
+
+      // 4. Upsert to Pinecone
+      await this.pineconeService.upsertVectors([
+        {
+          id: documentId,
+          values: embedding,
+          metadata: metadata,
+        },
+      ]);
+      console.log(`Successfully processed and ingested: ${filePath}`);
+    } catch (error) {
+      console.error(`Failed to process document ${filePath}:`, error);
+      throw error; // Re-throw to be handled by webhook handler
+    }
   }
 }

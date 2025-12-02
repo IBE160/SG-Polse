@@ -1,0 +1,196 @@
+// src/server/webhooks/supabase-storage-trigger.test.ts
+
+import handler from './supabase-storage-trigger';
+import { NextApiRequest, NextApiResponse } from '../../../__mocks__/next';
+import { createClient } from '@supabase/supabase-js'; // Mocked
+import { IngestionService } from '~/server/ingestion'; // Real IngestionService
+import { NotificationService } from '~/server/services/notification'; // Mocked
+
+
+// Use concrete types from jest for clarity
+type MockedRequest = Partial<NextApiRequest> & {
+  headers: Record<string, string | string[]>;
+};
+type MockedResponse = Partial<NextApiResponse> & {
+  status: jest.Mock;
+  json: jest.Mock;
+};
+
+// Explicitly mock the modules
+jest.mock('@supabase/supabase-js');
+// jest.mock('~/server/ingestion'); // Removed explicit mock
+jest.mock('~/server/services/notification');
+
+// Mock env directly for testing purposes
+jest.mock('~/env', () => ({
+  env: {
+    SUPABASE_URL: 'mock-supabase-url',
+    SUPABASE_SERVICE_ROLE_KEY: 'mock-supabase-service-role-key',
+    PINECONE_API_KEY: 'mock-pinecone-api-key',
+    PINECONE_ENVIRONMENT: 'mock-pinecone-environment',
+    PINECONE_INDEX_NAME: 'mock-pinecone-index-name',
+    OPENAI_API_KEY: 'mock-openai-api-key',
+    RESEND_API_KEY: 'mock-resend-api-key',
+  },
+}));
+
+
+describe('Supabase Storage Webhook Handler', () => {
+  let req: MockedRequest;
+  let res: MockedResponse;
+  let mockIngestionService: jest.Mocked<IngestionService>;
+  let mockNotificationService: jest.Mocked<NotificationService>;
+  let mockSupabaseClient: any; // Using 'any' for the mocked supabase client for flexibility
+
+  beforeEach(() => {
+    // Reset mocks before each test
+    jest.clearAllMocks();
+
+    // Setup common response mocks
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    // Get mocked instances
+    mockSupabaseClient = (createClient as jest.Mock).mock.results[0].value;
+    mockIngestionService = (IngestionService as jest.Mock).mock.instances[0] as jest.Mocked<IngestionService>;
+    mockNotificationService = (NotificationService as jest.Mock).mock.instances[0] as jest.Mocked<NotificationService>;
+
+    // Ensure mock download returns a Blob by default
+    mockSupabaseClient.storage.from().download.mockResolvedValue({
+      data: new Blob([Buffer.from('mock content')]),
+      error: null,
+    });
+  });
+
+  it('should return 405 for non-POST requests', async () => {
+    req = { method: 'GET', headers: {} };
+    await handler(req as NextApiRequest, res as NextApiResponse);
+    expect(res.status).toHaveBeenCalledWith(405);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Method Not Allowed' });
+  });
+
+  it('should return 400 for invalid Supabase event type', async () => {
+    req = {
+      method: 'POST',
+      headers: { 'x-supabase-event': 'STORAGE_OBJECT_DELETED' },
+      body: {},
+    };
+    await handler(req as NextApiRequest, res as NextApiResponse);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Invalid Supabase event type' });
+  });
+
+  it('should return 400 for missing payload fields', async () => {
+    req = {
+      method: 'POST',
+      headers: { 'x-supabase-event': 'STORAGE_OBJECT_CREATED' },
+      body: { bucketId: 'test-bucket', name: 'test-file.txt' }, // objectId is missing
+    };
+    await handler(req as NextApiRequest, res as NextApiResponse);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Missing required fields in payload' });
+  });
+
+  it('should process document, send success notification, and return 200 on successful upload', async () => {
+    const mockFilePath = 'courses/CS101/document.pdf';
+    const mockBucketId = 'course-documents';
+
+    req = {
+      method: 'POST',
+      headers: { 'x-supabase-event': 'STORAGE_OBJECT_CREATED' },
+      body: { bucketId: mockBucketId, objectId: 'some-uuid', name: mockFilePath },
+    };
+
+    await handler(req as NextApiRequest, res as NextApiResponse);
+
+    expect(mockSupabaseClient.storage.from).toHaveBeenCalledWith(mockBucketId);
+    expect(mockSupabaseClient.storage.from().download).toHaveBeenCalledWith(mockFilePath);
+    expect(mockIngestionService.processDocument).toHaveBeenCalledWith(
+      expect.any(Buffer),
+      'application/pdf',
+      mockFilePath,
+      'UNKNOWN_COURSE'
+    );
+    expect(mockNotificationService.sendEmail).toHaveBeenCalledWith(
+      'teacher@example.com',
+      'Document Processed Successfully',
+      expect.stringContaining(`Your document <b>${mockFilePath}</b> has been successfully processed`)
+    );
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Document processing initiated successfully' });
+  });
+
+  it('should handle different file types correctly', async () => {
+    const mockFilePath = 'path/to/document.docx';
+    req = {
+      method: 'POST',
+      headers: { 'x-supabase-event': 'STORAGE_OBJECT_CREATED' },
+      body: { bucketId: 'test-bucket', objectId: 'some-uuid', name: mockFilePath },
+    };
+
+    await handler(req as NextApiRequest, res as NextApiResponse);
+    expect(mockIngestionService.processDocument).toHaveBeenCalledWith(
+      expect.any(Buffer),
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      mockFilePath,
+      'UNKNOWN_COURSE'
+    );
+  });
+
+  it('should send failure notification and return 500 if Supabase download fails', async () => {
+    const mockFilePath = 'error-document.pdf';
+    const mockBucketId = 'course-documents';
+    req = {
+      method: 'POST',
+      headers: { 'x-supabase-event': 'STORAGE_OBJECT_CREATED' },
+      body: { bucketId: mockBucketId, objectId: 'some-uuid', name: mockFilePath },
+    };
+
+    // Configure the mock to simulate a download error
+    mockSupabaseClient.storage.from().download.mockResolvedValueOnce({
+      data: null,
+      error: new Error('Simulated Supabase download error'),
+    });
+
+    await handler(req as NextApiRequest, res as NextApiResponse);
+
+    expect(mockSupabaseClient.storage.from().download).toHaveBeenCalledWith(mockFilePath);
+    expect(mockIngestionService.processDocument).not.toHaveBeenCalled(); // Should not call ingestion
+    expect(mockNotificationService.sendEmail).toHaveBeenCalledWith(
+      'teacher@example.com',
+      'Document Processing Failed',
+      expect.stringContaining('Simulated Supabase download error')
+    );
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+      message: 'Failed to initiate document processing',
+      error: expect.stringContaining('Simulated Supabase download error'),
+    }));
+  });
+
+  it('should send failure notification and return 500 if ingestion service fails', async () => {
+    const mockFilePath = 'ingestion-fail.txt'; // Trigger mock ingestion failure
+    const mockBucketId = 'course-documents';
+    req = {
+      method: 'POST',
+      headers: { 'x-supabase-event': 'STORAGE_OBJECT_CREATED' },
+      body: { bucketId: mockBucketId, objectId: 'some-uuid', name: mockFilePath },
+    };
+
+    await handler(req as NextApiRequest, res as NextApiResponse);
+
+    expect(mockIngestionService.processDocument).toHaveBeenCalled();
+    expect(mockNotificationService.sendEmail).toHaveBeenCalledWith(
+      'teacher@example.com',
+      'Document Processing Failed',
+      expect.stringContaining('Mock IngestionService failure')
+    );
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+      message: 'Failed to initiate document processing',
+      error: expect.stringContaining('Mock IngestionService failure'),
+    }));
+  });
+});

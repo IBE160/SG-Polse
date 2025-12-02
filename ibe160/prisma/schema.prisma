@@ -58,6 +58,7 @@ model User {
     role          Role      @default(STUDENT)
     accounts      Account[]
     sessions      Session[]
+    courses       Course[]  @relation("TeacherCourses")
 }
 
 model VerificationToken {
@@ -66,4 +67,19 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Course {
+  id          String              @id @default(cuid())
+  name        String
+  teachers    User[]              @relation("TeacherCourses")
+  contactInfo TeacherContactInfo?
+}
+
+model TeacherContactInfo {
+  id            String @id @default(cuid())
+  contactMethod String
+  contactDetails String // e.g., email address, office hours, LMS link
+  courseId      String   @unique
+  course        Course   @relation(fields: [courseId], references: [id])
 }

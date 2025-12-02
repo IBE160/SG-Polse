@@ -159,6 +159,18 @@ exports.Prisma.VerificationTokenScalarFieldEnum = {
   expires: 'expires'
 };
 
+exports.Prisma.CourseScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
+exports.Prisma.TeacherContactInfoScalarFieldEnum = {
+  id: 'id',
+  contactMethod: 'contactMethod',
+  contactDetails: 'contactDetails',
+  courseId: 'courseId'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -182,7 +194,9 @@ exports.Prisma.ModelName = {
   Account: 'Account',
   Session: 'Session',
   User: 'User',
-  VerificationToken: 'VerificationToken'
+  VerificationToken: 'VerificationToken',
+  Course: 'Course',
+  TeacherContactInfo: 'TeacherContactInfo'
 };
 
 /**

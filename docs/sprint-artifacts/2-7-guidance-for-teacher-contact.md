@@ -16,14 +16,14 @@ so that I can get further assistance.
 
 ## Tasks / Subtasks
 
-- [ ] **Backend (API)**
-  - [ ] In the chatbot tRPC procedure, add a condition to check the confidence score or relevance of the retrieved documents from Pinecone.
-  - [ ] If the confidence is below a certain threshold, instead of generating an answer, return a predefined "I can't answer that" message along with the teacher contact information. (AC: #1)
-  - [ ] Create a mechanism to store and retrieve the customizable contact information (e.g., from a database table or a configuration file). (AC: #2)
-  - [ ] Add subtask for testing the fallback mechanism.
-- [ ] **Frontend (UI)**
-  - [ ] Update the chat message component to display the formatted "I can't answer that" message and the teacher contact information. (AC: #1)
-  - [ ] Add subtask for testing that the contact information is displayed correctly.
+- [x] **Backend (API)**
+  - [x] In the chatbot tRPC procedure, add a condition to check the confidence score or relevance of the retrieved documents from Pinecone.
+  - [x] If the confidence is below a certain threshold, instead of generating an answer, return a predefined "I can't answer that" message along with the teacher contact information. (AC: #1)
+  - [x] Create a mechanism to store and retrieve the customizable contact information (e.g., from a database table or a configuration file). (AC: #2)
+  - [x] Add subtask for testing the fallback mechanism.
+- [x] **Frontend (UI)**
+  - [x] Update the chat message component to display the formatted "I can't answer that" message and the teacher contact information. (AC: #1)
+  - [x] Add subtask for testing that the contact information is displayed correctly.
 
 ## Dev Notes
 
@@ -52,8 +52,16 @@ so that I can get further assistance.
 ### Debug Log References
 
 ### Completion Notes List
+- Implemented initial confidence score check and fallback mechanism for teacher contact guidance. Modified `queryChatbot` to return a predefined message when Pinecone confidence is below threshold. Updated `src/lib/types/chat.ts` to include `ChatbotResponse` interface for the tRPC procedure's return type, including `teacherContactInfo` and `confidenceScore`.
 
 ### File List
+- Modified: ibe160/prisma/schema.prisma
+- Modified: src/server/api/routers/chatbot.ts
+- Modified: src/lib/types/chat.ts
+- New: src/server/services/teacherContactService.ts
+- Modified: src/server/api/routers/chatbot.test.ts
+- Modified: src/app/_components/chatbot/ChatMessage.tsx
+- Modified: src/app/_components/chatbot/ChatMessage.test.tsx
 
 ## Change Log
 - 2025-11-28: Initial draft created.

@@ -1,6 +1,6 @@
 # Story 2.6: Bilingual Interpretation (English Terms)
 
-Status: ready-for-dev
+Status: in-progress
 
 ## Story
 
@@ -15,14 +15,15 @@ so that I can ask questions naturally.
 
 ## Tasks / Subtasks
 
-- [ ] **Backend (API)**
-  - [ ] Research and select a language detection library or service. (AC: #1)
-  - [ ] In the chatbot tRPC procedure, before generating the embedding for the user's query, pass the query through the language detection service.
-  - [ ] If the query is detected as mixed-language, consider a strategy to handle it. This could involve:
-    -   Translating the non-English parts of the query to English before creating the embedding.
-    -   Using a multilingual embedding model that can handle mixed-language queries directly.
-  - [ ] Update the prompt to the LLM to specify the language of the user's query and instruct it to respond in the same language. (AC: #2)
-  - [ ] Add subtask for testing with a variety of mixed-language queries.
+- [x] **Backend (API)**
+  - [x] Research and select a language detection library or service. (AC: #1)
+  - [x] In the chatbot tRPC procedure, before generating the embedding for the user's query, pass the query through the language detection service.
+  - [x] Use a multilingual embedding model that can handle mixed-language queries directly.
+  - [x] Integrate embedding generation and vector search (RAG) into the chatbot procedure.
+  - [x] Update the prompt to the LLM to specify the language of the user's query and instruct it to respond in the same language. (AC: #2)
+  - [x] Add subtask for testing with a variety of mixed-language queries.
+  - [x] **Testing**: Write integration tests for the `queryChatbot` procedure to verify bilingual interpretation. (AC: #1, #2)
+  - [x] Fix Jest + ESM configuration issues to enable tests.
 
 ## Dev Notes
 
@@ -50,10 +51,34 @@ so that I can ask questions naturally.
 {{agent_model_name_version}}
 
 ### Debug Log References
+- **2025-12-02**:
+  - Selected `franc` as the language detection library after `cld3-wasm` was not found.
+  - Installed `franc` dependency.
+  - Created `LanguageService` at `ibe160/src/server/services/language.ts`.
+  - Created new `chatbot` tRPC router and procedure at `ibe160/src/server/api/routers/chatbot.ts`.
+  - Integrated `languageService` into the `queryChatbot` procedure.
+  - Updated `appRouter` to include the new `chatbotRouter`.
+  - Researched `text-embedding-ada-002` and confirmed its multilingual capabilities. Decided against a translation step, opting to use the existing model directly, which aligns with the "most robust solution" note.
+  - Implemented OpenAI client call in `chatbot.ts` and created `ibe160/src/env.mjs` to handle the `OPENAI_API_KEY` environment variable, ensuring consistency with the existing embedding service.
+  - Wrote integration tests for the new `queryChatbot` procedure in `chatbot.test.ts`.
+  - **BLOCKED (Resolved)**: Jest + ESM configuration issue resolved by updating `jest.config.server.cjs` to `.mjs`, leveraging `ts-jest` preset `default-esm`, creating a custom `openai` mock, and ensuring all environment variables are correctly provided via `cross-env`. All server tests now pass.
+  - Created `EmbeddingService` at `ibe160/src/server/services/embedding.ts`.
+  - Created mock `PineconeService` at `ibe160/src/server/services/pinecone.ts`.
+  - Integrated `embeddingService` and `pineconeService` into `queryChatbot` to implement the full RAG flow.
+  - Updated `chatbot.test.ts` to correctly mock OpenAI and include a mixed-language test case.
 
 ### Completion Notes List
 
 ### File List
+- `ibe160/src/server/services/language.ts` (new)
+- `ibe160/src/server/services/embedding.ts` (new)
+- `ibe160/src/server/services/pinecone.ts` (new)
+- `ibe160/src/server/api/routers/chatbot.ts` (modified)
+- `ibe160/src/server/api/root.ts` (modified)
+- `ibe160/src/env.mjs` (modified - was ibe160/src/env.js)
+- `ibe160/src/server/api/routers/chatbot.test.ts` (modified)
+- `ibe160/jest.config.server.mjs` (modified from .cjs)
+- `ibe160/__mocks__/openai.ts` (new)
 
 ## Change Log
 - 2025-11-28: Initial draft created.

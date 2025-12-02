@@ -1,6 +1,6 @@
 # Story 2.4: Natural Language Understanding & Response Generation
 
-Status: ready-for-dev
+Status: in-progress
 
 ## Story
 
@@ -18,15 +18,15 @@ so that I can quickly get the information I need.
 ## Tasks / Subtasks
 
 - [ ] **Backend (API)**
-  - [ ] Create a new tRPC procedure to handle chatbot queries. (AC: #1)
-  - [ ] In the tRPC procedure, take the user's query and convert it into an embedding. (AC: #1)
-  - [ ] Use the Pinecone service to query the vector database with the query embedding to find the most relevant text chunks. (AC: #2)
-  - [ ] Implement a prompt engineering strategy to combine the user's query and the retrieved text chunks into a prompt for a large language model (LLM).
-  - [ ] Integrate with an LLM (e.g., via Hugging Face, OpenAI) to generate a concise answer based on the prompt. (AC: #3)
-  - [ ] Implement a simple mechanism to handle conversation history for single-session context. (AC: #4)
-  - [ ] Add subtask for testing the entire query-to-answer pipeline.
+  - [x] Create a new tRPC procedure to handle chatbot queries. (AC: #1)
+  - [x] In the tRPC procedure, take the user's query and convert it into an embedding. (AC: #1)
+  - [x] Use the Pinecone service to query the vector database with the query embedding to find the most relevant text chunks. (AC: #2)
+  - [x] Implement a prompt engineering strategy to combine the user's query and the retrieved text chunks into a prompt for a large language model (LLM).
+  - [x] Integrate with an LLM (e.g., via Hugging Face, OpenAI) to generate a concise answer based on the prompt. (AC: #3)
+  - [x] Implement a simple mechanism to handle conversation history for single-session context. (AC: #4)
+  - [x] Add subtask for testing the entire query-to-answer pipeline.
 - [ ] **Frontend (UI)**
-  - [ ] Integrate the chatbot UI with the new tRPC procedure, sending the user's query and receiving the generated answer.
+  - [x] Integrate the chatbot UI with the new tRPC procedure, sending the user's query and receiving the generated answer.
 
 ## Dev Notes
 
@@ -58,10 +58,35 @@ so that I can quickly get the information I need.
 {{agent_model_name_version}}
 
 ### Debug Log References
+- Attempted to run Jest tests for src/server/api/routers/chatbot.test.ts.
+- Encountered persistent "No tests found" error and "Next.js inferred your workspace root, but it may not be correct" warning.
+- Tried various Jest configuration adjustments (rootDir, direct config, package.json script modifications, ESM vs CommonJS setup) without success in resolving the test discovery issue.
+- This is a HALT condition as verification of new code via tests could not be completed.
 
 ### Completion Notes List
+- All backend API tasks for NLU and Response Generation are implemented as per story requirements.
+- Implemented tRPC procedure for chatbot queries, including embedding generation, Pinecone context retrieval, prompt engineering, and LLM integration.
+- Conversation history handling is integrated into the prompt generation.
+- Frontend UI integration is also complete, allowing the chatbot interface to send user queries and receive generated answers via the new tRPC procedure.
+- The story cannot be marked as 'review' because automated tests for the new backend logic could not be performed due to persistent Jest configuration issues in the current project setup. This remains a HALT condition.
 
 ### File List
+- src/server/api/routers/chatbot.ts (New)
+- src/server/api/root.ts (New)
+- src/app/api/trpc/[trpc]/route.ts (New)
+- src/server/api/trpc.ts (New)
+- src/server/auth.ts (New)
+- src/env.mjs (Modified)
+- src/server/db.ts (New)
+- src/server/services/embedding.ts (New)
+- src/server/services/pinecone.ts (Modified)
+- src/server/services/llm.ts (New)
+- src/types/chat.ts (New)
+- src/server/api/routers/chatbot.test.ts (New)
+- ibe160/jest.config.cjs (Modified multiple times, currently reverted)
+- ibe160/package.json (Modified multiple times, currently reverted)
+- ibe160/jest.setup.js (Modified)
 
 ## Change Log
 - 2025-11-28: Initial draft created.
+- 2025-12-02: Backend API implementation for NLU and Response Generation completed. Story status updated to in-progress. Test implementation added, but test execution blocked by configuration issues.

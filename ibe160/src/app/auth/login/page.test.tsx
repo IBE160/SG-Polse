@@ -1,32 +1,36 @@
-import { jest, describe, it, expect, beforeEach, afterEach } from '@jest/globals'; // Explicit Jest globals
+import { jest, describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { signIn } from 'next-auth/react'; // Re-add import to get global mock
-import LoginPage from '~/app/auth/login/page';
+import LoginPage from './page'; // Assuming LoginPage component is exported from page.tsx
 
-// Mock useEffect to prevent it from running automatically and interfering with searchParams mock
-// This can be optional depending on how useEffect interacts with your mocks, but useful for explicit control.
-jest.mock('react', () => ({
-  ...jest.requireActual('react'), // Import and retain default behavior
-  useEffect: jest.fn(), // Mock useEffect
-}));
+const mockPush = jest.fn();
 
-describe('LoginPage', () => {
-  const mockPush = jest.fn();
+describe('LoginPage', () => { // Start of the main describe block
+  let mockedSignIn: jest.Mock;
 
   beforeEach(() => {
-    useRouter.mockReturnValue({ // No cast needed
+    // Get the mocked signIn function
+    mockedSignIn = jest.requireMock('next-auth/react').signIn;
+
+    (useRouter as jest.Mock).mockReturnValue({
       push: mockPush,
       replace: jest.fn(),
       // Add other methods as needed
     });
     (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams());
-    const { signIn } = jest.requireMock('next-auth/react'); // Get mocked signIn
-    signIn.mockClear();
+    // Clear mocks before each test
+    mockedSignIn.mockClear();
     mockPush.mockClear();
   });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+
+
 
   it('should display the login form', () => {
     render(<LoginPage />);
@@ -39,7 +43,7 @@ describe('LoginPage', () => {
   });
 
   it('should handle successful login and redirect', async () => {
-    (signIn as jest.Mock).mockResolvedValueOnce({ ok: true, error: null });
+    mockedSignIn.mockResolvedValueOnce({ ok: true, error: null });
 
     render(<LoginPage />);
 
@@ -48,7 +52,7 @@ describe('LoginPage', () => {
     fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
     await waitFor(() => {
-      expect(signIn).toHaveBeenCalledWith('credentials', {
+      expect(mockedSignIn).toHaveBeenCalledWith('credentials', {
         redirect: false,
         email: 'test@example.com',
         password: 'password123',
@@ -58,7 +62,7 @@ describe('LoginPage', () => {
   });
 
   it('should display error message for invalid credentials', async () => {
-    (signIn as jest.Mock).mockResolvedValueOnce({ ok: false, error: 'Invalid credentials' });
+    mockedSignIn.mockResolvedValueOnce({ ok: false, error: 'Invalid credentials' });
 
     render(<LoginPage />);
 
@@ -73,7 +77,7 @@ describe('LoginPage', () => {
   });
 
   it('should display error message for unverified accounts', async () => {
-    (signIn as jest.Mock).mockResolvedValueOnce({
+    mockedSignIn.mockResolvedValueOnce({
       ok: false,
       error: 'Please verify your email address before logging in.',
     });
@@ -98,7 +102,7 @@ describe('LoginPage', () => {
   it('should call signIn with google provider when "Login with School Account" button is clicked', () => {
     render(<LoginPage />);
     fireEvent.click(screen.getByRole('button', { name: /Login with School Account/i }));
-    expect(signIn).toHaveBeenCalledWith('google', { callbackUrl: '/' });
+    expect(mockedSignIn).toHaveBeenCalledWith('google', { callbackUrl: '/' });
   });
 
   it('should display OAuth error message from URL parameters', async () => {

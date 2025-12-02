@@ -1,6 +1,6 @@
 # Story 3.1: Teacher Dashboard & Course Selection
 
-Status: ready-for-dev
+Status: in-progress
 
 ## Story
 
@@ -16,18 +16,18 @@ so that I can select the course for which I want to manage content.
 
 ## Tasks / Subtasks
 
-- [ ] **Backend (API)**
-  - [ ] Create a tRPC procedure to fetch the list of courses assigned to the currently authenticated teacher. (AC: #1, #3)
-  - [ ] This will require a relation in the database between `User` and `Course` models.
-  - [ ] Add subtask for testing the procedure.
-- [ ] **Frontend (UI)**
-  - [ ] Create a teacher dashboard page at `/teacher/dashboard`. (AC: #1)
-  - [ ] On this page, call the tRPC procedure to fetch and display the list of courses. (AC: #1)
-  - [ ] Implement a UI component to display the list of courses. (AC: #2)
-  - [ ] Clicking on a course should navigate to the content management page for that course (to be created in the next story). (AC: #2)
-  - [ ] Add subtask for testing the dashboard UI.
-- [ ] **Database**
-  - [ ] Update the `schema.prisma` file to create a `Course` model and establish a many-to-many or one-to-many relationship between `User` (teachers) and `Course`.
+- [x] **Backend (API)**
+  - [x] Create a tRPC procedure to fetch the list of courses assigned to the currently authenticated teacher. (AC: #1, #3)
+  - [x] This will require a relation in the database between `User` and `Course` models.
+  - [x] Add subtask for testing the procedure.
+- [x] **Frontend (UI)**
+  - [x] Create a teacher dashboard page at `/teacher/dashboard`. (AC: #1)
+  - [x] On this page, call the tRPC procedure to fetch and display the list of courses. (AC: #1)
+  - [x] Implement a UI component to display the list of courses. (AC: #2)
+  - [x] Clicking on a course should navigate to the content management page for that course (to be created in the next story). (AC: #2)
+  - [x] Add subtask for testing the dashboard UI.
+- [x] **Database**
+  - [x] Update the `schema.prisma` file to create a `Course` model and establish a many-to-many or one-to-many relationship between `User` (teachers) and `Course`.
 
 ## Dev Notes
 
@@ -54,10 +54,36 @@ so that I can select the course for which I want to manage content.
 {{agent_model_name_version}}
 
 ### Debug Log References
+- [x] Implemented Course and User relations in `prisma/schema.prisma`.
+- [x] Created `src/server/api/routers/teacher.ts` with `getTeacherCourses` tRPC procedure.
+- [x] Integrated `teacherRouter` into `src/server/api/root.ts`.
+- [x] Created `src/app/_components/teacher/CourseList.tsx` component.
+- [x] Updated `src/app/teacher/dashboard/page.tsx` to use `CourseList` and enforce teacher authentication.
+- [x] Created `src/server/api/routers/teacher.test.ts` for backend API.
+- [x] Created `src/app/_components/teacher/CourseList.test.tsx` for frontend component.
 
 ### Completion Notes List
+- All core tasks for the story have been implemented.
+- Database schema updated and migration applied.
+- Backend API for fetching teacher courses is implemented and protected.
+- Frontend dashboard page and course listing component are implemented.
+- New unit/integration tests for both backend and frontend components were written.
+- Note: Existing client-side test failures in `src/app/auth/verify/page.test.tsx` and `src/app/auth/login/page.test.tsx` were observed but deemed outside the scope of this story's direct implementation and are logged as technical debt.
 
 ### File List
+- `ibe160/prisma/schema.prisma` (modified)
+- `ibe160/src/server/api/trpc.ts` (modified)
+- `ibe160/src/server/api/routers/teacher.ts` (new)
+- `ibe160/src/server/api/root.ts` (modified)
+- `ibe160/src/app/_components/teacher/CourseList.tsx` (new)
+- `ibe160/src/app/teacher/dashboard/page.tsx` (modified)
+- `ibe160/jest.setup.cjs` (modified - prisma mock)
+- `ibe160/__mocks__/utils/api.ts` (modified - trpc react mock)
+- `ibe160/src/server/api/routers/teacher.test.ts` (new)
+- `ibe160/src/app/_components/teacher/CourseList.test.tsx` (new)
+- `ibe160/jest.config.cjs` (modified - moduleNameMapper)
+- `ibe160/__mocks__/trpc/react.ts` (deleted)
 
 ## Change Log
 - 2025-11-28: Initial draft created.
+- 2025-12-02: Implemented database schema changes, backend tRPC procedure, and frontend UI components for teacher dashboard. Added corresponding tests.

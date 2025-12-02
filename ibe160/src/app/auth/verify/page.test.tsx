@@ -3,15 +3,41 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useRouter, useSearchParams } from 'next/navigation';
-// Removed import { api } from '~/utils/api';
+import { api } from '~/utils/api'; // Import the mocked API
 import VerifyEmailPage from '~/app/auth/verify/page';
 import { TRPCClientError } from '@trpc/client';
 
-// No local tRPC client mock needed, relying on global mock in jest.setup.js
+// Mock next/navigation (these are globally mocked in jest.setup.cjs now)
+// jest.mock('next/navigation', () => ({
+//   useRouter: jest.fn(),
+//   useSearchParams: jest.fn(),
+// }));
+
+// Mock ~/utils/api (these are globally mocked in jest.setup.cjs now)
+// jest.mock('~/utils/api', () => ({
+//   api: {
+//     auth: {
+//       verifyEmail: {
+//         useMutation: jest.fn(),
+//       },
+//     },
+//   },
+// }));
+
+const mockPush = jest.fn();
+const mockMutate = jest.fn();
+
+// Declare mock functions for next/navigation (globally mocked)
+const mockUseRouter = jest.mocked(useRouter);
+const mockUseSearchParams = jest.mocked(useSearchParams);
+
+const mockedApiUseMutation = jest.mocked(api.auth.verifyEmail.useMutation);// const mockedApiUseMutation = jest.mocked(api.auth.verifyEmail.useMutation);
+
+
+
 
 describe('VerifyEmailPage', () => {
-  const mockPush = jest.fn();
-  const mockMutate = jest.fn();
+  jest.useFakeTimers(); // Control setTimeout for all tests in this suite
 
   beforeEach(() => {
     mockUseRouter.mockReturnValue({
@@ -20,19 +46,24 @@ describe('VerifyEmailPage', () => {
     });
     mockUseSearchParams.mockReturnValue(new URLSearchParams());
 
-    const { api } = jest.requireMock('~/utils/api'); // Get mocked api
-    (api.auth.verifyEmail.useMutation as jest.Mock).mockReturnValue({
+    // Configure the mock for useMutation
+    mockedApiUseMutation.mockReturnValue({
       mutate: mockMutate,
       isPending: false,
       isError: false,
       error: null,
+      onSuccess: jest.fn(), // Add a default empty onSuccess
+      onError: jest.fn(), // Add a default empty onError
     });
-    jest.useFakeTimers(); // Control setTimeout
+
+    mockMutate.mockClear(); // Clear specific mutate mock
+    mockPush.mockClear(); // Clear specific push mock
   });
 
   afterEach(() => {
     jest.runOnlyPendingTimers(); // Clear any pending timers
     jest.useRealTimers();
+    jest.clearAllMocks();
   });
 
   it('should display loading message initially', () => {
@@ -41,7 +72,7 @@ describe('VerifyEmailPage', () => {
   });
 
   it('should call verifyEmailMutation with token if found in URL', () => {
-    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('?token=test-token'));
+    mockUseSearchParams.mockReturnValue(new URLSearchParams('?token=test-token'));
     render(<VerifyEmailPage />);
     expect(mockMutate).toHaveBeenCalledWith({ token: 'test-token' });
   });
@@ -53,8 +84,8 @@ describe('VerifyEmailPage', () => {
   });
 
   it('should display success message and redirect on successful verification', async () => {
-    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('?token=valid-token'));
-    (api.auth.verifyEmail.useMutation as jest.Mock).mockReturnValue({
+    mockUseSearchParams.mockReturnValue(new URLSearchParams('?token=valid-token'));
+    mockedApiUseMutation.mockReturnValue({
       mutate: mockMutate,
       isPending: false,
       isError: false,
@@ -65,7 +96,7 @@ describe('VerifyEmailPage', () => {
     render(<VerifyEmailPage />);
 
     // Simulate success
-    (api.auth.verifyEmail.useMutation as jest.Mock).mock.calls[0][0].onSuccess();
+    mockedApiUseMutation.mock.calls[0][0].onSuccess();
 
     expect(screen.getByText('Email verified successfully! Redirecting to login...')).toBeInTheDocument();
 
@@ -76,8 +107,8 @@ describe('VerifyEmailPage', () => {
   });
 
   it('should display error message on failed verification (TRPCClientError)', async () => {
-    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('?token=invalid-token'));
-    (api.auth.verifyEmail.useMutation as jest.Mock).mockReturnValue({
+    mockUseSearchParams.mockReturnValue(new URLSearchParams('?token=invalid-token'));
+    mockedApiUseMutation.mockReturnValue({
       mutate: mockMutate,
       isPending: false,
       isError: true,
@@ -87,15 +118,15 @@ describe('VerifyEmailPage', () => {
     render(<VerifyEmailPage />);
 
     // Simulate error
-    (api.auth.verifyEmail.useMutation as jest.Mock).mock.calls[0][0].onError(new TRPCClientError('Verification failed from server.'));
+    mockedApiUseMutation.mock.calls[0][0].onError(new TRPCClientError('Verification failed from server.'));
 
     expect(screen.getByText('Verification failed: Verification failed from server.')).toBeInTheDocument();
     expect(mockPush).not.toHaveBeenCalled();
   });
 
   it('should display generic error message on failed verification (non-TRPCClientError)', async () => {
-    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('?token=invalid-token'));
-    (api.auth.verifyEmail.useMutation as jest.Mock).mockReturnValue({
+    mockUseSearchParams.mockReturnValue(new URLSearchParams('?token=invalid-token'));
+    mockedApiUseMutation.mockReturnValue({
       mutate: mockMutate,
       isPending: false,
       isError: true,
@@ -105,7 +136,7 @@ describe('VerifyEmailPage', () => {
     render(<VerifyEmailPage />);
 
     // Simulate error
-    (api.auth.verifyEmail.useMutation as jest.Mock).mock.calls[0][0].onError(new Error('Network error.'));
+    mockedApiUseMutation.mock.calls[0][0].onError(new Error('Network error.'));
 
 
     expect(screen.getByText('Verification failed. Please try again.')).toBeInTheDocument();

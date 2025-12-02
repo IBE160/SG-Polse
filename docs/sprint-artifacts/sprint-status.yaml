@@ -21,12 +21,12 @@ development_status:
   1-5-role-based-access-control-student-teacher: review
   2-1-canvas-lms-integration-for-course-data: in-progress
   2-2-data-ingestion-and-indexing-from-canvas: in-progress
-  2-3-chatbot-user-interface-student-view: ready-for-dev
-  2-4-natural-language-understanding-response-generation: ready-for-dev
-  2-5-answer-sourcing-and-citation: ready-for-dev
-  2-6-bilingual-interpretation-english-terms: ready-for-dev
-  2-7-guidance-for-teacher-contact: ready-for-dev
-  3-1-teacher-dashboard-course-selection: ready-for-dev
-  3-3-automated-document-processing-indexing: ready-for-dev
-  3-3-automated-document-processing-indexing: drafted
+  2-3-chatbot-user-interface-student-view: review
+  2-4-natural-language-understanding-response-generation: in-progress
+  2-5-answer-sourcing-and-citation: in-progress
+  2-6-bilingual-interpretation-english-terms: in-progress
+  2-7-guidance-for-teacher-contact: in-progress
+  3-1-teacher-dashboard-course-selection: review
+  3-2-document-upload-interface-for-teachers: review
+  3-3-automated-document-processing-indexing: review
   3-4-document-management-versioning-basic: ready-for-dev
