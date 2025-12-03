@@ -71,5 +71,17 @@ export class PineconeService {
       throw new Error("Failed to query vectors from Pinecone.");
     }
   }
+  public async deleteMany(ids: string[], namespace?: string): Promise<void> {
+    if (!this.index) {
+      throw new Error("Pinecone index not initialized. Call initializeIndex() first.");
+    }
+    try {
+      await this.index.deleteMany(ids, { namespace });
+      console.log(`Successfully deleted ${ids.length} vectors from Pinecone.`);
+    } catch (error) {
+      console.error("Error deleting vectors from Pinecone:", error);
+      throw new Error("Failed to delete vectors from Pinecone.");
+    }
+  }
 }
 

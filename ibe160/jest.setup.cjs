@@ -64,23 +64,29 @@ jest.mock('next-auth/react', () => {
 });
 
 // Global mock for ~/utils/api (tRPC client)
-jest.mock('~/utils/api', () => {
-  return {
-    api: {
-      auth: {
-        verifyEmail: {
-          useMutation: jest.fn(() => ({
-            mutate: jest.fn(),
-            isLoading: false,
-            isError: false,
-            error: null,
-          })),
-        },
+jest.mock('~/utils/api', () => ({
+  api: {
+    auth: {
+      verifyEmail: {
+        useMutation: jest.fn(() => ({
+          mutate: jest.fn(),
+          isLoading: false,
+          isError: false,
+          error: null,
+        })),
       },
-      getSession: jest.fn(),
     },
-  };
-});
+    teacher: {
+      listDocuments: {
+        useQuery: jest.fn(),
+      },
+      deleteDocument: {
+        useMutation: jest.fn(),
+      },
+    },
+    getSession: jest.fn(),
+  },
+}));
 
 
 

@@ -1,24 +1,15 @@
 // ibe160/__mocks__/utils/api.ts
-import { jest } from '@jest/globals';
+
+// This is a mock for the tRPC API client to be used in Jest tests.
+// It provides mock implementations for the tRPC procedures used in UI components.
 
 export const api = {
-  auth: {
-    verifyEmail: {
-      useMutation: jest.fn(), // Changed this line
-    },
-    getSession: jest.fn(),
-  },
   teacher: {
-    getTeacherCourses: {
-      useQuery: jest.fn(), // Changed this line
+    listDocuments: {
+      useQuery: jest.fn(),
+    },
+    deleteDocument: {
+      useMutation: jest.fn(),
     },
   },
 };
-
-// Mock `TRPCClientError` if it's imported
-export class TRPCClientError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'TRPCClientError';
-  }
-}

@@ -54,5 +54,47 @@ export class SupabaseService {
     return null;
   }
 
+  listObjects(
+    bucket: string,
+    path?: string,
+  ): Promise<Array<{ name: string; url: string; size: number }>> {
+    const { data, error } = await this.supabase.storage.from(bucket).list(path, {
+      // You can add options here like sortBy, limit, offset, search
+    });
+
+    if (error) {
+      console.error("Error listing objects:", error);
+      throw new Error(`Failed to list objects: ${error.message}`);
+    }
+
+    if (!data) {
+      return [];
+    }
+
+    return data.map((file) => {
+      const publicUrl = this.supabase.storage.from(bucket).getPublicUrl(file.name).data.publicUrl;
+      return {
+        name: file.name,
+        url: publicUrl,
+        size: file.metadata?.size || 0, // Supabase list might not always return size directly
+      };
+    });
+  }
+
+  /**
+   * Removes files from a Supabase Storage bucket.
+   * @param bucket The name of the storage bucket.
+   * @param paths An array of full paths (including filenames) of the files to remove.
+   * @returns A promise that resolves when the files are removed.
+   */
+  async removeObjects(bucket: string, paths: string[]): Promise<void> {
+    const { error } = await this.supabase.storage.from(bucket).remove(paths);
+
+    if (error) {
+      console.error("Error removing objects:", error);
+      throw new Error(`Failed to remove objects: ${error.message}`);
+    }
+  }
+
   // Add other Supabase related methods here as needed, e.g., for downloading, deleting, listing files.
 }

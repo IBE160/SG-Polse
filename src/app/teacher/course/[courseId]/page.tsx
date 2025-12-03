@@ -1,6 +1,8 @@
 // src/app/teacher/course/[courseId]/page.tsx
 import { api } from '~/utils/api';
-import { FileUpload } from '~/app/_components/teacher/FileUpload'; // Import FileUpload component
+import { FileUpload } from '~/app/_components/teacher/FileUpload';
+import { DocumentList } from '~/app/_components/teacher/DocumentList'; // Import DocumentList component
+import { notFound } from 'next/navigation'; // Import notFound for better error handling
 
 interface CourseContentManagementPageProps {
   params: {
@@ -11,8 +13,6 @@ interface CourseContentManagementPageProps {
 export default function CourseContentManagementPage({ params }: CourseContentManagementPageProps) {
   const { courseId } = params;
 
-  // Placeholder for fetching course details and files
-  // This will be implemented in a later step
   const { data: courses, isLoading, error } = api.teacher.getTeacherCourses.useQuery();
 
   if (isLoading) {
@@ -36,6 +36,7 @@ export default function CourseContentManagementPage({ params }: CourseContentMan
       <p className="mb-6">Manage documents for this course.</p>
 
       <FileUpload courseId={courseId} />
+      <DocumentList courseId={courseId} /> {/* Render DocumentList component */}
     </div>
   );
 }

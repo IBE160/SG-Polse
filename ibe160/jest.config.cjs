@@ -90,7 +90,7 @@ async function setupJestProjects() {
 
   const clientConfig = await createClientJestConfig(clientCustomConfig)();
   return {
-    projects: [clientConfig, serverCustomConfig], // Use serverCustomConfig directly
+    projects: [clientConfig, serverCustomConfig],
   };
 }
 
