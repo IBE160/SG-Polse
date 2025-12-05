@@ -1,13 +1,13 @@
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
-import { Geist } from "next/font/google";
+import { Inter } from "next/font/google";
 
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 
-const geist = Geist({
+const inter = Inter({
   subsets: ["latin"],
 });
 
@@ -17,7 +17,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <div className={geist.className}>
+      <div className={inter.className}>
         <Component {...pageProps} />
       </div>
     </SessionProvider>

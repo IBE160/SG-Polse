@@ -7,8 +7,12 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
+    DATABASE_URL: z.string().url(),
     OPENAI_API_KEY: z.string().min(1),
-    NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+    NODE_ENV: z
+      .enum(["development", "test", "production"])
+      .default("development"),
+    AUTH_SECRET: z.string().min(1),
   },
 
   /**
@@ -25,8 +29,10 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct them manually.
    */
   runtimeEnv: {
+    DATABASE_URL: process.env.DATABASE_URL,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     NODE_ENV: process.env.NODE_ENV,
+    AUTH_SECRET: process.env.AUTH_SECRET,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

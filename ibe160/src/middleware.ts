@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "~/server/auth";
+import { auth } from "~/server/auth/edge";
 import { type NextRequest } from "next/server";
 
 export default auth((req) => {
@@ -54,5 +54,5 @@ export default auth((req) => {
 // Optionally, don't invoke Middleware on some paths
 // Read more: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!api|trpc|.+\\.[\\w]+$|_next).*)", "/"],
 };
