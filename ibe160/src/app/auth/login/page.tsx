@@ -14,6 +14,7 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
+    if (!searchParams) return;
     const oauthError = searchParams.get('error');
     if (oauthError) {
       // Map NextAuth.js error codes to user-friendly messages

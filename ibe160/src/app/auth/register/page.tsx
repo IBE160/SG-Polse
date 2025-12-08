@@ -2,22 +2,23 @@
 
 import { useState } from "react";
 import { api } from "~/utils/api";
+import Link from "next/link";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const registerMutation = api.auth.register.useMutation({
-    onSuccess: () => {
-      setEmail("");
-      setPassword("");
-      setError("");
-    },
-    onError: (error) => {
-      setError(error.message);
-    },
-  });
+  // const registerMutation = api.auth.register.useMutation({
+  //   onSuccess: () => {
+  //     setEmail("");
+  //     setPassword("");
+  //     setError("");
+  //   },
+  //   onError: (error) => {
+  //     setError(error.message);
+  //   },
+  // });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,8 +30,9 @@ export default function RegisterPage() {
       setError("Password must be at least 8 characters long.");
       return;
     }
-    setError("");
-    registerMutation.mutate({ email, password });
+    setError("Registration is currently disabled."); // Placeholder error message
+    // setError("");
+    // registerMutation.mutate({ email, password });
   };
 
   return (
@@ -61,15 +63,18 @@ export default function RegisterPage() {
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
           </div>
-          <button type="submit" disabled={registerMutation.isPending} className="w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50">
-            {registerMutation.isPending ? "Registering..." : "Register"}
+          <button type="submit" disabled={false} className="w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50">
+            {"Register"}
           </button>
         </form>
-        {registerMutation.isSuccess && (
+        {/* {registerMutation.isSuccess && (
           <p className="mt-4 text-center text-green-600">{registerMutation.data.message}</p>
-        )}
-        {(error || registerMutation.isError) && (
+        )} */}
+        {/* {(error || registerMutation.isError) && (
           <p className="mt-4 text-center text-red-600">{error || registerMutation.error.message}</p>
+        )} */}
+        {error && (
+          <p className="mt-4 text-center text-red-600">{error}</p>
         )}
         <p className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{' '}

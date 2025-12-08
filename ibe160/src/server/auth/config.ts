@@ -2,7 +2,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import GoogleProvider from "next-auth/providers/google";
-import { type Role } from "@prisma/client";
+import { $Enums } from "@prisma/client";
 
 import { db } from "~/server/db";
 
@@ -16,12 +16,12 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      role: Role;
+      role: $Enums.Role;
     } & DefaultSession["user"];
   }
 
   interface User {
-    role: Role;
+    role: $Enums.Role;
   }
 }
 
@@ -53,15 +53,15 @@ export const authConfig = {
   adapter: PrismaAdapter(db),
   callbacks: {
     signIn: async ({ user, account, profile }) => {
-      if (user.email) {
+      //if (user.email) {
         // Placeholder for school email domain check
         // In a real application, this would be configured with the actual school domain(s)
-        if (!user.email.endsWith("@school.com")) {
+        //if (!user.email.endsWith("@school.com")) {
           // Optionally, redirect to an error page or show a message
           // For now, prevent sign-in for unauthorized domains
-          return false;
-        }
-      }
+        //  return false;
+      //  }
+      //}
       return true;
     },
     session: ({ session, user }) => ({

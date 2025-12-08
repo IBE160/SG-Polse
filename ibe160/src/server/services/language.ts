@@ -1,4 +1,4 @@
-import { franc } from 'franc';
+import {franc} from 'franc';
 
 /**
  * A service class to handle language detection and translation.

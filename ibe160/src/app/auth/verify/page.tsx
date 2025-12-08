@@ -2,42 +2,44 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { api } from '~/utils/api'; // Corrected tRPC client import
-import { TRPCClientError } from '@trpc/client';
+// import { api } from '~/utils/api'; // Corrected tRPC client import
+// import { TRPCClientError } from '@trpc/client';
 
 export default function VerifyEmailPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [message, setMessage] = useState('Verifying your email...');
-  const [isError, setIsError] = useState(false);
+  const [message, setMessage] = useState('Email verification functionality is temporarily unavailable.');
+  const [isError, setIsError] = useState(true); // Set to true as functionality is disabled
 
-  const verifyEmailMutation = api.auth.verifyEmail.useMutation({
-    onSuccess: () => {
-      setMessage('Email verified successfully! Redirecting to login...');
-      setTimeout(() => {
-        router.push('/auth/login'); // AC: #3 User is redirected to a login page or a success message after verification.
-      }, 3000);
-    },
-    onError: (error) => {
-      setIsError(true);
-      if (error instanceof TRPCClientError) {
-        setMessage(`Verification failed: ${error.message}`);
-      } else {
-        setMessage('Verification failed. Please try again.');
-      }
-    },
-  });
+  // const verifyEmailMutation = api.auth.verifyEmail.useMutation({
+  //   onSuccess: () => {
+  //     setMessage('Email verified successfully! Redirecting to login...');
+  //     setTimeout(() => {
+  //       router.push('/auth/login'); // AC: #3 User is redirected to a login page or a success message after verification.
+  //     }, 3000);
+  //   },
+  //   onError: (error) => {
+  //     setIsError(true);
+  //     if (error instanceof TRPCClientError) {
+  //       setMessage(`Verification failed: ${error.message}`);
+  //     } else {
+  //       setMessage('Verification failed. Please try again.');
+  //     }
+  //   },
+  // });
 
   useEffect(() => {
-    const token = searchParams.get('token');
+    // const token = searchParams.get('token');
 
-    if (token) {
-      verifyEmailMutation.mutate({ token });
-    } else {
-      setIsError(true);
-      setMessage('No verification token found.');
-    }
-  }, [searchParams, verifyEmailMutation]);
+    // if (token) {
+    //   verifyEmailMutation.mutate({ token });
+    // } else {
+    //   setIsError(true);
+    //   setMessage('No verification token found.');
+    // }
+    setIsError(true);
+    setMessage('Email verification functionality is temporarily unavailable.');
+  }, [searchParams]); // Removed verifyEmailMutation from dependency array as it's commented out.
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-4">
@@ -46,7 +48,7 @@ export default function VerifyEmailPage() {
         <p className={`text-center text-lg ${isError ? 'text-red-600' : 'text-gray-700'}`}>
           {message}
         </p>
-        {!isError && verifyEmailMutation.isLoading && (
+        {/* {!isError && verifyEmailMutation.isLoading && (
           <div className="mt-4 text-center">
             <svg
               className="mx-auto h-8 w-8 animate-spin text-blue-500"
@@ -69,7 +71,7 @@ export default function VerifyEmailPage() {
               ></path>
             </svg>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
