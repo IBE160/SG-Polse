@@ -52,6 +52,7 @@ export const createInnerTRPCContext = (opts: CreateContextOptions) => {
  * @see https://trpc.io/docs/context
  */
 export const createTRPCContext = async (opts: CreateNextContextOptions) => {
+  console.log('--- Creating tRPC Context ---'); // <--- ADD THIS
   const { req, res } = opts;
 
   // Get the session from the server using the getServerSession wrapper function
@@ -83,6 +84,8 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
     };
   },
 });
+console.log('tRPC base initialized (t object created).'); // <--- ADD THIS
+
 
 /**
  * Create a server-side caller.

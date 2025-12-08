@@ -26,19 +26,24 @@ export const chatbotRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { message } = input;
+      console.log('Entered sendMessage mutation with input:', input); // <--- ADD THIS
 
-      // 1. Detect the language of the user's query
-      const detectedLanguage = await languageService.detectLanguage(message);
+      try { // <--- ADD THIS
+        const { message } = input;
 
-      // 2. Generate an embedding for the user's query using a multilingual model
-      const embedding = await embeddingService.generateEmbedding(message);
+        // 1. Detect the language of the user's query
+        const detectedLanguage = await languageService.detectLanguage(message);
+        console.log('Detected Language:', detectedLanguage); // <--- THIS WILL NOW BE INSIDE TRY
 
-      // 3. Find relevant context from the vector database
-      const context = await pineconeService.findMostRelevantContext(embedding);
+        // 2. Generate an embedding for the user's query using a multilingual model
+        const embedding = await embeddingService.generateEmbedding(message);
 
-      // 4. Construct the prompt for the LLM, including the retrieved context
-      const systemPrompt = `You are a helpful assistant for the IBE160 course.
+        // 3. Find relevant context from the vector database
+        const context = await pineconeService.findMostRelevantContext(embedding);
+        console.log('Pinecone Context:', context); // <--- THIS WILL NOW BE INSIDE TRY
+
+        // 4. Construct the prompt for the LLM, including the retrieved context
+        const systemPrompt = `You are a helpful assistant for the IBE160 course.
 Answer the user's question based on the following context.
 Please respond to the user in the same language they used, which has been detected as: ${detectedLanguage}.
 

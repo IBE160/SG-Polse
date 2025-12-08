@@ -41,10 +41,13 @@ const ChatPage = ({ params }: { params: { courseId: string } }) => {
   const handleSendMessage = () => {
     if (inputValue.trim() === '' || sendMessageMutation.isPending) return;
 
-    sendMessageMutation.mutate({
+    const payload = {
       message: inputValue,
       conversationHistory: messages.map(msg => ({ sender: msg.sender, text: msg.text })),
-    });
+    };
+    console.log('Frontend sending payload:', payload); // <--- ADD THIS
+
+    sendMessageMutation.mutate(payload);
   };
 
   useEffect(() => {

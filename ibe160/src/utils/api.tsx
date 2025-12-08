@@ -24,6 +24,12 @@ export function TRPCReactProvider(props: { children: React.ReactNode, headers: H
     api.createClient({
       transformer: superjson,
       links: [
+        () =>
+          (runtime) =>
+          ({ op, next }) => {
+            console.log('--- tRPC Client Link Input ---', op.input); // <--- ADD THIS
+            return next(op);
+          },
         loggerLink({
           enabled: (opts) =>
             process.env.NODE_ENV === "development" ||
