@@ -15,7 +15,7 @@ const openai = new OpenAI({
 });
 
 export const chatbotRouter = createTRPCRouter({
-  queryChatbot: publicProcedure
+  sendMessage: publicProcedure
     .input(
       z.object({
         message: z.string(),
@@ -25,7 +25,7 @@ export const chatbotRouter = createTRPCRouter({
         })).optional(),
       })
     )
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { message } = input;
 
       // 1. Detect the language of the user's query

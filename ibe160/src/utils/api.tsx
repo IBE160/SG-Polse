@@ -1,12 +1,11 @@
-/**
- * This is the client-side entrypoint for your tRPC API. It is used to create the `api` object which
- * contains the Next.js App-wrapper, as well as your type-safe React Query hooks.
- *
- * We also create a few inference helpers for input and output types.
- */
+"use client";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink, loggerLink } from "@trpc/client";
-import { createTRPCNext } from "@trpc/next";
+import { createTRPCReact } from "@trpc/react-query";
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
+import { SessionProvider } from "next-auth/react";
+import { useState } from "react";
 import superjson from "superjson";
 
 import { type AppRouter } from "~/server/api/root";
@@ -17,15 +16,13 @@ const getBaseUrl = () => {
   return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
 };
 
-/** A set of type-safe react-query hooks for your tRPC API. */
-export const api = createTRPCNext<AppRouter>({
-  config() {
-    return {
-      /**
-       * Links used to determine request flow from client to server.
-       *
-       * @see https://trpc.io/docs/links
-       */
+export const api = createTRPCReact<AppRouter>();
+
+export function TRPCReactProvider(props: { children: React.ReactNode, headers: Headers }) {
+  const [queryClient] = useState(() => new QueryClient());
+  const [trpcClient] = useState(() =>
+    api.createClient({
+      transformer: superjson,
       links: [
         loggerLink({
           enabled: (opts) =>
@@ -33,25 +30,26 @@ export const api = createTRPCNext<AppRouter>({
             (opts.direction === "down" && opts.result instanceof Error),
         }),
         httpBatchLink({
-          /**
-           * Transformer used for data de-serialization from the server.
-           *
-           * @see https://trpc.io/docs/data-transformers
-           */
-          transformer: superjson,
           url: `${getBaseUrl()}/api/trpc`,
+          headers() {
+            const heads = new Map(props.headers);
+            heads.set("x-trpc-source", "react");
+            return Object.fromEntries(heads);
+          },
         }),
       ],
-    };
-  },
-  /**
-   * Whether tRPC should await queries when server rendering pages.
-   *
-   * @see https://trpc.io/docs/nextjs#ssr-boolean-default-false
-   */
-  ssr: false,
-  transformer: superjson,
-});
+    })
+  );
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <api.Provider client={trpcClient} queryClient={queryClient}>
+        <SessionProvider>{props.children}</SessionProvider>
+      </api.Provider>
+    </QueryClientProvider>
+  );
+}
+
 
 /**
  * Inference helper for inputs.
