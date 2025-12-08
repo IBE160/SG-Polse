@@ -1,7 +1,8 @@
-import { type DefaultSession, type NextAuthConfig } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import { type Role } from "@prisma/client";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { type DefaultSession, type NextAuthConfig } from "next-auth";
+import DiscordProvider from "next-auth/providers/discord";
+import GoogleProvider from "next-auth/providers/google";
+import { $Enums } from "@prisma/client";
 
 import { db } from "~/server/db";
 
@@ -15,12 +16,12 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      role: Role;
+      role: $Enums.Role;
     } & DefaultSession["user"];
   }
 
   interface User {
-    role: Role;
+    role: $Enums.Role;
   }
 }
 
@@ -31,6 +32,10 @@ declare module "next-auth" {
  */
 export const authConfig = {
   providers: [
+    DiscordProvider({
+      clientId: process.env.DISCORD_CLIENT_ID,
+      clientSecret: process.env.DISCORD_CLIENT_SECRET,
+    }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -45,33 +50,27 @@ export const authConfig = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
-  session: {
-    strategy: "jwt",
-  },
+  adapter: PrismaAdapter(db),
   callbacks: {
     signIn: async ({ user, account, profile }) => {
-      // if (user.email) {
-      //   // Placeholder for school email domain check
-      //   // In a real application, this would be configured with the actual school domain(s)
-      //   if (!user.email.endsWith("@school.com")) {
-      //     // Optionally, redirect to an error page or show a message
-      //     // For now, prevent sign-in for unauthorized domains
-      //     return false;
-      //   }
-      // }
+      //if (user.email) {
+        // Placeholder for school email domain check
+        // In a real application, this would be configured with the actual school domain(s)
+        //if (!user.email.endsWith("@school.com")) {
+          // Optionally, redirect to an error page or show a message
+          // For now, prevent sign-in for unauthorized domains
+        //  return false;
+      //  }
+      //}
       return true;
     },
-    jwt: ({ token, user }) => {
-      if (user) {
-        token.role = user.role;
-      }
-      return token;
-    },
-    session: ({ session, token }) => {
-      session.user.role = token.role as Role;
-      session.user.id = token.sub as string;
-      return session;
-    },
+    session: ({ session, user }) => ({
+      ...session,
+      user: {
+        ...session.user,
+        id: user.id,
+        role: user.role,
+      },
+    }),
   },
 } satisfies NextAuthConfig;
-

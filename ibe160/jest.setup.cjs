@@ -5,14 +5,17 @@ process.env.CANVAS_API_URL = 'https://canvas.example.com';
 process.env.CANVAS_API_TOKEN = 'test-token';
 process.env.OPENAI_API_KEY = 'test-openai-key'; // For chatbot tests
 
+// @ts-ignore
 require('@testing-library/jest-dom');
 
 // Global mock for @prisma/client to prevent actual PrismaClient instantiation
 jest.mock('@prisma/client', () => {
   return {
-    Role: {
-      STUDENT: 'STUDENT',
-      TEACHER: 'TEACHER',
+    Prisma: { // Added Prisma namespace
+      Role: {
+        STUDENT: 'STUDENT',
+        TEACHER: 'TEACHER',
+      },
     },
     PrismaClient: jest.fn(() => ({
       $connect: jest.fn(),

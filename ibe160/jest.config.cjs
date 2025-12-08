@@ -1,4 +1,4 @@
-const nextJest = require('next/jest');
+const nextJest = require('next/jest').default;
 
 // Custom transformation for ESM modules
 // NOTE: `ts-jest` needs to be installed for this transform to work.
@@ -22,15 +22,6 @@ const esmTransformIgnorePatterns = [
   '/node_modules/(?!superjson|@auth\/prisma-adapter|@prisma\/client|pdf-parse|mammoth)/',
 ];
 
-// Create a Jest config for client-side (app) tests
-const createClientJestConfig = nextJest({
-  dir: './', // Path to the Next.js app directory
-})
-
-// Create a Jest config for server-side tests (api, server)
-const createServerJestConfig = nextJest({
-  dir: './', // Path to the Next.js app directory
-})
 
 async function setupJestProjects() {
   // Set environment variables for testing purposes, especially for @t3-oss/env-nextjs validation
@@ -45,10 +36,7 @@ async function setupJestProjects() {
   process.env.PINECONE_INDEX_NAME = process.env.PINECONE_INDEX_NAME || "dummy_pinecone_index_name";
   process.env.OPENAI_API_KEY = process.env.OPENAI_API_KEY || "dummy_openai_api_key";
   process.env.GEMINI_API_KEY = process.env.GEMINI_API_KEY || "dummy_gemini_api_key";
-  process.env.PINECONE_API_KEY = process.env.PINECONE_API_KEY || "dummy_pinecone_api_key";
-  process.env.PINECONE_ENVIRONMENT = process.env.PINECONE_ENVIRONMENT || "dummy_pinecone_environment";
-  process.env.PINECONE_INDEX_NAME = process.env.PINECONE_INDEX_NAME || "dummy_pinecone_index_name";
-  process.env.NODE_ENV = process.env.NODE_ENV || "test";
+
 
   const commonConfig = {
     rootDir: '.', // Explicitly set rootDir to the current directory
@@ -71,8 +59,6 @@ async function setupJestProjects() {
     displayName: 'client',
     testEnvironment: 'jest-environment-jsdom',
     testMatch: ['<rootDir>/src/app/**/*.test.ts?(x)'],
-    transform: esmTransform, // Use custom transform
-    transformIgnorePatterns: esmTransformIgnorePatterns,
     moduleNameMapper: {
       ...commonConfig.moduleNameMapper, // Merge common moduleNameMapper
       '^~/utils/api$': '<rootDir>/__mocks__/utils/api.ts',
@@ -84,13 +70,20 @@ async function setupJestProjects() {
     displayName: 'server',
     testEnvironment: 'node',
     testMatch: ['<rootDir>/src/server/**/*.test.ts?(x)'],
-    transform: esmTransform, // Use custom transform
-    transformIgnorePatterns: esmTransformIgnorePatterns,
+
+
   };
 
-  const clientConfig = await createClientJestConfig(clientCustomConfig)();
+  // Get the Jest config factory function from next/jest
+  const createJestConfig = nextJest({
+    dir: './', // Path to the Next.js app directory
+  });
+
+  const clientConfig = await createJestConfig(clientCustomConfig)();
+  const serverConfig = await createJestConfig(serverCustomConfig)(); // Use createJestConfig for server too.
+
   return {
-    projects: [clientConfig, serverCustomConfig],
+    projects: [clientConfig, serverConfig],
   };
 }
 
