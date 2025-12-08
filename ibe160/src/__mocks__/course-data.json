@@ -1,0 +1,26 @@
+
+{
+  "courseName": "IBE160",
+  "assignments": [
+    {
+      "id": 1,
+      "title": "Assignment 1: Project Proposal",
+      "dueDate": "2025-12-15T23:59:59",
+      "description": "Submit a one-page project proposal outlining the problem you want to solve, your proposed solution, and the expected outcomes."
+    },
+    {
+      "id": 2,
+      "title": "Assignment 2: Literature Review",
+      "dueDate": "2026-01-10T23:59:59",
+      "description": "Conduct a literature review on existing solutions and technologies related to your project. Summarize your findings in a 3-page report."
+    },
+    {
+      "id": 3,
+      "title": "Assignment 3: Mid-term Presentation",
+      "dueDate": "2026-02-05T23:59:59",
+      "description": "Prepare and deliver a 10-minute presentation on your project's progress, including a demo of your prototype."
+    }
+  ],
+  "courseInfo": "This course provides an introduction to the principles of innovation and business engineering. Students will learn how to identify and solve real-world problems using a combination of design thinking, business strategy, and technology.",
+  "syllabus": "The full syllabus can be found on the course website: [link to syllabus]"
+}
