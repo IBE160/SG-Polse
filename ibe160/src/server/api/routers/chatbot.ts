@@ -33,7 +33,7 @@ export const chatbotRouter = createTRPCRouter({
           apiKey: env.OPENAI_API_KEY,
         });
 
-        const { message } = input;
+        const { message, conversationHistory } = input;
 
         // 1. Detect the language of the user's query
         const detectedLanguage = await languageService.detectLanguage(message);
@@ -57,11 +57,17 @@ ${context}
 ---
 `;
 
+        const conversationMessages = (conversationHistory ?? []).map(msg => ({
+          role: msg.sender === 'bot' ? 'assistant' : 'user',
+          content: msg.text,
+        }));
+
         // 5. Call the LLM
         const response = await openai.chat.completions.create({
           model: "gpt-3.5-turbo", // Or another suitable model
           messages: [
             { role: "system", content: systemPrompt },
+            ...conversationMessages,
             { role: "user", content: message },
           ],
         });

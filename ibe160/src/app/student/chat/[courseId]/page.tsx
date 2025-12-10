@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef, use } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams } from 'next/navigation';
 import { api } from '~/utils/api';
 
 interface Message {
@@ -8,8 +9,9 @@ interface Message {
   sender: 'user' | 'bot';
 }
 
-const ChatPage = ({ params }: { params: { courseId: string } }) => {
-  const { courseId } = use(params);
+const ChatPage = () => {
+  const params = useParams();
+  const courseId = params.courseId as string;
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const chatContainerRef = useRef<HTMLDivElement>(null);
