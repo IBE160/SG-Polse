@@ -48,8 +48,6 @@ const ChatPage = () => {
       message: inputValue,
       conversationHistory: messages.map(msg => ({ sender: msg.sender, text: msg.text })),
     };
-    console.log('Frontend sending payload:', payload); // <--- ADD THIS
-
     sendMessageMutation.mutate(payload);
   };
 

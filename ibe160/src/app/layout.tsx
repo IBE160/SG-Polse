@@ -9,7 +9,7 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
+        <TRPCReactProvider headers={await headers()}>{children}</TRPCReactProvider>
       </body>
     </html>
   );

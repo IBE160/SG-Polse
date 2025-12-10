@@ -22,7 +22,6 @@ export function TRPCReactProvider(props: { children: React.ReactNode, headers: H
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
     api.createClient({
-      transformer: superjson,
       links: [
         loggerLink({
           enabled: (opts) =>
@@ -30,6 +29,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode, headers: H
             (opts.direction === "down" && opts.result instanceof Error),
         }),
         httpBatchLink({
+          transformer: superjson,
           url: `${getBaseUrl()}/api/trpc`,
           headers() {
             const heads = new Map(props.headers);
