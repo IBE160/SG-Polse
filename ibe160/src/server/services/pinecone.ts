@@ -115,7 +115,7 @@ export class PineconeService {
     }
 
     try {
-      await this.index.delete({ filter: { fileName: fileName } });
+      await this.index.deleteMany({ filter: { fileName: fileName } }); // Corrected call
       console.log(`Successfully deleted vectors for fileName: ${fileName} from Pinecone index: ${this.indexName}`);
     } catch (error) {
       console.error(`Error deleting vectors for fileName: ${fileName} from Pinecone:`, error);

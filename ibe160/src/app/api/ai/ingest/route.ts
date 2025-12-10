@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "fs";
-import { join } from "path";
+import { join, basename } from "path"; // Import basename
 import { glob } from "glob"; // Using glob for file matching
 import { embeddingService } from "~/server/services/embedding";
 import { pineconeService } from "~/server/services/pinecone";
@@ -30,7 +30,9 @@ export async function POST(request: NextRequest) {
     const chunkOverlap = 50; // Define a small overlap to maintain context
 
     for (const filePath of textFiles) {
-      const fileName = filePath.replace(uploadDir + '/', ''); // Get relative file name
+      const fileName = basename(filePath); // Use basename to get just the filename
+      // console.log('Ingestion API: Processing filePath:', filePath); // Removed debug log
+      // console.log('Ingestion API: Derived fileName for metadata:', fileName); // Removed debug log
       const fileContent = await fs.readFile(filePath, "utf-8");
 
       const textChunks: string[] = [];

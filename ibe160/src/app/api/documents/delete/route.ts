@@ -59,9 +59,13 @@ export async function POST(request: NextRequest) {
         }
     }
 
+    const pineconeFileName = filename.toLowerCase().endsWith(".pdf")
+      ? `${filename}.txt`
+      : filename; // Assuming direct .txt files are stored as is, or adjust based on ingestion logic
+
     // Delete embeddings from Pinecone
-    await pineconeService.deleteVectors(filename); // Pass the original filename as metadata filter
-    console.log(`Attempted to delete Pinecone embeddings for: ${filename}`);
+    await pineconeService.deleteVectors(pineconeFileName); // Pass the corrected filename for metadata filter
+    console.log(`Attempted to delete Pinecone embeddings for: ${pineconeFileName}`);
 
     const message = filesDeleted.length > 0
       ? `Successfully initiated deletion for ${filename}. Files deleted: ${filesDeleted.join(', ')}`
