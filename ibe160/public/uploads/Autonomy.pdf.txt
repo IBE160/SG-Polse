@@ -1,0 +1,35 @@
+Autonomy
+Autonomy in AI refers to the capability of a system to perform tasks or make decisions without
+human intervention. Autonomous AI systems can operate independently, using algorithms to
+process data, learn from it, and make decisions based on predefined criteria or learned patterns.
+Autonomy is beneficial for:
+• 	Efficiency: Autonomous systems can perform tasks faster and more consistently than
+humans, especially in repetitive or large-scale operations.
+• 	Scalability: They can handle large volumes of data and operations without the need for
+proportional increases in human resources.
+• 	24/7 Operation: Autonomous systems can work continuously without breaks, providing
+constant service or monitoring.
+However, autonomy also raises concerns about accountability, ethical decision-making, and the
+potential for unintended consequences if systems act without proper guidance or understanding
+of context.
+Human Oversight
+Human oversight involves the supervision and intervention by humans in the operation of AI
+systems to ensure they function correctly and ethically.
+It is crucial for:
+• 	Accountability: Human oversight ensures that there is a responsible party who can
+intervene if an AI system makes an incorrect or harmful decision.
+• 	Ethical Decision-Making: Humans can provide moral and ethical judgment that AI
+systems lack, ensuring decisions align with societal values.
+• 	Error Correction: Humans can identify and correct errors or biases in AI outputs that
+the system might not recognize on its own.
+• 	Trust Building: Knowing that humans oversee AI systems can increase trust among
+users and stakeholders, as there is assurance that someone is monitoring the system's
+actions.
+Example Use Case: Autonomous Vehicles
+Imagine a self-driving car that makes decisions without human intervention. In the event of an
+accident, questions arise about who is responsible.
+Ethical Consideration: Ensure human oversight in critical decision-making processes.
+Establish guidelines for when human intervention is necessary.
+
+-- 1 of 1 --
+

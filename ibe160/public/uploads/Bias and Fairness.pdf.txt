@@ -1,0 +1,72 @@
+Ethics in Machine Learning (ML) – Key Considerations
+1. 	Bias and Fairness
+Bias
+Bias in AI and machine learning refers to systematic errors in decision-making processes
+that lead to unfair or discriminatory outcomes. It can arise from various sources, including:
+• 	Data 	Bias: 	Occurs 	when 	the 	data 	used 	to 	train 	machine 	learning 	models 	is
+unrepresentative or incomplete. This can lead to biased outputs if the training data
+reflects existing prejudices or stereotypes.
+• 	Algorithmic Bias: Happens when the algorithms themselves have inherent biases, often
+due to biased assumptions or criteria used in decision-making processes.
+• 	User Bias: Introduced by users who may unconsciously or consciously impose their
+own biases into AI systems through their interactions or the data they provide.
+Bias can manifest in different forms, such as sampling bias, where the training data is not
+representative of the target population, or confirmation bias, where AI systems reinforce
+pre-existing beliefs held by developers or users.
+Fairness
+Fairness in AI and machine learning involves ensuring that algorithmic decision-making
+processes produce equitable and just outcomes for all individuals and groups. It aims to
+prevent discrimination based on attributes such as race, gender, age, or other protected
+characteristics.
+Fairness can be achieved by:
+• 	Diversifying Training Data: Ensuring that datasets are representative of diverse
+populations to avoid skewed results.
+• 	Implementing Fairness Metrics: Incorporating specific metrics to evaluate and mitigate
+bias during model training and deployment.
+• 	Ensuring Transparency: Making AI systems transparent so that their decision-making
+processes can be understood and challenged if necessary.
+Example Use Case: Hiring Algorithms
+Imagine a company uses an ML algorithm to screen job applicants. If the historical data used
+to train this algorithm reflects past hiring biases (e.g., favoring certain genders or ethnicities),
+the algorithm might perpetuate these biases. This can lead to unfair treatment of candidates
+based on gender or race.
+Ethical 	Consideration: 	Ensure 	fairness 	by 	using 	diverse 	datasets 	and 	implementing
+algorithms that mitigate bias. Regularly test and adjust the system to prevent bias from creeping
+in over time.
+
+-- 1 of 3 --
+
+Mandatory Reading: Real world AI/ML bias examples: https://levity.ai/blog/ai-bias-how-
+to-avoid
+Examples of combatting AI/ML bias
+(source: https://www.digitalocean.com/resources/articles/ai-bias)
+Some organizations are already doing their part to battle AI bias, but it will continue to be an
+uphill fight as large language models (LLMs) consume more data.
+Here are a few examples of combatting AI bias—these examples highlight the proactive steps
+taken by various organizations to combat AI bias. See which practices you can adopt to help
+build more equitable and trustworthy AI systems.
+• 	IBM’s AI Fairness 360 toolkit: IBM developed the AI Fairness 360 (AIF360) toolkit—
+an open-source library that includes metrics to check for biases in datasets and machine
+learning models. It also provides algorithms to mitigate these biases. This toolkit
+supports developers in building fairer AI systems by offering practical tools to identify
+and reduce bias throughout the AI development lifecycle.
+• 	Microsoft’s Fairlearn: Microsoft has developed Fairlearn, an open-source toolkit for
+assessing and improving the fairness of AI models. Fairlearn provides fairness metrics
+and mitigation algorithms to help developers understand and mitigate bias in their
+models.
+• 	Partnership 	on 	AI’s 	fairness, 	transparency, 	and 	accountability 	initiative: The
+Partnership 	on AI—a 	consortium 	of 	leading 	technology 	companies, 	academic
+institutions, and NGOs—has launched initiatives focused on fairness, transparency, and
+accountability 	in AI. 	It 	conducts 	research, 	publishes 	guidelines, 	and 	promotes
+collaboration to address AI bias and promote ethical AI development.
+• 	MIT 	Media 	Lab’s 	Algorithmic 	Justice 	League: The 	Algorithmic 	Justice
+League advocates for AI accountability. They conduct research, raise awareness about
+AI bias, and collaborate with policymakers and industry leaders to develop standards
+and practices that promote fairness in AI systems.
+
+-- 2 of 3 --
+
+
+
+-- 3 of 3 --
+

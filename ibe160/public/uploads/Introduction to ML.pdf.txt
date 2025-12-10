@@ -1,0 +1,215 @@
+1. Introduction to Machine
+Learning
+IBE 400
+Swati Aggarwal
+
+-- 1 of 23 --
+
+The Challenge of Digit Recognition: MNIST Dataset
+Ambiguity in Data
+Our goal: create an AI system that can automatically identify these digits, despite their variations and sometimes ambiguous appearance s.
+The MNIST dataset contains thousands of handwritten digit images with their corresponding labels (0-9).
+
+-- 2 of 23 --
+
+Why Rule-Based Systems Fail
+The 1980s Approach
+Traditional AI in the 1980s used "expert systems" with manually
+written rules:
+• If black pixels form a single loop → digit is 0
+• If black pixels form two intersecting loops → digit is 8
+• If black pixels form a vertical line in the middle → digit is 1
+Problems
+This approach fails for several reasons:
+• Extremely laborious to write comprehensive rules
+• Requires precise definitions of vague terms like "mostly," "loop,"
+"middle"
+• Handwritten digits vary widely, requiring countless exceptions
+• Results in poor performance despite enormous effort
+
+-- 3 of 23 --
+
+Comparison between traditional
+approach and ML
+Source: Géron, A. (2023). The machine learning landscape. In Hands-on machine learning with Scikit-Learn, Keras, and TensorFlow (3rd ed). O’Reilly Media.
+
+-- 4 of 23 --
+
+Machine Learning : The Hype Curve
+Worldwide Norway
+
+-- 5 of 23 --
+
+Who?
+Can you recognize a person even if some of the facial features are masked?
+
+-- 6 of 23 --
+
+HOW were you able to recognize?
+Tom Cruise
+
+-- 7 of 23 --
+
+ML: What is it?
+• Machine learning involves designing automated systems that uncover
+hidden patterns in data to help make smart decisions.
+• This concept is inspired by how the human brain learns from the
+information it receives from the environment.
+Orange?
+Watermelon?
+Apple?
+
+-- 8 of 23 --
+
+The Big Four Types of Machine Learning
+Supervised Learning
+Learns from labeled examples with known
+outcomes
+Unsupervised Learning
+Finds hidden patterns in unlabeled data
+Semi-Supervised Learning
+Uses small labeled data with large
+unlabeled datasets
+Reinforcement Learning
+Learns through trial and error with
+rewards/penalties
+Each approach solves different problems and has distinct applications in the AI ecosystem.
+
+-- 9 of 23 --
+
+Supervised Learning: Learning with a Teacher
+Supervised learning algorithms are trained on labeled datasets where each input has a corresponding correct output.
+The algorithm learns to map inputs to outputs.
+Key Tasks:
+• Classification:
+Categorizing inputs (spam detection, medical diagnosis)
+• Regression:
+Predicting continuous values (house prices, temperature
+forecasting)
+
+-- 10 of 23 --
+
+Google’s Quick, Draw!
+https://quickdraw.withgoogle.com/
+
+-- 11 of 23 --
+
+Source: Brink, H., Richards, J., & Fetherolf, M. (2016). Real-world machine learning. Manning Publications
+
+-- 12 of 23 --
+
+Machine Learning Tasks
+1. Classification (Predicting Categories)
+Classification assigns items to predefined labels .
+Postal Mail Sorting (Posten
+Norge)
+Classifies addresses into delivery zones
+(e.g., Oslo vs. Trondheim vs. Tromsø).
+Healthcare (Helse Norge)
+Classifies whether a medical image (like
+a mammogram) shows cancer or no
+cancer.
+Banking (DNB)
+Classifies a transaction as fraudulent or
+legitimate.
+
+-- 13 of 23 --
+
+2. Regression (Predicting Continuous Values)
+Regression predicts numerical outcomes across Norwegian sectors:
+Eiendom (Real Estate)
+Predicts the price of a house in Oslo based on size,
+location, year built, and number of bedrooms.
+Statens vegvesen (Roads & Traffic)
+Predicts daily traffic volume on the E6 highway
+depending on time of year, weather, and weekday.
+Meteorologisk institutt (Weather Service)
+Predicts temperature or rainfall amount in
+Bergen tomorrow.
+
+-- 14 of 23 --
+
+Unsupervised Learning: Discovering
+Hidden Patterns
+How It Works
+Algorithms analyze unlabeled data to identify inherent structures, patterns, and
+relationships without predefined categories or outcomes.
+Key Techniques
+• Clustering: Grouping similar data points (customer segmentation, image
+compression)
+• Dimensionality Reduction: Simplifying data while preserving information (feature
+extraction)
+Customer segmentation by purchasing behavior without predefined groups
+
+-- 15 of 23 --
+
+Source: Géron, A. (2023). The machine learning landscape. In Hands-on machine learning with Scikit-Learn, Keras, and TensorFlow (3rd ed). O’Reilly Media.
+
+-- 16 of 23 --
+
+Source: Géron, A. (2023). The machine learning landscape. In Hands-on machine learning with Scikit-Learn, Keras, and TensorFlow (3rd ed). O’Reilly Media.
+
+-- 17 of 23 --
+
+3. Clustering (Finding Natural Groupings)
+Clustering groups data without predefined labels, revealing natural patterns:
+Tourism (Visit Norway)
+Clusters tourists into groups (e.g.,
+hikers, city visitors, northern
+lights seekers) based on travel
+behavior.
+Retail (Rema 1000)
+Clusters customers by shopping
+patterns (e.g., families with kids,
+students, health-focused shoppers).
+Education
+Clusters Norwegian schools by
+performance indicators (attendance,
+exam scores, student-teacher ratio).
+
+-- 18 of 23 --
+
+Semi-Supervised Learning: The Best of Both Worlds
+Semi-supervised learning bridges the gap between supervised and unsupervised
+approaches by using:
+• Small amounts of labeled data (expensive to obtain)
+• Large amounts of unlabeled data (inexpensive and abundant)
+Perfect For:
+Tasks where labeling is expensive, time-consuming, or requires experts, such as:
+• Medical image analysis
+• Speech recognition with limited transcriptions
+
+-- 19 of 23 --
+
+Source: Géron, A. (2023). The machine learning landscape. In Hands-on machine learning with Scikit-Learn, Keras, and TensorFlow (3rd ed). O’Reilly Media.
+
+-- 20 of 23 --
+
+Reinforcement Learning: Learning by
+Trial and Error
+Agent
+AI system that makes decisions (robot, game player, trading
+algorithm)
+Environment
+World the agent operates in (game, simulation, real-world
+setting)
+Rewards
+Feedback signals that guide learning (points, profit, task
+completion)
+Example: AlphaGo mastered the ancient game of Go by playing millions of
+matches against itself, learning optimal strategies through reward signals.
+
+-- 21 of 23 --
+
+Source: Géron, A. (2023). The machine learning landscape. In Hands-on machine learning with Scikit-Learn, Keras, and TensorFlow (3rd ed). O’Reilly Media.
+
+-- 22 of 23 --
+
+Robot Navigating a Maze: Real-World Example
+Learning Path to Diamond
+• Rewards for approaching goal
+• Penalties for hazards
+• Optimal route emerges through trial & error
+
+-- 23 of 23 --
+

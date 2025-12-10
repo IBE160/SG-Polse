@@ -1,0 +1,54 @@
+Machine Learning: Supervised vs Unsupervised Learning
+What is Machine Learning?
+Machine Learning (ML) is when computers learn from data — instead of being programmed
+with fixed rules.
+We give data to the machine, and it finds patterns or makes predictions based on that data.
+1. Supervised Learning
+Definition: In supervised learning, the model learns from labeled data — which means we
+already know the answers (output values).
+Think of it like a teacher supervising the learning process.
+Example:
+Hours Studied 	Marks Scored
+2 	40
+4 	60
+6 	80
+The model learns the relationship between “hours studied” (input) and “marks scored”
+(output). Later, it can predict marks for a new student who studied 5 hours.
+Common Algorithms:
+Linear Regression
+Decision Trees
+Random Forest
+Support Vector Machines (SVM)
+Neural Networks
+Used for:
+Predicting sales, prices, or scores (Regression)
+Classifying emails as spam or not spam (Classification)
+2. Unsupervised Learning
+Definition: In unsupervised learning, the data is unlabeled — there are no answers given. The
+model has to find patterns or groups on its own.
+It’s like giving students a bunch of puzzle pieces without showing them the final picture.
+Example:
+
+-- 1 of 2 --
+
+Imagine you have customer data — age, income, and spending — but no labels.
+The algorithm can group customers with similar behavior together (e.g., high-income big
+spenders, low-income minimal spenders).
+Common Algorithms:
+K-Means Clustering
+Hierarchical Clustering
+Principal Component Analysis (PCA)
+Used for:
+Customer segmentation
+Market basket analysis
+Detecting anomalies or patterns
+Feature 	Supervised Learning 	Unsupervised Learning
+Data 	Labeled (known output) 	Unlabeled (unknown output)
+Goal 	Predict outcomes 	Find hidden patterns or groups
+Example 	Predict house prices 	Group customers by buying habits
+Type of Problems 	Classification & Regression 	Clustering & Association
+Supervised Learning → Like learning with an answer key.
+Unsupervised Learning → Like exploring without a map to find patterns yourself.
+
+-- 2 of 2 --
+

@@ -1,0 +1,64 @@
+Dataset Description: Medical Insurance Charges
+This dataset contains anonymous personal and medical data for individuals, with the
+primary objective of predicting their individual health insurance costs (). It integrates key
+demographic, health, and lifestyle features, making it highly suitable for Regression
+Analysis to model the financial burden on healthcare systems.
+The standard dataset comprises 7 variables and is a classic example for practicing data
+cleaning, feature engineering (One-Hot Encoding), and linear modeling.
+Key Features
+The following table details the variables present in the dataset and notes on their data
+quality, based on the provided data sample and prior analysis:
+Feature
+Name Type Description Data Quality Note
+age
+Numerical
+(float)
+The age of the primary
+policyholder.
+Missing Values observed
+(requires Imputation).
+sex
+Categorical
+(Object)
+The gender of the policyholder
+(female or male).
+Missing Values observed
+(requires Imputation).
+bmi
+Numerical
+(float)
+Body Mass Index (BMI). An
+indicator of body fat based on
+height and weight.
+Missing Values observed
+(requires Imputation).
+children
+Numerical
+(int)
+The number of children or
+dependents covered by the health
+insurance plan. Complete.
+smoker
+Categorical
+(Object)
+Binary indicator of whether the
+policyholder smokes (yes or no).
+This is the strongest predictor. Complete.
+region
+Categorical
+(Object)
+The beneficiary's residential area in
+the US (e.g., northeast, southwest).
+Missing Values observed
+(requires Imputation).
+charges
+Numerical
+(float)
+Individual medical costs billed by
+health insurance.
+Complete. Target Variable.
+Note: Distribution is highly
+Right-Skewed.
+
+-- 1 of 1 --
+

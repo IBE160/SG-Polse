@@ -1,0 +1,94 @@
+📑 Synthetic E-Commerce Retail Dataset —
+Description
+This dataset simulates transactions from an online retail company.
+It was designed with built-in missing values, outliers, categorical variables, and numeric
+features so that we can practice preprocessing techniques.
+🔢 Dataset Overview
+• 	Rows: 1000 transactions
+• 	Columns: 22
+• 	Includes: User info, order details, product features, engagement metrics, and derived
+business KPIs
+• 	Teaching features: MCAR/MAR/MNAR missingness, outliers, categorical encodings
+(nominal + ordinal), variables for scaling
+🗂 Columns & Details
+Identifiers
+• 	order_id (int) → Unique transaction ID (100000–101000)
+• 	user_id (int) → Customer identifier (repeat customers possible)
+Customer & Session Info
+• 	device_type (categorical: nominal)
+§ 	Values: Mobile, Desktop, Tablet
+§ 	Device used for browsing.
+• 	traffic_source (categorical: nominal)
+§ 	Values:
+o 	Organic → Arrived via unpaid search (SEO, Google results)
+o 	Paid → Clicked on paid ads (Google Ads, social ads)
+o 	Email → Clicked from email campaigns/newsletters
+o 	Referral → Came from other websites/blogs/forums
+o 	Direct → Typed URL/bookmark directly
+o 	Social → From social platforms (Instagram, Facebook, TikTok)
+• 	country (categorical: nominal)
+§ 	Values: Norway, Sweden, Denmark, Finland, Germany, UK, USA
+§ 	Used to differentiate domestic vs international orders.
+• 	is_member (categorical: binary)
+§ 	Values: Yes, No
+
+-- 1 of 3 --
+
+§ 	Whether customer is enrolled in loyalty program.
+• 	loyalty_tier (categorical: ordinal)
+§ 	Values: None < Bronze < Silver < Gold < Platinum
+§ 	Only meaningful for members; non-members mostly None.
+Engagement Metrics
+• 	session_length_min (float) → Total browsing session length (minutes). Some MCAR
+missingness. Includes: Time when the browser tab is open, even if the user is idle.
+• 	time_on_site_min (float) → Active time spent on site in session.Excludes: Long
+idle/inactive periods when no clicks or scrolls happen.
+• 	pages_viewed (int) → Number of pages viewed.
+Order Details
+• 	product_category (categorical: nominal)
+§ 	Values: Electronics, Apparel, Home, Books, Beauty
+§ 	Each has distinct price distributions.
+• 	price (float) → Unit price, depends on product category.
+• 	discount_pct (float) → Discount applied (0–60%).
+§ 	More missing for Organic traffic (MAR).
+• 	quantity (int) → Units purchased (1–4 normal, 20–60 outlier bulk orders).
+• 	revenue (float) → Derived as price × quantity × (1 - discount_pct).
+§ 	A few extreme outliers (wholesale/erroneous).
+Customer History
+• 	days_since_last_purchase (float) → Recency of last purchase. Members buy more
+often; random MCAR missingness.
+• 	customer_tenure_months (float) → How long the customer has been with the
+platform.
+§ 	MNAR-like: non-members less likely to provide tenure.
+Feedback & Returns
+• 	rating (float) → Customer satisfaction rating (1–5).
+§ 	Some missing (MCAR) and a few invalid outliers (0, 6).
+• 	return_rate_pct (float) → % of items historically returned. Mostly low (~8%), with
+outliers 50–95%.
+
+-- 2 of 3 --
+
+Logistics
+• 	shipping_cost (float) → Delivery fee. Lower for domestic, higher for international.
+Outliers at ~120.
+• 	delivery_time_days (float) → Delivery time (days). Domestic ~3, international ~7.
+Outliers 20–40.
+Fraud
+• 	fraud_flag (binary int) → 1 if fraudulent transaction, else 0. About 2% positive.
+🎯 Why this dataset is useful
+• 	Missingness: MCAR (session_length_min), MAR (discount_pct), MNAR
+(customer_tenure_months)
+• 	Outliers: Injected
+in quantity, revenue, shipping_cost, return_rate_pct, delivery_time_day
+s, rating
+• 	Categorical variety:
+§ 	Nominal: device_type, traffic_source, product_category, country, i
+s_member
+§ 	Ordinal: loyalty_tier
+• 	Scaling candidates: Continuous skewed vars (revenue, price, shipping_cost) +
+count vars (quantity, pages_viewed)
+This makes it an ideal sandbox for practicing EDA, feature engineering, and preprocessing
+pipelines.
+
+-- 3 of 3 --
+

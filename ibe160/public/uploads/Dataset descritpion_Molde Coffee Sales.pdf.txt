@@ -1,0 +1,85 @@
+Molde Coffee Sales — Dataset Description
+Overview
+• 	File name: molde_coffee_sales.csv
+• 	Rows: ~25 (24 daily records across 4 stores for 6 days, plus 1 intentional duplicate)
+• 	Columns: 14
+• 	Time period: 2025-06-01 → 2025-06-06 (daily)
+• 	Granularity: One row per Store_ID × Date (with a single, intentional duplicate row
+for practice)
+• 	Scope: 4 small outlets in Molde (2 cafés, 2 kiosks), daily sales + simple context
+(weather, promo)
+Purpose: Synthetic dataset for EDA and created for practice. Some missing values and one
+duplicate row are intentionally included.
+Columns
+Keys & calendar
+1. 	Date — string (YYYY-MM-DD)
+Daily date of the record. Intended key component with Store_ID.
+o 	Example: 2025-06-03
+2. 	Month — string (MMM)
+Month abbreviation derived from Date.
+o 	Values: Jun (all rows in this file)
+3. 	DayOfWeek — string (Mon–Sun)
+Day of week derived from Date.
+o 	Values present: Sun, Mon, Tue, Wed, Thu, Fri (this 6-day window)
+Store metadata
+4. 	Store_ID — string
+Unique store code.
+o 	Values: M01, M02, M03, M04
+5. 	Neighborhood — string
+Molde neighborhood of the store.
+o 	Values: Sentrum, Reknes, Kviltorp, Eikrem
+6. 	Store_Type — string
+Outlet type.
+o 	Values: Cafe, Kiosk
+Sales & context
+7. 	Drinks_Sold — integer (units)
+Number of drink items sold that day.
+
+-- 1 of 3 --
+
+8. 	Food_Sold — integer (units)
+Number of food items sold that day.
+9. 	Revenue_NOK — integer (NOK)
+Estimated daily revenue in Norwegian kroner.
+o 	Rough driver logic: drinks × 45 + food × 65 + promo uplift (if any) ± small
+noise
+10. Avg_Temp_C — float (°C)
+Average ambient temperature that day.
+o 	Missing values: intentionally present in ~1 row
+11. Rainfall_mm — float (mm)
+Daily rainfall.
+o 	Missing values: intentionally present in ~2 rows
+12. Promo — string (Yes/No)
+Whether a simple promotion ran that day (applies to Cafés on Fri/Sat only in this
+window).
+o 	Values: Yes, No (expect only Fri promos in this 6-day slice)
+Utility & target
+13. Source — string
+Constant string used to demonstrate “useless” column removal.
+o 	Value: AccountingExport (same for all rows)
+14. High_Revenue — string (target label)
+Target/class label: High if Revenue_NOK > 15000, else Low.
+o 	Values: High, Low
+Data quality notes (intentional for exercises)
+• 	Missing values: 3 total (≈2 in Rainfall_mm, 1 in Avg_Temp_C).
+• 	Duplicate rows: 1 full duplicate row (practice for drop_duplicates).
+• 	Constant column: Source (practice for dropping non-informative features).
+• 	Expected key: (Date, Store_ID) should be unique except for the intentionally
+duplicated row.
+Categorical columns & typical uniques
+• 	Month (1), DayOfWeek (≈6), Store_ID (4), Neighborhood (4),
+Store_Type (2), Promo (2), High_Revenue (2).
+(Counts are for this particular 6-day slice.)
+Units & ranges (typical)
+• 	Drinks_Sold: units/day, ~70–180
+
+-- 2 of 3 --
+
+• 	Food_Sold: units/day, ~10–70
+• 	Revenue_NOK: NOK/day, roughly 5k–20k+ (promos push higher)
+• 	Avg_Temp_C: °C, ~9–17
+• 	Rainfall_mm: mm/day, ~50–150 (Molde is rainy!)
+These are indicative; use describe() to see exact min/median/max in your copy.
+
+-- 3 of 3 --
+

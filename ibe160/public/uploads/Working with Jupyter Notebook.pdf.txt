@@ -1,0 +1,97 @@
+Getting Started with Jupyter Notebook
+(Beginner’s Guide)
+1. What’s a Jupyter Notebook?
+• 	An interactive document (with .ipynb extension) combining code, output, and
+narrative.
+• 	Ideal for data exploration, learning Python, and sharing results.
+• 	Runs locally in your browser via a "kernel" (e.g., Python).
+2. How to Install
+• 	Using Anaconda (recommended for beginners):
+o 	Download Anaconda distribution.
+o 	Install using default options (includes Python, Jupyter, and key libraries).
+• 	Using pip (if you already have Python installed):
+• 	pip install jupyter
+3. Launching the Notebook
+• 	Anaconda: Open via Anaconda Navigator or the desktop shortcut.
+• 	Terminal / Command Prompt:
+• 	jupyter notebook
+• 	Jupyter opens in your default browser at http://localhost:8888/tree.
+• 	Click New → Python 3 to create a notebook.
+4. Basic Concepts: Cells & Kernel
+• 	Cells: Building blocks—two types:
+o 	Code cells: For writing/running Python.
+o 	Markdown cells: For text (formatted using Markdown).
+• 	Kernel: The engine that executes your code.
+
+-- 1 of 4 --
+
+5. Your First Steps
+1. 	In a code cell:
+print("Hello, world!")
+Run using Ctrl + Enter (Win/Linux) or ⌘ + Enter (Mac).
+2. 	Try another code cell:
+import time
+time.sleep(3) 	# watch the [*] while it runs
+3. 	Notice the execution label: In [1], In [2], etc.—shows order of execution.
+6. Editing vs. Command Mode & Shortcuts
+
+-- 2 of 4 --
+
+• 	Edit mode (green border): Type into a cell.
+• 	Command mode (blue border): Manage cells.
+• 	Useful shortcuts (when in command mode):
+o 	A / B → insert cell Above / Below
+o 	M → change to Markdown
+o 	Y → change to Code
+o 	DD → delete cell (press “D” twice)
+o 	Z → undo last cell deletion
+o 	Ctrl + Enter → run cell, stay
+o 	Shift + Enter → run cell, move to next
+o 	Alt + Enter → run cell, insert new below
+7. Using Markdown Cells
+• 	Press M, then type:
+# Project Title
+**Bold**, *italic*, `inline code`
+- Bullet point 1
+- Bullet point 2
+1) Step one
+2) Step two
+• 	Run (Shift+Enter) to render.
+8. Mini Data Example
+In a new code cell:
+import pandas as pd
+import matplotlib.pyplot as plt
+df = pd.DataFrame({
+"year": [2021, 2022, 2023, 2024],
+"value": [10, 14, 9, 18]
+})
+df
+Then plot:
+df.plot(x="year", y="value", kind="line")
+plt.title("Demo Trend")
+plt.show()
+(Anaconda includes libraries; if needed: pip install pandas matplotlib.)
+9. Save, Rename, and Navigate
+• 	Rename: click the notebook name (top-left).
+• 	Save: use menu File → Save & Checkpoint or the save icon.
+
+-- 3 of 4 --
+
+• 	Dashboard view: manage, rename, open, or shut down notebooks via the Running
+tab.
+10. Export & Share
+• 	Export via File → Download as… (e.g., HTML, PDF).
+• 	Share on GitHub and view/read via nbviewer.
+• 	Jupyter runs locally unless you intentionally upload/share the notebook.
+11. Troubleshooting Tips
+• 	If a cell stays at In [*]: use Kernel → Restart.
+• 	To clean up execution state: use Kernel → Restart & Run All.
+• 	Change cell type if needed: press M (Markdown) or Y (Code).
+• 	If files don’t appear, start Jupyter from the right directory or adjust its start location.
+12. Good Practices
+• 	Only run notebooks from trusted sources.
+• 	Keep data files in the same folder or use relative paths.
+• 	Write headings and comments for clarity and reproducibility.
+
+-- 4 of 4 --
+

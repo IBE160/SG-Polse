@@ -1,0 +1,70 @@
+Dataset Description
+This is a synthetic dataset representing student study habits and performance.
+Each row represents one student, and each column is a measurable feature about their
+academic and lifestyle factors.
+The goal is to predict whether a student will pass (1) or fail (0) the final exam.
+Feature 	Type 	Description 	Typical Impact on
+Outcome
+study_hours_per_day 	Numeric (float) 	Average hours
+spent studying per
+day
+More hours →
+higher chance of
+passing
+attendance_percent 	Numeric (float) 	Percentage of
+lectures attended
+Higher attendance
+→ higher chance of
+passing
+sleep_hours_per_night 	Numeric (float) 	Average daily
+sleep hours
+Moderate sleep
+improves
+focus/performance
+social_media_hours_per_day 	Numeric (float) 	Time spent daily
+on social media
+More hours →
+lower chance of
+passing
+practice_tests_taken 	Integer 	Number of
+mock/practice
+tests completed
+More practice →
+better exam
+readiness
+prior_gpa_1_to_4 	Numeric (float) 	Prior GPA (scale
+1.0–4.0)
+Strong prior GPA
+predicts good
+outcomes
+anxiety_level_1_to_5 	Numeric (float) 	Self-reported
+stress/anxiety
+level
+High anxiety may
+hurt performance
+tutoring_attended 	Binary (0/1) 	Whether the
+student attended
+tutoring
+Tutoring tends to
+improve results
+part_time_job 	Binary (0/1) 	Whether student
+has a part-time
+job
+Job may reduce
+study time
+(negative effect)
+eats_breakfast 	Binary (0/1) 	Whether the
+student eats
+breakfast
+regularly
+Linked to better
+focus and
+consistency
+passed_final_exam 	Binary (0/1) 	Target variable: 1
+= Passed, 0 =
+Failed
+What the model
+tries to predict
+
+-- 1 of 1 --
+

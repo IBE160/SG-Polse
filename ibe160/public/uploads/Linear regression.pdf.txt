@@ -1,0 +1,180 @@
+1. 	Linear regression?
+When we see a relationship in a scatterplot, we can use a line to summarize that relationship
+and to make predictions. This process is called linear regression.
+Linear regression is a statistical method used to model the relationship between a dependent
+variable and one or more independent variables. It is primarily used for predicting continuous
+outcomes.
+2. 	Fitting a line to data
+There are more advanced ways to fit a line (like least squares), but the core idea is the same:
+we want the line to pass through the “middle” of the points, minimizing the overall vertical
+distances.
+Key Concepts
+• 	Equation: The basic form of a linear regression equation is:
+y=β0+β1x +ϵ
+where:
+• 	y is the dependent variable (the outcome we are trying to predict).
+• 	x is the independent variable (the predictor).
+• 	β0 is the intercept (the expected mean value of y when x=0).
+• 	β1 is the slope coefficient (indicating how much y changes for a one-unit change in x).
+• 	ϵ represents the error term (the difference between observed and predicted values).
+
+-- 1 of 8 --
+
+Objective: The goal is to find the best-fitting line through the data points that minimizes the
+sum of squared differences between observed and predicted values, known as residuals
+Example:
+Consider a scenario where you want to predict a person's productivity score based on their
+hours of sleep. Suppose you have data on several individuals' productivity score and hours of
+sleep. By applying linear regression, you can determine a line that best fits this data, allowing
+you to predict productitivity score based on hours of sleep.
+Dataset (synthetic): Hours of Sleep vs. Productivity Score
+Hours of Sleep (x) Productivity Score (y)
+4 	50
+5 	55
+6 	65
+7 	70
+8 	68
+• 	Shows the dataset with three candidate lines (A, B, C).
+• 	Line B (y=5x+28) is the best fit.
+
+-- 2 of 8 --
+
+Shows only the best line with residuals (purple dashed lines) from each data point to the line.
+• 	These residuals are the errors.
+• 	The best-fit line minimizes the sum of squared residuals (SSE).
+3. 	Example problem: Calories Burned vs. Time Spent Running (synthetic)
+We measured calories burned for different running times.
+Minutes Running (x) Calories Burned (y)
+10 	80
+20 	150
+30 	220
+40 	295
+50 	360
+
+-- 3 of 8 --
+
+Fitted line: y=7x+10
+Interpretation:
+• 	Slope = 7 → Each extra minute of running burns about 7 calories.
+• 	Intercept = 10 → If you run 0 minutes, baseline calories burned is about 10 (resting).
+The red line is the regression line (y=7x+10).
+The purple dashed lines show rise/run:
+• 	Run = 10 minutes
+• 	Rise = 70 calories
+This visually confirms that the slope = 7 (70 ÷ 10).
+The intercept = 10 is where the line crosses the y-axis (baseline calories burned with 0 minutes
+of running).
+Practice Problem
+1. 	How many calories for 25 minutes of running?
+2. 	If someone burned 300 calories, estimate how long they ran.
+4. Types of Linear Regression
+1. 	Univariate Linear Regression
+
+-- 4 of 8 --
+
+One independent variable (predictor x) and one dependent variable (outcome y).
+Equation: y=b0+b1x
+Example: predicting exam score from hours studied.
+2. 	Multivariate (Multiple) Linear Regression
+More than one independent variable.
+Equation: y=b0+b1x1+b2x2+⋯+bnxn
+Example: predicting house price from square footage, number of bedrooms, and age of the
+house.
+Key difference
+• 	Univariate regression fits a line in 2D space (scatterplot).
+• 	Multiple regression fits a plane or hyperplane in higher dimensions.
+Evaluate the performance of linear regression
+Linear regression is a fundamental statistical technique used to model the relationship between
+a dependent variable and one or more independent variables. Two key metrics for evaluating
+the performance of a linear regression model are Mean Squared Error (MSE) and R-squared
+R2.
+Mean Squared Error (MSE)
+MSE measures the average squared difference between the observed actual outcomes and the
+outcomes predicted by the model. It provides an indication of how close the regression line is
+to the actual data points.
+Steps to Calculate MSE
+1. 	Find the Regression Line: Use your dataset to fit a linear regression model.
+2. 	Predict Values: Use the regression equation to predict values for your dependent
+variable.
+3. 	Calculate Errors: For each data point, subtract the predicted value from the actual
+value to get the error.
+4. 	Square the Errors: Square each error to eliminate negative values and emphasize
+larger errors.
+5. 	Average the Squared Errors: Sum all squared errors and divide by the number of
+observations.
+
+-- 5 of 8 --
+
+Interpretation
+• 	A lower MSE indicates a better fit, meaning predictions are closer to actual values.
+• 	MSE is always non-negative, with 0 indicating a perfect fit.
+R-squared (R2)
+R2 also known as the coefficient of determination, measures how well the independent variables
+explain the variability of the dependent variable. It represents the proportion of variance in the
+dependent variable that is predictable from the independent variables.
+Steps to Calculate R2
+1. 	Calculate Total Sum of Squares (SST): Measure total variability in the dependent
+variable.
+2. 	Calculate Sum of Squared Residuals (SSR): Measure variability not explained by the
+model (errors).
+3. 	Compute R2 Subtract SSR from SST, divide by SST, and subtract from 1.
+Interpretation
+• 	R2 ranges from 0 to 1.
+
+-- 6 of 8 --
+
+• 	An R2 of 0 means no explanatory power, while 1 means perfect explanation.
+Both MSE and R2are essential metrics for assessing linear regression models:
+• 	MSE focuses on prediction accuracy by penalizing large errors.
+• 	R2 evaluates how well your model explains variability in your data.
+By understanding these metrics, you can better interpret and improve your regression models.
+MASTER STEPS: LINEAR REGRESSION
+To train a model using linear regression in Python, you can follow these basic steps.
+This example uses the popular library scikit-learn, which is commonly used for machine
+learning tasks:
+1. 	Import Necessary Libraries:
+python
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+2. 	Load and Prepare the Data:
+Load your dataset into a Pandas DataFrame. For this example, let's assume you have a CSV
+file:
+python
+data = pd.read_csv('your_dataset.csv')
+3. 	Select Features and Target Variable:
+Identify the independent variables (features) and the dependent variable (target) you want to
+predict.
+python
+X = data[['feature1', 'feature2', 'feature3']] # Replace with your actual feature names
+y = data['target'] # Replace with your actual target variable name
+4. 	Split the Data into Training and Test Sets:
+Divide the data into training and test sets to evaluate the model's performance.
+
+-- 7 of 8 --
+
+python
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+5. 	Initialize and Train the Linear Regression Model:
+Create an instance of the LinearRegression class and fit it to the training data.
+python
+model = LinearRegression()
+model.fit(X_train, y_train)
+6. 	Make Predictions:
+Use the trained model to make predictions on the test set.
+python
+y_pred = model.predict(X_test)
+7. 	Evaluate the Model:
+Assess the model's performance using a metric such as Mean Squared Error (MSE).
+python
+mse = mean_squared_error(y_test, y_pred)
+print(f'Mean Squared Error: {mse}')
+Þ These steps provide a basic workflow for implementing linear regression in Python
+using scikit-learn.
+Þ You can adjust feature selection, data preprocessing, and evaluation metrics based on
+your specific dataset and requirements
+
+-- 8 of 8 --
+

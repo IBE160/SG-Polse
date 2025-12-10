@@ -1,0 +1,68 @@
+1. 	Transparency and Explainability
+Transparency
+Transparency in AI refers to the openness and clarity with which AI systems operate. It involves
+making the decision-making processes of AI systems understandable and accessible to users,
+stakeholders, and regulators.
+Transparency is essential for several reasons:
+• 	Building Trust: When users understand how an AI/ML system works, they are more
+likely to trust its decisions. This trust is crucial in high-stakes areas like healthcare and
+finance.
+• 	Promoting Accountability: Transparency allows stakeholders to identify and address
+errors or biases in AI systems. It ensures that AI systems can be audited and held
+accountable for their outputs.
+• 	Ensuring Fairness: By making the workings of AI systems visible, transparency helps
+detect and mitigate biases, ensuring that AI does not discriminate against any group.
+• 	Compliance with Regulations: Many regulations require transparency in automated
+decision-making processes to protect individuals' rights and ensure ethical use of AI.
+Explainability
+Explainability refers to the ability of AI systems to provide understandable explanations for
+their decisions and actions. This concept is particularly important for complex "black box"
+models like deep learning neural networks, where the internal workings are not easily
+interpretable. Explainability is important because:
+• 	Accountability: It allows organizations to trace decisions back to their sources,
+facilitating accountability and corrective actions when necessary.
+• 	Trust: Providing clear explanations for AI decisions helps build trust with users and
+stakeholders, particularly in sensitive domains.
+• 	Regulatory Compliance: Explainable AI helps organizations meet legal requirements
+by providing insights into the logic behind automated decisions.
+• 	Performance Improvement: Understanding how models make decisions can lead to
+better optimization and fine-tuning of AI systems
+Example Use Case: Credit Scoring Systems
+A bank uses an ML model to determine credit scores but does not disclose how decisions are
+made. Customers denied credit might not understand why, leading to mistrust.
+
+-- 1 of 2 --
+
+o 	Explainable AI (XAI) refers to the ability of an AI system to provide easy-to-understand
+explanations for its decisions and actions. For example, if a customer asks a chatbot for
+product recommendations, an explainable AI system could provide details such as:
+“We think you’d like this product based on your purchase history and preferences.”
+“We’re recommending this product based on your positive reviews for similar items.”
+Offering clear explanations gives the customer an understanding of the AI’s decision-
+making process. This builds customer trust because consumers understand what’s
+behind the AI’s responses. This concept can also be referred to as responsible AI,
+trustworthy AI, or glass box systems.
+(source: https://www.zendesk.co.uk/blog/ai-transparency/)
+o 	Interpretability
+Interpretability in AI focuses on human understanding of how an AI model operates and
+behaves. While XAI focuses on providing clear explanations about the results,
+interpretability focuses on internal processes (like the relationships between inputs and
+outputs) to understand the system’s predictions or decisions.
+On the flip side, there are black box systems. These AI models are complex and provide
+results without clearly explaining how they achieved them. This lack of transparency
+makes it difficult or impossible for users to understand the AI’s decision-making
+processes, leading to a lack of trust in the information provided.
+Let’s use the same scenario from above where a customer asks a chatbot for product
+suggestions. An interpretable AI system c ould explain that it uses a decision tree model
+(it is the tye of the ML model) to decide on a recommendation.
+(source: https://www.zendesk.co.uk/blog/ai-transparency/)
+Ethical Consideration: Develop AI systems with transparency in mind, providing clear
+explanations for decisions. This builds trust and allows individuals to understand and challenge
+decisions if necessary.
+Mandatory Reading:
+Examples That Illustrate Why Transparency Is Crucial In AI
+https://www.forbes.com/sites/bernardmarr/2024/05/17/examples-that-illustrate-why-
+transparency-is-crucial-in-ai/
+
+-- 2 of 2 --
+

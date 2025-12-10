@@ -1,0 +1,46 @@
+Random Forest
+What is a Random Forest?
+A Random Forest is like a team of many decision trees working together.
+Each tree makes its own prediction, and the forest takes a majority vote (for classification)
+or average (for regression).
+Think of it as “wisdom of the crowd” — instead of trusting one decision tree, we trust many
+trees and let them decide together.
+How It Works (Step-by-Step)
+1. 	Create many decision trees — each tree gets a slightly different random sample of
+the data (this is called bagging).
+2. 	Each tree learns patterns independently (like “Has stripes?”, “Has mane?”, etc.).
+3. 	All trees vote on the final answer.
+4. 	The majority vote wins — this gives better accuracy and avoids overfitting.
+🦁 vs 🐯 Example
+Let’s say we again want to predict whether an animal is a lion or a tiger, based on features
+like:
+Has Stripes Has Mane Weight (kg) Animal
+0 	1 	190 	Lion
+1 	0 	220 	Tiger
+0 	1 	180 	Lion
+1 	0 	200 	Tiger
+• 	Tree 1 might decide: “Has stripes?” → Tiger
+• 	Tree 2 might decide: “Has mane?” → Lion
+• 	Tree 3 might use both “Weight” and “Has stripes”
+When we show a new animal:
+• 	Tree 1 → Tiger
+• 	Tree 2 → Tiger
+• 	Tree 3 → Lion
+Majority vote = Tiger
+
+-- 1 of 2 --
+
+The Random Forest predicts: Tiger
+Why Use Random Forest?
+Feature 	Decision Tree 	Random Forest
+Simplicity Easy to understand 	A bit complex
+Stability 	Can overfit easily 	More stable and accurate
+Accuracy 	Depends on one tree 	Combines many trees for better performance
+Analogy 	One person’s opinion Group decision (majority wins)
+Summary
+• 	Random Forest = many trees + random sampling + voting
+• 	Reduces overfitting and improves accuracy
+• 	Works well for both classification (like lion vs tiger) and regression problems
+
+-- 2 of 2 --
+

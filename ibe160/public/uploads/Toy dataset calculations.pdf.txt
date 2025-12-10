@@ -1,0 +1,67 @@
+Toy dataset (hours → exam score)
+x = Hours studied y = Exam score
+1 	52
+2 	56
+3 	61
+4 	66
+5 	71
+Per-point residuals (y - ŷ) for each line
+Line 	x 	y (actual) 	ŷ (predicted) 	Residual (y - ŷ )
+Line A: y=50+5x 	1.0 	52.0 	55.0 	-3.0
+Line A: y=50+5x 	2.0 	56.0 	60.0 	-4.0
+Line A: y=50+5x 	3.0 	61.0 	65.0 	-4.0
+Line A: y=50+5x 	4.0 	66.0 	70.0 	-4.0
+Line A: y=50+5x 	5.0 	71.0 	75.0 	-4.0
+
+-- 1 of 3 --
+
+Line B: y=46+5.5x 	1.0 	52.0 	51.5 	0.5
+Line B: y=46+5.5x 	2.0 	56.0 	57.0 	-1.0
+Line B: y=46+5.5x 	3.0 	61.0 	62.5 	-1.5
+Line B: y=46+5.5x 	4.0 	66.0 	68.0 	-2.0
+Line B: y=46+5.5x 	5.0 	71.0 	73.5 	-2.5
+Line C: y=55+4x 	1.0 	52.0 	59.0 	-7.0
+Line C: y=55+4x 	2.0 	56.0 	63.0 	-7.0
+Line C: y=55+4x 	3.0 	61.0 	67.0 	-6.0
+Line C: y=55+4x 	4.0 	66.0 	71.0 	-5.0
+Line C: y=55+4x 	5.0 	71.0 	75.0 	-4.0
+The Sum of Squared Errors (SSE) is the core measure used in linear regression:
+Where:
+• 	yi= actual value
+• 	y^i = predicted value from the line
+• 	n = number of data points
+It measures the total squared distance between the actual points and the predicted line.
+• 	Smaller SSE = line fits better.
+• 	The “best fit line” in ordinary least squares (OLS) is the one that minimizes SSE.
+Mean Absolute Error (MAE)
+• 	Take each residual
+• 	Make it positive by taking the absolute value,
+• 	Average them over all data points.
+Interpretation: “On average, how far off are our predictions?”
+
+-- 2 of 3 --
+
+Example: If MAE = 3 in exam scores, predictions are off by ~3 marks on average.
+Root Mean Squared Error (RMSE)
+• 	Square each residual (bigger errors get punished more),
+• 	Average them,
+• 	Take the square root.
+Interpretation: “Typical error size, but with big mistakes counted extra.”
+Example: If RMSE = 4 in exam scores, then the typical prediction error is about 4 marks, but
+large mistakes are weighted more than small ones.
+Fit comparison (lower is better)
+Line 	SSE (∑ residual²) 	MAE (mean |residual|) 	RMSE (√mean residual²)
+1 	Line B: y=46+5.5x 	13.75 	1.5 	1.658
+0 	Line A: y=50+5x 	73.0 	3.8 	3.821
+2 	Line C: y=55+4x 	175.0 	5.8 	5.916
+Predictions for two new points (using the three candidate
+lines)
+Candidate lines:
+• 	Line A
+• 	Line B
+• 	Line C
+New points: Hours studied: 0.5 hours, 5.5 hours, What will be the prediction for the new
+points? If we use lines A,B,C?
+
+-- 3 of 3 --
+

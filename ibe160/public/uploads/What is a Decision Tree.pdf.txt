@@ -1,0 +1,57 @@
+What is a Decision Tree?
+A Decision Tree is a model that makes decisions by asking a series of questions — just like
+humans do when classifying something.
+Each question splits the data into groups based on the most useful feature (the one that
+separates the classes best).
+🦁 vs 🐯 Example — Lion or Tiger?
+Imagine we want to teach a computer to tell the difference between a lion and a tiger.
+We have data like this:
+Animal Has Stripes Weight (kg) Mane Species
+Lion 	No 	190 	Yes 	Lion
+Tiger 	Yes 	220 	No 	Tiger
+Lion 	No 	180 	Yes 	Lion
+Tiger 	Yes 	200 	No 	Tiger
+How does the tree decide the first question (the “best split”)?
+The goal is to choose the question that best separates lions from tigers.
+Possible first questions:
+1. 	“Is weight > 150 kg?”
+2. 	“Does it have stripes?”
+3. 	“Does it have a mane?”
+Now, all lions and tigers weigh more than 150 kg — so that question doesn’t help separate
+them.
+But the question “Does it have stripes?” perfectly splits the animals:
+• 	If Yes → Tiger
+• 	If No → Lion
+So, the best splitting question is “Does it have stripes?”, not “Does it weigh more than
+150 kg?”
+
+-- 1 of 2 --
+
+The Resulting Decision Tree
+[Has stripes?]
+/ 	\
+Yes 	No
+[Tiger] 	[Lion]
+Key Idea:
+1. 	The model sees examples of lions and tigers.
+2. 	It tests which feature best separates them.
+3. 	It finds that “Has_Stripes” gives a perfect split — all tigers have stripes, all lions
+don’t.
+4. 	The resulting tree will have:
+[Has stripes?]
+/ 	\
+Yes 	No
+[Tiger] 	[Lion]
+A Decision Tree always chooses the feature that gives the clearest separation between
+groups — the one that reduces impurity (or confusion) the most.
+Summary
+• 	Decision Trees work by asking questions that split data clearly.
+• 	The first (root) question is the most powerful one.
+• 	In our example, “Has stripes?” is a better split than “Weight > 150 kg?” because it
+cleanly separates tigers from lions.
+• 	Decision trees automatically choose the best splitting feature based on data.
+• 	The “best” feature is the one that gives the cleanest separation (lowest impurity).
+• 	In this case, “Has Stripes” is far more useful than “Weight”.
+
+-- 2 of 2 --
+

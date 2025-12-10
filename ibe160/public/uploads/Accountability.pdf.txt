@@ -1,0 +1,60 @@
+1. 	Accountability
+Accountability in the context of AI and machine learning refers to the obligation of individuals,
+organizations, or systems to be answerable for their actions, decisions, and outcomes. It
+involves ensuring that there is a clear line of responsibility for the behavior and impact of AI
+systems.
+Here are some key aspects of accountability in AI:
+• 	Responsibility
+Assignment of Responsibility: Clearly defining who is responsible for various aspects of an AI
+system, from development and deployment to monitoring and maintenance. This includes
+developers, data scientists, and decision-makers within an organization.
+Legal and Ethical Obligations: Ensuring that AI systems comply with relevant laws,
+regulations, and ethical standards. Organizations must be prepared to justify their use of AI
+technologies and demonstrate compliance.
+• 	Transparency
+Clear Documentation: Maintaining detailed records of how AI systems are developed, trained,
+and used. This includes documenting data sources, algorithms, decision-making processes, and
+any changes made over time.
+Explainability: Providing understandable explanations for how AI systems make decisions.
+This 	helps 	stakeholders 	understand 	the 	rationale 	behind 	AI 	outputs 	and 	facilitates
+accountability.
+• 	Error Handling
+Monitoring and Evaluation: Continuously monitoring AI systems to detect errors, biases, or
+unintended consequences. Regular evaluations help ensure that systems remain accurate and
+fair.
+Corrective Measures: Implementing processes to address issues when they arise. This includes
+updating models, retraining with new data, or adjusting algorithms to prevent future errors.
+• 	Impact Assessment
+Assessing Outcomes: Regularly assessing the impact of AI systems on individuals and society.
+This involves evaluating whether the system's outcomes align with intended goals and ethical
+standards.
+Stakeholder Engagement: Involving stakeholders in discussions about the use and impact of
+AI systems. This can include customers, employees, regulators, and other affected parties.
+Example Use Case: Financial Advice Algorithms
+
+-- 1 of 2 --
+
+An AI system provides investment advice that leads to significant financial loss for users.
+Determining who is accountable—developers, the deploying company, or the AI itself—can be
+complex.
+Ethical Consideration: Establish clear legal frameworks and ethical guidelines to define
+accountability in AI systems.
+o 	Accountability
+Accountability in AI means ensuring AI systems are held responsible for their actions
+and decisions. With machine learning (ML), AI should learn from its mistakes and
+improve over time, while businesses should take suitable corrective actions to prevent
+similar errors in the future.
+Say an AI chatbot mistakenly recommends an item that’s out of stock. The customer
+attempts to purchase the product because they believe it’s available, but they are later
+informed that the item is temporarily out of stock, leading to frustration. The company
+apologizes and implements human oversight to review and validate critical product-
+related information before bots can communicate it to customers.
+This example of accountability in AI for customer service shows how the company took
+responsibility for the error, outlined steps to correct it, and implemented preventative
+measures. Businesses should also perform regular audits of AI systems to identify and
+eliminate biases, ensure fair and nondiscriminatory outcomes, and foster transparency
+in AI.
+(source: https://www.zendesk.co.uk/blog/ai-transparency/)
+
+-- 2 of 2 --
+

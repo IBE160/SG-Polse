@@ -1,0 +1,80 @@
+Model Evaluation — Why It Matters
+When we train a machine learning model (like logistic regression), we want to know:
+How well does it make predictions?
+That’s where evaluation metrics come in.
+They tell us how good or bad our model is at classifying things correctly.
+We’ll use a simple example throughout:
+The model predicts whether a student passes (1) or fails (0) the final exam.
+1. Confusion Matrix
+The Confusion Matrix shows what the model got right and what it got wrong.
+Actual ↓ / Predicted → 	Pass (1) 	Fail (0)
+Pass (1) 	✅ True Positive (TP) ❌ False Negative (FN)
+Fail (0) 	❌ False Positive (FP) ✅ True Negative (TN)
+Example:
+Out of 100 students:
+• 	60 actually passed
+• 	40 actually failed
+Model’s predictions:
+Predicted Pass Predicted Fail
+Actually Pass 50 ✅ (TP) 	10 ❌ (FN)
+Actually Fail 8 ❌ (FP) 	32 ✅ (TN)
+Confusion Matrix in Numbers
+Predicted
+Pass 	Fail
+Actual Pass 	50 	10
+Actual Fail 	8 	32
+• 	TP = 50
+• 	FN = 10
+• 	FP = 8
+• 	TN = 32
+
+-- 1 of 4 --
+
+2. Accuracy — Overall Correctness
+Accuracy = How often the model is correct.
+Accuracy = 82%
+When Accuracy Can Mislead
+Imagine only 10% of students fail.
+If the model predicts everyone “passes,” accuracy = 90% — but it never caught a single
+failing student.
+So, accuracy isn’t always enough!
+3. Precision — How Reliable “Pass” Predictions Are
+Precision asks:
+Of all students the model predicted will pass, how many actually passed?
+High precision means few false alarms (few FPs).
+It’s about being accurate when you say “positive.”
+4. Recall — How Many Actual Passes Were Caught
+Recall asks:
+Of all students who actually passed, how many did the model identify correctly?
+
+-- 2 of 4 --
+
+Recall = 83.3%
+High recall means few missed cases (few FNs).
+It’s about catching as many real positives as possible.
+Imagine you’re a doctor testing for a disease.
+Precision answers:
+“Of all the people I said have the disease, how many actually have it?”
+It’s about being accurate when you say “positive.”
+High precision = few false alarms.
+Recall answers:
+“Of all the people who actually have the disease, how many did I find?”
+It’s about catching as many real positives as possible.
+High recall = few misses.
+5. F1 Score — The Balance
+The F1 Score combines Precision and Recall into one number.
+It’s the harmonic mean:
+F1 Score = 0.847 (84.7%)
+Great for imbalanced datasets (like few failures or few passes).
+Summary Table
+
+-- 3 of 4 --
+
+Metric 	Formula 	Interpretation
+Accuracy (TP + TN) / (TP + TN + FP + FN) Overall correctness
+Precision TP / (TP + FP) 	When model says “Pass,” how often it’s right
+Recall 	TP / (TP + FN) 	How many actual “Passes” it caught
+F1 Score 2 × (Prec × Rec) / (Prec + Rec) 	Balance between Prec & Rec
+
+-- 4 of 4 --
+

@@ -1,0 +1,23 @@
+Dataset Description: Molde Tourism Data
+This dataset contains tourism-related information for the Molde region, organized across 122
+observations and 12 variables. It integrates climate conditions, tourist activity, infrastructure
+usage, and seasonal indicators, making it suitable for exploratory data analysis (EDA) to
+understand tourism trends and influencing factors.
+Key Features
+Neighborhood (categorical) – The area within Molde where data was recorded (e.g.,
+Sentrum).
+Month (categorical) – Calendar month of observation (Jan–Dec).
+Season (categorical) – Season classification (Winter, Spring, Summer, Autumn).
+Tourists (integer) – Number of tourists recorded in that period.
+Rainfall_mm (float) – Average monthly rainfall (in millimeters). (5 missing values)
+Avg_Temp_C (float) – Average monthly temperature (°C). (5 missing values)
+Hotel_Occupancy_% (float) – Percentage of hotel occupancy.
+Events_Count (integer) – Number of events held in the area.
+Fjord_View_Rating (float) – A rating (1–5) of fjord visibility and attractiveness. (5 missing
+values)
+Ferry_Traffic (integer) – Number of ferry movements during the period.
+High_Season (categorical) – Indicator of whether the period is high or low tourist season.
+Source (categorical) – Source of the data (e.g., VisitMolde, fictitious).
+
+-- 1 of 1 --
+
