@@ -11,7 +11,14 @@ const StudentDashboardPage = () => {
 
   return (
     <div className="container mx-auto max-w-4xl py-8">
-      <h1 className="text-3xl font-bold">My Courses</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">My Courses</h1>
+        <Link href="/upload" legacyBehavior>
+          <a className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Upload Document
+          </a>
+        </Link>
+      </div>
       <p className="mt-2 text-lg text-gray-600">Select a course to start a chat session.</p>
 
       <div className="mt-8 space-y-4">
