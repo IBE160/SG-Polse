@@ -11,10 +11,6 @@ import { embeddingService } from "~/server/services/embedding";
 import { pineconeService } from "~/server/services/pinecone";
 import { env } from "~/env";
 
-const openai = new OpenAI({
-  apiKey: env.OPENAI_API_KEY,
-});
-
 export const chatbotRouter = createTRPCRouter({
   sendMessage: publicProcedure
     .input(
@@ -30,6 +26,13 @@ export const chatbotRouter = createTRPCRouter({
       console.log('Entered sendMessage mutation with input:', input);
 
       try {
+        if (!env.OPENAI_API_KEY) {
+          throw new Error('OPENAI_API_KEY is not set in environment variables.');
+        }
+        const openai = new OpenAI({
+          apiKey: env.OPENAI_API_KEY,
+        });
+
         const { message } = input;
 
         // 1. Detect the language of the user's query
