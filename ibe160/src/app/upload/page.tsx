@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FC } from "react";
+import Link from "next/link"; // Import Link
 
 const UploadPage: FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -62,7 +63,7 @@ const UploadPage: FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ filename: uploadedFilename.split('.').slice(0, -1).join('.') }),
+        body: JSON.stringify({ filename: uploadedFilename }),
       });
 
       const data = await response.json();
@@ -81,7 +82,14 @@ const UploadPage: FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-4">Upload a Document</h1>
+      <div className="flex justify-between items-center mb-8"> {/* Added div for layout */}
+        <h1 className="text-3xl font-bold">Upload a Document</h1>
+        <Link href="/student/dashboard" legacyBehavior>
+          <a className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+            Back to Dashboard
+          </a>
+        </Link>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="file" className="block text-sm font-medium text-gray-700">

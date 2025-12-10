@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link"; // Import Link
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import { api } from '~/utils/api';
@@ -66,8 +67,13 @@ const ChatPage = () => {
 
   return (
     <div className="container mx-auto flex h-[calc(100vh-4rem)] flex-col bg-gray-50">
-      <div className="border-b bg-white p-4 shadow-sm">
+      <div className="border-b bg-white p-4 shadow-sm flex items-center justify-between"> {/* Modified div for layout */}
         <h1 className="text-2xl font-bold">Chat for Course: {courseId}</h1>
+        <Link href="/student/dashboard" legacyBehavior>
+          <a className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+            Back to Dashboard
+          </a>
+        </Link>
       </div>
       
       <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4">

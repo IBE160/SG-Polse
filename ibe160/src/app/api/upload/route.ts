@@ -1,7 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises"; // Import mkdir
 import { join } from "path";
-import parsePdf from "pdf-parse"; // Corrected import statement
+
+// Use require for pdf-parse to avoid ESM/CJS interop issues
+const pdf = require("pdf-parse"); 
+console.log('pdf module imported:', pdf); // Added console.log for debugging
 
 export async function POST(request: NextRequest) {
   const data = await request.formData();
@@ -28,7 +31,8 @@ export async function POST(request: NextRequest) {
 
     // If the file is a PDF, parse it and save the text
     if (file.name.toLowerCase().endsWith(".pdf")) {
-      const data = await parsePdf(buffer); // Changed usage
+      const parser = new pdf.PDFParse({ data: buffer }); // Instantiate the class
+      const data = await parser.getText(); // Call the getText method
       const textFilePath = `${filePath}.txt`;
       await writeFile(textFilePath, data.text);
     }
