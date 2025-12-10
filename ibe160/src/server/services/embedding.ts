@@ -1,15 +1,24 @@
 import OpenAI from 'openai';
 import { env } from '~/env';
 
-const openai = new OpenAI({
-  apiKey: env.OPENAI_API_KEY,
-});
-
 /**
  * A service class for generating text embeddings using OpenAI.
  */
 export class EmbeddingService {
+  private openai: OpenAI | null = null;
   private readonly model = 'text-embedding-ada-002';
+
+  private getClient(): OpenAI {
+    if (!this.openai) {
+      if (!env.OPENAI_API_KEY) {
+        throw new Error('OPENAI_API_KEY is not set in environment variables.');
+      }
+      this.openai = new OpenAI({
+        apiKey: env.OPENAI_API_KEY,
+      });
+    }
+    return this.openai;
+  }
 
   /**
    * Generates an embedding for a given text.
@@ -19,7 +28,8 @@ export class EmbeddingService {
    */
   async generateEmbedding(text: string): Promise<number[]> {
     try {
-      const response = await openai.embeddings.create({
+      const client = this.getClient();
+      const response = await client.embeddings.create({
         model: this.model,
         input: text,
       });

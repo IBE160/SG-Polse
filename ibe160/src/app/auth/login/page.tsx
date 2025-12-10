@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
+import { FcGoogle } from 'react-icons/fc';
+import { FaDiscord } from 'react-icons/fa';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -100,14 +102,30 @@ export default function LoginPage() {
         {error && (
           <p className="mt-4 text-center text-red-600">{error}</p>
         )}
-        {/* New button for OAuth login */}
-        <button
-          type="button" // Use type="button" to prevent form submission
-          onClick={() => signIn('google', { callbackUrl: '/' })} // Initiate Google OAuth flow with explicit redirect
-          className="mt-4 w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-        >
-          Login with School Account
-        </button>
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-gray-300" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="bg-white px-2 text-gray-500">Or continue with</span>
+          </div>
+        </div>
+        <div className="space-y-4">
+          <button
+            onClick={() => signIn("google", { callbackUrl: "/student/dashboard" })}
+            className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-3 font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50"
+          >
+            <FcGoogle className="mr-3 h-6 w-6" />
+            Sign in with Google
+          </button>
+          <button
+            onClick={() => signIn("discord", { callbackUrl: "/student/dashboard" })}
+            className="flex w-full items-center justify-center rounded-md border border-transparent bg-[#5865F2] px-4 py-3 font-medium text-white shadow-sm transition-colors hover:bg-[#4752C4]"
+          >
+            <FaDiscord className="mr-3 h-6 w-6" />
+            Sign in with Discord
+          </button>
+        </div>
         <p className="mt-6 text-center text-sm text-gray-600">
           Don't have an account?{' '}
           <Link href="/auth/register" className="font-medium text-indigo-600 hover:text-indigo-500">

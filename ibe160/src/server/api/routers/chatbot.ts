@@ -1,5 +1,6 @@
 import { z } from "zod";
 import OpenAI from 'openai';
+import { TRPCError } from "@trpc/server";
 
 import {
   createTRPCRouter,
@@ -10,12 +11,8 @@ import { embeddingService } from "~/server/services/embedding";
 import { pineconeService } from "~/server/services/pinecone";
 import { env } from "~/env";
 
-const openai = new OpenAI({
-  apiKey: env.OPENAI_API_KEY,
-});
-
 export const chatbotRouter = createTRPCRouter({
-  queryChatbot: publicProcedure
+  sendMessage: publicProcedure
     .input(
       z.object({
         message: z.string(),
@@ -25,20 +22,32 @@ export const chatbotRouter = createTRPCRouter({
         })).optional(),
       })
     )
-    .query(async ({ ctx, input }) => {
-      const { message } = input;
+    .mutation(async ({ ctx, input }) => {
+      console.log('Entered sendMessage mutation with input:', input);
 
-      // 1. Detect the language of the user's query
-      const detectedLanguage = await languageService.detectLanguage(message);
+      try {
+        if (!env.OPENAI_API_KEY) {
+          throw new Error('OPENAI_API_KEY is not set in environment variables.');
+        }
+        const openai = new OpenAI({
+          apiKey: env.OPENAI_API_KEY,
+        });
 
-      // 2. Generate an embedding for the user's query using a multilingual model
-      const embedding = await embeddingService.generateEmbedding(message);
+        const { message } = input;
 
-      // 3. Find relevant context from the vector database
-      const context = await pineconeService.findMostRelevantContext(embedding);
+        // 1. Detect the language of the user's query
+        const detectedLanguage = await languageService.detectLanguage(message);
+        console.log('Detected Language:', detectedLanguage);
 
-      // 4. Construct the prompt for the LLM, including the retrieved context
-      const systemPrompt = `You are a helpful assistant for the IBE160 course.
+        // 2. Generate an embedding for the user's query using a multilingual model
+        const embedding = await embeddingService.generateEmbedding(message);
+
+        // 3. Find relevant context from the vector database
+        const context = await pineconeService.findMostRelevantContext(embedding);
+        console.log('Pinecone Context:', context);
+
+        // 4. Construct the prompt for the LLM, including the retrieved context
+        const systemPrompt = `You are a helpful assistant for the IBE160 course.
 Answer the user's question based on the following context.
 Please respond to the user in the same language they used, which has been detected as: ${detectedLanguage}.
 
@@ -48,8 +57,7 @@ ${context}
 ---
 `;
 
-      // 5. Call the LLM
-      try {
+        // 5. Call the LLM
         const response = await openai.chat.completions.create({
           model: "gpt-3.5-turbo", // Or another suitable model
           messages: [
@@ -65,8 +73,12 @@ ${context}
           sources: [], // Placeholder for actual sources from RAG
         };
       } catch (error) {
-        console.error('Error calling OpenAI:', error);
-        throw new Error('Failed to get a response from the chatbot.');
+        console.error('Error in sendMessage mutation:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to get a response from the chatbot.',
+          cause: error,
+        });
       }
     }),
 });

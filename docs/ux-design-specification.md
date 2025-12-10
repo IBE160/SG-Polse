@@ -228,14 +228,44 @@ graph TD
 *   **Back button behavior:** Browser's back button will work as expected.
 *   **Deep linking:** Application will use a clear URL structure (e.g., `/course/{courseId}/chat`, `/course/{courseId}/files`) to enable deep linking.
 
+### Empty State Patterns
+*   **Purpose:** To guide users, prevent confusion, and provide a clear path forward when there is no data to display. Empty states should be helpful, not just blank.
+
+*   **Student Chat - First Use (Initial State):**
+    *   **Visual:** The chat window will display a welcome card.
+    *   **Content:**
+        *   **Heading:** "Welcome to the IBE160 Assistant!"
+        *   **Body:** "I'm here to help you with questions about course content, assignments, and deadlines. What can I help you find today?"
+        *   **Suggested Actions:** Display 2-3 buttons for common queries (e.g., "Next assignment deadline?", "Where is the syllabus?").
+
+*   **Student Chat - No Answer Found:**
+    *   **Visual:** The chatbot responds with a specific card indicating no answer was found.
+    *   **Content:**
+        *   **Heading:** "I couldn't find a specific answer for that."
+        *   **Body:** "My knowledge is based on the documents provided by your teacher. You could try rephrasing your question, or if you need more help, it's best to contact your teacher directly."
+        *   **Action:** Provide a clear link or information on how to contact the teacher.
+
+*   **Teacher View - No Files Uploaded:**
+    *   **Visual:** The file management area will display a prominent instruction block instead of an empty list.
+    *   **Content:**
+        *   **Heading:** "Let's build your chatbot's knowledge."
+        *   **Body:** "This is where you'll manage the files your chatbot uses to answer student questions. Get started by uploading your first document, like the course syllabus or an assignment description."
+        *   **Action:** A primary "Upload Document" button is displayed centrally in this block.
+
 ## 11. Responsive and Accessibility Strategy
 
 ### Responsive Design
-*   **Target Devices:** Desktop (primary focus).
+*   **Target Devices:** Desktop (primary focus), with a baseline usable experience for Tablet and Mobile.
 *   **Breakpoint Strategy:**
-    *   **Desktop:** `min-width: 1024px` (Tailwind's `lg` breakpoint).
+    *   **Mobile:** `< 768px` (Tailwind's `md` breakpoint)
+    *   **Tablet:** `768px` to `1024px` (Tailwind's `md` to `lg` breakpoints)
+    *   **Desktop:** `min-width: 1024px` (Tailwind's `lg` breakpoint)
     *   **Large Desktop:** `min-width: 1280px` (Tailwind's `xl` breakpoint) and above.
-*   **Adaptation Patterns:** Multi-column layouts for desktop where appropriate; student chat interface centered with max-width for readability. Tablet/Mobile not explicitly designed for in this phase.
+
+*   **Adaptation Patterns:**
+    *   **Navigation Adaptation:** On Mobile and Tablet, any horizontal navigation bars (e.g., in the teacher's admin interface) will collapse into a single "hamburger" menu icon that reveals navigation links when tapped.
+    *   **Content Organization:** All multi-column layouts will stack vertically into a single column on Mobile and Tablet screens. The student chat interface, being single-column, will naturally adapt, with its `max-width` ensuring readability.
+    *   **Touch Targets:** All interactive elements (buttons, links, input fields) must have a minimum touch target size of 44x44 pixels on all devices to ensure usability on touchscreens.
 
 ### Accessibility Strategy
 *   **Compliance Target:** WCAG 2.1 Level AA.

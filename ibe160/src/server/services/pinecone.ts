@@ -48,4 +48,4 @@ export class PineconeService {
   }
 }
 
-export const pineconeService = new PineconeService();
+export const pineconeService = new PineconeService("", "", "");
