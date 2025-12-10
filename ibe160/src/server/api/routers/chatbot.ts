@@ -1,5 +1,6 @@
 import { z } from "zod";
 import OpenAI from 'openai';
+import { TRPCError } from "@trpc/server";
 
 import {
   createTRPCRouter,
@@ -26,21 +27,21 @@ export const chatbotRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      console.log('Entered sendMessage mutation with input:', input); // <--- ADD THIS
+      console.log('Entered sendMessage mutation with input:', input);
 
-      try { // <--- ADD THIS
+      try {
         const { message } = input;
 
         // 1. Detect the language of the user's query
         const detectedLanguage = await languageService.detectLanguage(message);
-        console.log('Detected Language:', detectedLanguage); // <--- THIS WILL NOW BE INSIDE TRY
+        console.log('Detected Language:', detectedLanguage);
 
         // 2. Generate an embedding for the user's query using a multilingual model
         const embedding = await embeddingService.generateEmbedding(message);
 
         // 3. Find relevant context from the vector database
         const context = await pineconeService.findMostRelevantContext(embedding);
-        console.log('Pinecone Context:', context); // <--- THIS WILL NOW BE INSIDE TRY
+        console.log('Pinecone Context:', context);
 
         // 4. Construct the prompt for the LLM, including the retrieved context
         const systemPrompt = `You are a helpful assistant for the IBE160 course.
@@ -53,8 +54,7 @@ ${context}
 ---
 `;
 
-      // 5. Call the LLM
-      try {
+        // 5. Call the LLM
         const response = await openai.chat.completions.create({
           model: "gpt-3.5-turbo", // Or another suitable model
           messages: [
@@ -70,8 +70,12 @@ ${context}
           sources: [], // Placeholder for actual sources from RAG
         };
       } catch (error) {
-        console.error('Error calling OpenAI:', error);
-        throw new Error('Failed to get a response from the chatbot.');
+        console.error('Error in sendMessage mutation:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to get a response from the chatbot.',
+          cause: error,
+        });
       }
     }),
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, use } from 'react';
 import { api } from '~/utils/api';
 
 interface Message {
@@ -9,6 +9,7 @@ interface Message {
 }
 
 const ChatPage = ({ params }: { params: { courseId: string } }) => {
+  const { courseId } = use(params);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -66,7 +67,7 @@ const ChatPage = ({ params }: { params: { courseId: string } }) => {
   return (
     <div className="container mx-auto flex h-[calc(100vh-4rem)] flex-col bg-gray-50">
       <div className="border-b bg-white p-4 shadow-sm">
-        <h1 className="text-2xl font-bold">Chat for Course: {params.courseId}</h1>
+        <h1 className="text-2xl font-bold">Chat for Course: {courseId}</h1>
       </div>
       
       <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4">
