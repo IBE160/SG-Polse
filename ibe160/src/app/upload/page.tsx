@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FC } from "react";
+import { useState, type FC, useEffect } from "react"; // Import useEffect
 import Link from "next/link"; // Import Link
 
 const UploadPage: FC = () => {
@@ -11,6 +11,29 @@ const UploadPage: FC = () => {
   const [uploadedFilename, setUploadedFilename] = useState<string | null>(null);
   const [isIngesting, setIsIngesting] = useState<boolean>(false);
   const [ingestionMessage, setIngestionMessage] = useState<string>("");
+  const [documents, setDocuments] = useState<string[]>([]); // New state for documents
+  const [loadingDocuments, setLoadingDocuments] = useState<boolean>(true); // New state for loading
+
+  const fetchDocuments = async () => {
+    setLoadingDocuments(true);
+    try {
+      const response = await fetch("/api/documents/list");
+      const data = await response.json();
+      if (response.ok) {
+        setDocuments(data.files);
+      } else {
+        setMessage(`Error fetching documents: ${data.error || "An unknown error occurred."}`);
+      }
+    } catch (error: any) {
+      setMessage(`An unexpected error occurred while fetching documents: ${error.message || ""}`);
+    } finally {
+      setLoadingDocuments(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDocuments();
+  }, []); // Fetch documents on component mount
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -43,6 +66,7 @@ const UploadPage: FC = () => {
       if (response.ok) {
         setMessage(data.message);
         setUploadedFilename(file.name);
+        fetchDocuments(); // Refresh document list after successful upload
       } else {
         setMessage(`Error: ${data.error || "An unknown error occurred during upload."}`);
       }
@@ -106,6 +130,33 @@ const UploadPage: FC = () => {
       setIngestionMessage(`An unexpected error occurred during ingestion: ${error.message || ""}`);
     } finally {
       setIsIngesting(false);
+    }
+  };
+
+  const handleDelete = async (filenameToDelete: string) => {
+    if (!confirm(`Are you sure you want to delete "${filenameToDelete}"? This will also remove its associated text file and embeddings.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/documents/delete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ filename: filenameToDelete }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage(data.message);
+        fetchDocuments(); // Refresh the list after deletion
+      } else {
+        setMessage(`Error deleting document: ${data.error || "An unknown error occurred during deletion."}`);
+      }
+    } catch (error: any) {
+      setMessage(`An unexpected error occurred during deletion: ${error.message || ""}`);
     }
   };
 
@@ -173,6 +224,30 @@ const UploadPage: FC = () => {
           <p className="text-gray-800">{summary}</p>
         </div>
       )}
+
+      {/* Display uploaded documents list */}
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">Uploaded Documents</h2>
+        {loadingDocuments ? (
+          <p>Loading documents...</p>
+        ) : documents.length === 0 ? (
+          <p>No documents uploaded yet.</p>
+        ) : (
+          <ul className="space-y-2">
+            {documents.map((doc, index) => (
+              <li key={index} className="flex justify-between items-center bg-gray-50 p-3 rounded-md shadow-sm">
+                <span className="text-gray-800">{doc}</span>
+                <button
+                  onClick={() => handleDelete(doc)}
+                  className="inline-flex justify-center py-1 px-3 border border-transparent shadow-sm text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };

@@ -103,6 +103,25 @@ export class PineconeService {
       throw new Error('Failed to query Pinecone for relevant context.');
     }
   }
+
+  /**
+   * Deletes vectors from the Pinecone index based on a filter.
+   * @param fileName The fileName metadata to filter vectors for deletion.
+   */
+  async deleteVectors(fileName: string): Promise<void> {
+    if (!env.PINECONE_API_KEY || !env.PINECONE_INDEX_NAME) {
+      console.log(`Mock: Deleting vectors with fileName: ${fileName} from Pinecone.`);
+      return Promise.resolve();
+    }
+
+    try {
+      await this.index.delete({ filter: { fileName: fileName } });
+      console.log(`Successfully deleted vectors for fileName: ${fileName} from Pinecone index: ${this.indexName}`);
+    } catch (error) {
+      console.error(`Error deleting vectors for fileName: ${fileName} from Pinecone:`, error);
+      throw new Error(`Failed to delete vectors for fileName: ${fileName} from Pinecone.`);
+    }
+  }
 }
 
 export const pineconeService = new PineconeService(
