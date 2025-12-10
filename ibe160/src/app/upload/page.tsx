@@ -9,6 +9,8 @@ const UploadPage: FC = () => {
   const [summary, setSummary] = useState<string>("");
   const [isSummarizing, setIsSummarizing] = useState<boolean>(false);
   const [uploadedFilename, setUploadedFilename] = useState<string | null>(null);
+  const [isIngesting, setIsIngesting] = useState<boolean>(false);
+  const [ingestionMessage, setIngestionMessage] = useState<string>("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -25,6 +27,7 @@ const UploadPage: FC = () => {
 
     setSummary(""); // Clear previous summary
     setUploadedFilename(null); // Clear previous filename
+    setIngestionMessage(""); // Clear previous ingestion message
 
     const formData = new FormData();
     formData.append("file", file);
@@ -80,9 +83,35 @@ const UploadPage: FC = () => {
     }
   };
 
+  const handleIngest = async () => {
+    setIsIngesting(true);
+    setIngestionMessage("");
+
+    try {
+      const response = await fetch("/api/ai/ingest", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setIngestionMessage(data.message);
+      } else {
+        setIngestionMessage(`Error during ingestion: ${data.error || "An unknown error occurred during ingestion."}`);
+      }
+    } catch (error: any) {
+      setIngestionMessage(`An unexpected error occurred during ingestion: ${error.message || ""}`);
+    } finally {
+      setIsIngesting(false);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8"> {/* Added div for layout */}
+      <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Upload a Document</h1>
         <Link href="/student/dashboard" legacyBehavior>
           <a className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
@@ -111,18 +140,32 @@ const UploadPage: FC = () => {
       </form>
       {message && <p className="mt-4 text-sm text-gray-600">{message}</p>}
 
-      {uploadedFilename && uploadedFilename.toLowerCase().endsWith(".pdf") && (
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-2">Document Actions</h2>
+      <div className="mt-8 space-y-4"> {/* Group document actions */}
+        {uploadedFilename && uploadedFilename.toLowerCase().endsWith(".pdf") && (
+          <div>
+            <h2 className="text-2xl font-bold mb-2">Document Specific Actions</h2>
+            <button
+              onClick={handleSummarize}
+              disabled={isSummarizing}
+              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            >
+              {isSummarizing ? "Summarizing..." : "Summarize Document"}
+            </button>
+          </div>
+        )}
+
+        <div className="pt-4"> {/* Separator for ingestion button */}
+          <h2 className="text-2xl font-bold mb-2">Global Document Actions</h2>
           <button
-            onClick={handleSummarize}
-            disabled={isSummarizing}
-            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            onClick={handleIngest}
+            disabled={isIngesting}
+            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-            {isSummarizing ? "Summarizing..." : "Summarize Document"}
+            {isIngesting ? "Ingesting All..." : "Ingest All Documents for AI"}
           </button>
+          {ingestionMessage && <p className="mt-4 text-sm text-gray-600">{ingestionMessage}</p>}
         </div>
-      )}
+      </div>
 
       {summary && (
         <div className="mt-8 p-4 bg-gray-100 rounded-md">
