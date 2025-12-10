@@ -1,5 +1,5 @@
-import { handlers } from "~/server/auth";
+import { GET, POST } from "~/server/auth";
 
-export const { GET, POST } = handlers;
+export { GET, POST };
 
 export const runtime = "nodejs";
