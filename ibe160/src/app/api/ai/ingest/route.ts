@@ -31,6 +31,14 @@ export async function POST(request: NextRequest) {
 
     for (const filePath of textFiles) {
       const fileName = basename(filePath); // Use basename to get just the filename
+
+      // Check if the file has already been ingested
+      const alreadyIngested = await pineconeService.queryByFileName(fileName);
+      if (alreadyIngested) {
+        console.log(`File already ingested, skipping: ${fileName}`);
+        continue;
+      }
+
       // console.log('Ingestion API: Processing filePath:', filePath); // Removed debug log
       // console.log('Ingestion API: Derived fileName for metadata:', fileName); // Removed debug log
       const fileContent = await fs.readFile(filePath, "utf-8");

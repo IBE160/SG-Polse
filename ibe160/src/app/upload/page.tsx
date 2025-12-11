@@ -11,6 +11,7 @@ const UploadPage: FC = () => {
   const [uploadedFilename, setUploadedFilename] = useState<string | null>(null);
   const [isIngesting, setIsIngesting] = useState<boolean>(false);
   const [ingestionMessage, setIngestionMessage] = useState<string>("");
+  const [isClearing, setIsClearing] = useState<boolean>(false); // New state for clearing
   const [documents, setDocuments] = useState<string[]>([]); // New state for documents
   const [loadingDocuments, setLoadingDocuments] = useState<boolean>(true); // New state for loading
 
@@ -133,6 +134,34 @@ const UploadPage: FC = () => {
     }
   };
 
+  const handleClear = async () => {
+    if (!confirm("Are you sure you want to delete all data? This action is irreversible.")) {
+      return;
+    }
+
+    setIsClearing(true);
+    setIngestionMessage("");
+
+    try {
+      const response = await fetch("/api/ai/clear", {
+        method: "POST",
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setIngestionMessage(data.message);
+        fetchDocuments(); // Refresh document list
+      } else {
+        setIngestionMessage(`Error clearing data: ${data.error || "An unknown error occurred."}`);
+      }
+    } catch (error: any) {
+      setIngestionMessage(`An unexpected error occurred while clearing data: ${error.message || ""}`);
+    } finally {
+      setIsClearing(false);
+    }
+  };
+  
   const handleDelete = async (filenameToDelete: string) => {
     if (!confirm(`Are you sure you want to delete "${filenameToDelete}"? This will also remove its associated text file and embeddings.`)) {
       return;
@@ -213,6 +242,13 @@ const UploadPage: FC = () => {
             className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             {isIngesting ? "Ingesting All..." : "Ingest All Documents for AI"}
+          </button>
+          <button
+            onClick={handleClear}
+            disabled={isClearing}
+            className="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          >
+            {isClearing ? "Clearing All Data..." : "Clear All Data"}
           </button>
           {ingestionMessage && <p className="mt-4 text-sm text-gray-600">{ingestionMessage}</p>}
         </div>

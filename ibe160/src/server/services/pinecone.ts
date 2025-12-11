@@ -139,6 +139,55 @@ export class PineconeService {
       throw new Error(`Failed to delete vectors for fileName: ${fileName} from Pinecone.`);
     }
   }
+
+  /**
+   * Queries the Pinecone index for vectors with a matching fileName in their metadata.
+   * @param fileName The fileName to query for.
+   * @returns A promise that resolves to true if vectors are found, false otherwise.
+   */
+  async queryByFileName(fileName: string): Promise<boolean> {
+    if (!env.PINECONE_API_KEY || !env.PINECONE_INDEX_NAME) {
+      console.log(`Mock: Querying for fileName: ${fileName} in Pinecone.`);
+      return Promise.resolve(false); // Assume not found in mock environment
+    }
+
+    try {
+      const queryResult = await this.index.query({
+        topK: 1, // We only need to know if at least one vector exists
+        filter: { fileName: { "$eq": fileName } },
+        vector: Array(1536).fill(0), // Dummy vector
+        includeValues: false,
+        includeMetadata: false,
+      });
+
+      return queryResult.matches.length > 0;
+    } catch (error) {
+      console.error(`Error querying for fileName: ${fileName} from Pinecone:`, error);
+      // In case of an error, we might want to proceed with ingestion to be safe,
+      // or handle it more gracefully depending on the desired behavior.
+      // For now, let's return false to allow ingestion to proceed.
+      return false;
+    }
+  }
+
+  /**
+   * Deletes all vectors from the Pinecone index.
+   * @returns A promise that resolves when all vectors have been deleted.
+   */
+  async deleteAll(): Promise<void> {
+    if (!env.PINECONE_API_KEY || !env.PINECONE_INDEX_NAME) {
+      console.log("Mock: Deleting all vectors from Pinecone.");
+      return Promise.resolve();
+    }
+
+    try {
+      await this.index.deleteAll();
+      console.log(`Successfully deleted all vectors from Pinecone index: ${this.indexName}`);
+    } catch (error) {
+      console.error(`Error deleting all vectors from Pinecone:`, error);
+      throw new Error(`Failed to delete all vectors from Pinecone.`);
+    }
+  }
 }
 
 export const pineconeService = new PineconeService(
