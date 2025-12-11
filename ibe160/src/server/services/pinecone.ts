@@ -115,8 +115,25 @@ export class PineconeService {
     }
 
     try {
-      await this.index.deleteMany({ filter: { fileName: fileName } }); // Corrected call
-      console.log(`Successfully deleted vectors for fileName: ${fileName} from Pinecone index: ${this.indexName}`);
+      // 1. Query for the vector IDs to delete
+      const queryResult = await this.index.query({
+        topK: 10000, // A large number to get all matching vectors
+        filter: { fileName: { "$eq": fileName } },
+        vector: Array(1536).fill(0), // Dummy vector
+        includeValues: false, // We only need the IDs
+        includeMetadata: false,
+      });
+
+      if (queryResult.matches && queryResult.matches.length > 0) {
+        const vectorIdsToDelete = queryResult.matches.map(match => match.id);
+
+        // 2. Delete by ID
+        await this.index.deleteMany(vectorIdsToDelete);
+        console.log(`Successfully deleted ${vectorIdsToDelete.length} vectors for fileName: ${fileName} from Pinecone index: ${this.indexName}`);
+      } else {
+        console.log(`No vectors found for fileName: ${fileName}, nothing to delete.`);
+      }
+
     } catch (error) {
       console.error(`Error deleting vectors for fileName: ${fileName} from Pinecone:`, error);
       throw new Error(`Failed to delete vectors for fileName: ${fileName} from Pinecone.`);

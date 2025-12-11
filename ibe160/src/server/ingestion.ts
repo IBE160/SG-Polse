@@ -29,12 +29,10 @@ export class IngestionService {
   constructor() {
     this.documentParser = new DocumentParser();
     this.embeddingService = embeddingService;
-    this.pineconeService = new PineconeService(
-      env.PINECONE_API_KEY,
-      env.PINECONE_ENVIRONMENT,
-      env.PINECONE_INDEX_NAME
-    );
-  }
+          this.pineconeService = new PineconeService(
+          env.PINECONE_API_KEY,
+          env.PINECONE_INDEX_NAME
+        );  }
 
   // Placeholder for fetching documents from Canvas
   private async fetchDocumentsFromCanvas(courseId: string): Promise<Document[]> {
@@ -49,10 +47,10 @@ export class IngestionService {
 
     for (const doc of documents) {
       try {
-        console.log(`Parsing document: ${doc.documentName}`);
+        console.log(`Parsing document: ${doc.metadata.documentName}`);
         const textContent = await this.documentParser.parse(doc.filePath, doc.fileType);
 
-        console.log(`Generating embedding for document: ${doc.documentName}`);
+        console.log(`Generating embedding for document: ${doc.metadata.documentName}`);
         const embedding = await this.embeddingService.generateEmbedding(textContent);
 
         if (embedding.length > 0) {
@@ -65,14 +63,14 @@ export class IngestionService {
             },
           };
 
-          console.log(`Upserting vector for document: ${doc.documentName}`);
+          console.log(`Upserting vector for document: ${doc.metadata.documentName}`);
           await this.pineconeService.upsertVectors([vector]);
-          console.log(`Successfully ingested: ${doc.documentName}`);
+          console.log(`Successfully ingested: ${doc.metadata.documentName}`);
         } else {
-          console.warn(`No embedding generated for document: ${doc.documentName}. Skipping upsert.`);
+          console.warn(`No embedding generated for document: ${doc.metadata.documentName}. Skipping upsert.`);
         }
       } catch (error) {
-        console.error(`Error processing document ${doc.documentName}:`, error);
+        console.error(`Error processing document ${doc.metadata.documentName}:`, error);
         // Continue to next document even if one fails
       }
     }
@@ -102,6 +100,7 @@ export class IngestionService {
         source: "Teacher Upload", // Or derive from filePath/bucket
         courseId: courseId,
         documentName: filePath.split('/').pop(), // Extract filename
+        fileName: filePath.split('/').pop(), // Add fileName to metadata for Pinecone deletion
         fileType: fileType,
         textContent: textContent.substring(0, 500), // Store first 500 chars of text for context
       };

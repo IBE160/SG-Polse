@@ -3,8 +3,7 @@ import { writeFile, mkdir, rm } from "fs/promises"; // Import mkdir and rm
 import { join } from "path";
 import { v4 as uuidv4 } from 'uuid'; // Import uuid for unique temp directory names
 
-// Use require for pdf-parse and adm-zip to avoid ESM/CJS interop issues
-const pdf = require("pdf-parse");
+import { PDFParse } from "pdf-parse";
 const AdmZip = require("adm-zip");
 
 export async function POST(request: NextRequest) {
@@ -39,6 +38,13 @@ export async function POST(request: NextRequest) {
       for (const zipEntry of zipEntries) {
         if (!zipEntry.isDirectory) {
           const entryFileName = zipEntry.entryName;
+          
+          // Skip macOS resource fork files and other hidden files
+          if (entryFileName.startsWith('__MACOSX/') || entryFileName.split('/').pop().startsWith('.')) {
+            console.log(`Skipping macOS resource fork or hidden file: ${entryFileName}`);
+            continue;
+          }
+
           const entryFilePath = join(tempExtractionPath, entryFileName);
           const fileExtension = entryFileName.toLowerCase().split('.').pop();
           const fileNameWithoutExtension = entryFileName.split('.').slice(0, -1).join('.');
@@ -47,8 +53,9 @@ export async function POST(request: NextRequest) {
 
           if (fileExtension === "pdf") {
             const pdfBuffer = zipEntry.getData();
+            let parser;
             try {
-              const parser = new pdf.PDFParse({ data: pdfBuffer });
+              parser = new PDFParse({ data: pdfBuffer });
               const pdfData = await parser.getText();
               savedFileName = `${fileNameWithoutExtension}.pdf.txt`;
               await writeFile(join(uploadDir, savedFileName), pdfData.text);
@@ -56,6 +63,10 @@ export async function POST(request: NextRequest) {
             } catch (pdfError: any) {
               console.error(`Error parsing PDF from ZIP entry ${entryFileName}:`, pdfError);
               processedFiles.push(`${entryFileName} (PDF parsing failed: ${pdfError.message})`);
+            } finally {
+              if (parser) {
+                await parser.destroy();
+              }
             }
           } else if (fileExtension === "txt") {
             const textContent = zipEntry.getData().toString('utf8');
@@ -76,10 +87,17 @@ export async function POST(request: NextRequest) {
       await writeFile(filePath, buffer);
 
       if (file.name.toLowerCase().endsWith(".pdf")) {
-        const parser = new pdf.PDFParse({ data: buffer });
-        const data = await parser.getText();
-        const textFilePath = `${filePath}.txt`;
-        await writeFile(textFilePath, data.text);
+        let parser;
+        try {
+          parser = new PDFParse({ data: buffer });
+          const data = await parser.getText();
+          const textFilePath = `${filePath}.txt`;
+          await writeFile(textFilePath, data.text);
+        } finally {
+          if (parser) {
+            await parser.destroy();
+          }
+        }
       }
       return NextResponse.json({ message: "File uploaded successfully." });
     }
