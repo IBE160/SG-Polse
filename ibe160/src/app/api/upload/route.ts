@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir, rm } from "fs/promises"; // Import mkdir and rm
+import { writeFile, mkdir, rm, access } from "fs/promises"; // Import mkdir, rm, and access
 import { join } from "path";
 import { v4 as uuidv4 } from 'uuid'; // Import uuid for unique temp directory names
 
@@ -50,6 +50,17 @@ export async function POST(request: NextRequest) {
           const fileNameWithoutExtension = entryFileName.split('.').slice(0, -1).join('.');
 
           let savedFileName: string | null = null;
+          const expectedTxtFileName = fileExtension === "pdf" ? `${fileNameWithoutExtension}.pdf.txt` : `${fileNameWithoutExtension}.txt`;
+          const expectedTxtFilePath = join(uploadDir, expectedTxtFileName);
+
+          try {
+            await access(expectedTxtFilePath);
+            console.log(`File from ZIP already ingested, skipping: ${entryFileName}`);
+            processedFiles.push(`${entryFileName} (skipped, already ingested)`);
+            continue; // Skip to the next file in the ZIP
+          } catch (error) {
+            // File does not exist, proceed with ingestion
+          }
 
           if (fileExtension === "pdf") {
             const pdfBuffer = zipEntry.getData();
@@ -84,6 +95,18 @@ export async function POST(request: NextRequest) {
     } else {
       // Original handling for single files (PDF, TXT, etc.)
       const filePath = join(uploadDir, file.name);
+      const textFilePath = file.name.toLowerCase().endsWith(".pdf")
+        ? `${filePath}.txt`
+        : filePath;
+
+      try {
+        await access(textFilePath); // Check if the .txt file already exists
+        console.log(`File already ingested, skipping: ${file.name}`);
+        return NextResponse.json({ message: `File already ingested, skipping: ${file.name}` });
+      } catch (error) {
+        // File does not exist, proceed with ingestion
+      }
+
       await writeFile(filePath, buffer);
 
       if (file.name.toLowerCase().endsWith(".pdf")) {
@@ -91,7 +114,6 @@ export async function POST(request: NextRequest) {
         try {
           parser = new PDFParse({ data: buffer });
           const data = await parser.getText();
-          const textFilePath = `${filePath}.txt`;
           await writeFile(textFilePath, data.text);
         } finally {
           if (parser) {

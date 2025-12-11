@@ -2,6 +2,9 @@ import { DocumentParser } from './services/parser';
 import { embeddingService } from './services/embedding';
 import { PineconeService /*, Vector*/ } from './services/pinecone'; // Commented out Vector import
 import { env } from '../env';
+import { access, writeFile } from 'fs/promises';
+import { join } from 'path';
+
 
 // Temporary local definition for Vector to bypass Jest module resolution issue
 interface Vector {
@@ -44,13 +47,30 @@ export class IngestionService {
 
   async ingestCourseDocuments(courseId: string): Promise<void> {
     const documents = await this.fetchDocumentsFromCanvas(courseId);
+    const uploadDir = join(process.cwd(), "public", "uploads");
 
     for (const doc of documents) {
+      let textFilePath: string; // Declare textFilePath once
       try {
-        console.log(`Parsing document: ${doc.metadata.documentName}`);
+        const docName = doc.metadata.documentName;
+        const expectedTxtFileName = doc.fileType === 'pdf' ? `${docName}.txt` : docName;
+        textFilePath = join(uploadDir, expectedTxtFileName);
+
+        try {
+          await access(textFilePath);
+          console.log(`Document already ingested, skipping: ${docName}`);
+          continue;
+        } catch (error) {
+          // File does not exist, proceed with ingestion
+        }
+
+        console.log(`Parsing document: ${docName}`);
         const textContent = await this.documentParser.parse(doc.filePath, doc.fileType);
 
-        console.log(`Generating embedding for document: ${doc.metadata.documentName}`);
+        // Save the extracted text content to a local .txt file
+        await writeFile(textFilePath, textContent);
+        
+        console.log(`Generating embedding for document: ${docName}`);
         const embedding = await this.embeddingService.generateEmbedding(textContent);
 
         if (embedding.length > 0) {
@@ -63,11 +83,11 @@ export class IngestionService {
             },
           };
 
-          console.log(`Upserting vector for document: ${doc.metadata.documentName}`);
+          console.log(`Upserting vector for document: ${docName}`);
           await this.pineconeService.upsertVectors([vector]);
-          console.log(`Successfully ingested: ${doc.metadata.documentName}`);
+          console.log(`Successfully ingested: ${docName}`);
         } else {
-          console.warn(`No embedding generated for document: ${doc.metadata.documentName}. Skipping upsert.`);
+          console.warn(`No embedding generated for document: ${docName}. Skipping upsert.`);
         }
       } catch (error) {
         console.error(`Error processing document ${doc.metadata.documentName}:`, error);
