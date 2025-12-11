@@ -4,8 +4,8 @@ import { headers } from "next/headers";
 import { TRPCReactProvider } from "~/utils/api";
 
 export const metadata = {
-  title: "IBE160 Chatbot",
-  description: "Your assistant for the IBE160 course.",
+  title: "IBE400 Machine Learning Chatbot",
+  description: "Your assistant for the IBE400 Machine Learning course.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 

@@ -16,6 +16,11 @@ const ChatPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const inputValueRef = useRef<HTMLInputElement>(null);
+
+  const { data: initialMessageData, isSuccess } = api.chatbot.getInitialMessage.useQuery(undefined, {
+    staleTime: Infinity, // This query should only run once
+  });
 
   // Use useMutation for sending messages
   const sendMessageMutation = api.chatbot.sendMessage.useMutation({
@@ -32,6 +37,7 @@ const ChatPage = () => {
         const newMessages = prev.slice(0, prev.length - 1); // Remove last message ("Thinking...")
         return [...newMessages, { text: data.answer, sender: 'bot' }];
       });
+      inputValueRef.current?.focus(); // Focus the input after successful message sending
     },
     onError: (error) => {
       setMessages(prev => {
@@ -39,6 +45,7 @@ const ChatPage = () => {
         const newMessages = prev.slice(0, prev.length - 1);
         return [...newMessages, { text: `Error: ${error.message}`, sender: 'bot' }];
       });
+      inputValueRef.current?.focus(); // Focus the input after an error
     },
   });
 
@@ -53,6 +60,12 @@ const ChatPage = () => {
   };
 
   useEffect(() => {
+    if (isSuccess && initialMessageData && messages.length === 0) {
+      setMessages([{ text: initialMessageData.message, sender: 'bot' }]);
+    }
+  }, [isSuccess, initialMessageData, messages.length]);
+
+  useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
@@ -61,6 +74,7 @@ const ChatPage = () => {
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      e.preventDefault();
       handleSendMessage();
     }
   };
@@ -97,6 +111,7 @@ const ChatPage = () => {
       <div className="border-t bg-white p-4">
         <div className="flex items-center space-x-2">
           <input
+            ref={inputValueRef}
             type="text"
             placeholder="Ask a question about the course..."
             className="flex-1 rounded-md border border-gray-300 p-2 focus:border-purple-500 focus:ring-purple-500"

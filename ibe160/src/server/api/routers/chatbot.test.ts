@@ -14,7 +14,21 @@ jest.mock('openai');
 
 const createCaller = createCallerFactory(appRouter);
 
-describe('chatbotRouter.queryChatbot', () => {
+describe('chatbotRouter.getInitialMessage', () => {
+  it('should return the introductory message', async () => {
+    // Arrange
+    const caller = createCaller({ session: null, db: {} as any });
+    const expectedMessage = `Hello! I'm your assistant for the IBE400 Machine Learning course. How can I help you today?`;
+
+    // Act
+    const result = await caller.chatbot.getInitialMessage();
+
+    // Assert
+    expect(result.message).toBe(expectedMessage);
+  });
+});
+
+describe('chatbotRouter.sendMessage', () => {
   let caller: ReturnType<typeof createCaller>;
   let mockDetectLanguage: jest.Mock;
   let mockGenerateEmbedding: jest.Mock;
@@ -40,12 +54,12 @@ describe('chatbotRouter.queryChatbot', () => {
 
   it('should handle a mixed-language query by executing the full RAG flow', async () => {
     // Arrange
-    const testMessage = 'Hva er dependency injection?';
-    const detectedLanguage = 'nno'; // Nynorsk Norwegian (example)
+    const testMessage = 'What is Machine Learning?';
+    const detectedLanguage = 'en'; 
     const mockEmbedding = [0.1, 0.2, 0.3];
-    const mockContext = `Retrieved Document: "Lecture Notes Week 4"
-Content: "Dependency Injection (DI) is a design pattern used to implement inversion of control."`;
-    const expectedResponse = 'Dependency injection er et designmønster...';
+    const mockContext = `Retrieved Document: "Lecture Notes Week 1"
+Content: "Machine Learning is a field of artificial intelligence that uses statistical techniques to give computer systems the ability to "learn" from data."`;
+    const expectedResponse = 'Machine Learning is a field of artificial intelligence that uses statistical techniques to give computer systems the ability to "learn" from data.';
 
     mockDetectLanguage.mockResolvedValue(detectedLanguage);
     mockGenerateEmbedding.mockResolvedValue(mockEmbedding);
@@ -54,7 +68,7 @@ Content: "Dependency Injection (DI) is a design pattern used to implement invers
       choices: [{ message: { content: expectedResponse } }],
     });
 
-    const expectedSystemPrompt = `You are a helpful assistant for the IBE160 course.
+    const expectedSystemPrompt = `You are a helpful assistant for the IBE400 Machine Learning course.
 Answer the user's question based on the following context.
 Please respond to the user in the same language they used, which has been detected as: ${detectedLanguage}.
 
@@ -65,7 +79,7 @@ ${mockContext}
 `;
 
     // Act
-    const result = await caller.chatbot.queryChatbot({ message: testMessage });
+    const result = await caller.chatbot.sendMessage({ message: testMessage });
 
     // Assert
     // Verify the full RAG flow was executed
@@ -98,7 +112,7 @@ ${mockContext}
     });
     
     // Act
-    await caller.chatbot.queryChatbot({ message: testMessage });
+    await caller.chatbot.sendMessage({ message: testMessage });
 
     // Assert
     // Check that the system prompt includes the 'und' language code

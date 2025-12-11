@@ -12,6 +12,11 @@ import { pineconeService } from "~/server/services/pinecone";
 import { env } from "~/env";
 
 export const chatbotRouter = createTRPCRouter({
+  getInitialMessage: publicProcedure.query(() => {
+    return {
+      message: `Hello! I'm your assistant for the IBE400 Machine Learning course. How can I help you today?`
+    };
+  }),
   sendMessage: publicProcedure
     .input(
       z.object({
@@ -47,7 +52,7 @@ export const chatbotRouter = createTRPCRouter({
         console.log('Pinecone Context:', context);
 
         // 4. Construct the prompt for the LLM, including the retrieved context
-        const systemPrompt = `You are a helpful assistant for the IBE160 course.
+        const systemPrompt = `You are a helpful assistant for the IBE400 Machine Learning course.
 Answer the user's question based on the following context.
 Please respond to the user in the same language they used, which has been detected as: ${detectedLanguage}.
 
@@ -57,20 +62,33 @@ ${context}
 ---
 `;
 
-        const conversationMessages = (conversationHistory ?? []).map(msg => ({
-          role: msg.sender === 'bot' ? 'assistant' : 'user',
-          content: msg.text,
-        }));
+                const conversationMessages = (conversationHistory ?? []).map(msg => ({
 
-        // 5. Call the LLM
-        const response = await openai.chat.completions.create({
-          model: "gpt-3.5-turbo", // Or another suitable model
-          messages: [
-            { role: "system", content: systemPrompt },
-            ...conversationMessages,
-            { role: "user", content: message },
-          ],
-        });
+                  role: msg.sender === 'bot' ? 'assistant' : 'user',
+
+                  content: msg.text,
+
+                }));
+
+        
+
+                // 5. Call the LLM
+
+                const response = await openai.chat.completions.create({
+
+                  model: "gpt-3.5-turbo", // Or another suitable model
+
+                  messages: [
+
+                    { role: "system", content: systemPrompt },
+
+                    ...conversationMessages,
+
+                    { role: "user", content: message },
+
+                  ],
+
+                });
 
         const answer = response.choices[0]?.message?.content ?? "Sorry, I could not generate a response.";
 

@@ -4,7 +4,7 @@ import Link from 'next/link';
 const StudentDashboardPage = () => {
   // Mock data for enrolled courses. In a real app, this would come from an API call.
   const courses = [
-    { id: 'ibe160', name: 'IBE160 - Introduction to Business Engineering' },
+    { id: 'ibe400', name: 'IBE400 - Machine Learning' },
     // Example of another course for UI testing:
     // { id: 'fin201', name: 'FIN201 - Corporate Finance' },
   ];
