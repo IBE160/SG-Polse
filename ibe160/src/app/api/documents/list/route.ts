@@ -5,20 +5,27 @@ import { join } from "path";
 export async function GET(request: NextRequest) {
   try {
     const uploadDir = join(process.cwd(), "public", "uploads");
+    await fs.mkdir(uploadDir, { recursive: true }); // Ensure the directory exists
     const files = await fs.readdir(uploadDir);
+    const fileSet = new Set(files);
 
-    // Filter out .txt files that are companions to .pdf files
-    const documentFiles = files.filter(file => 
-      !file.toLowerCase().endsWith('.pdf.txt') && !file.toLowerCase().endsWith('.txt')
-    );
+    const documentFiles = files.filter(file => {
+      if (file.startsWith('temp_')) {
+        return false;
+      }
+      if (file.toLowerCase().endsWith('.pdf.txt')) {
+        const pdfCompanion = file.substring(0, file.length - 4);
+        if (fileSet.has(pdfCompanion)) {
+          return false; // Hide the .pdf.txt file if its .pdf companion exists
+        }
+      }
+      return true; // Show all other files
+    });
 
-    // Filter out temporary directories created during zip extraction
-    const finalDocumentList = documentFiles.filter(file => !file.startsWith('temp_'));
-
-    return NextResponse.json({ files: finalDocumentList });
+    return NextResponse.json({ files: documentFiles });
   } catch (error: any) {
     if (error.code === 'ENOENT') {
-      // If the directory doesn't exist yet, return an empty array
+      // This should no longer be hit, but kept as a safeguard
       return NextResponse.json({ files: [] });
     }
     console.error("Error listing documents:", error);
