@@ -80,11 +80,10 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="container mx-auto flex h-[calc(100vh-4rem)] flex-col bg-gray-50">
-      <div className="border-b bg-white p-4 shadow-sm flex items-center justify-between"> {/* Modified div for layout */}
-        <h1 className="text-2xl font-bold">Chat for Course: {courseId}</h1>
+    <div className="container mx-auto flex h-[calc(100vh-4rem)] flex-col bg-gray-50 dark:bg-gray-900">
+      <div className="flex justify-end p-4 bg-gray-50 dark:bg-gray-900">
         <Link href="/student/dashboard" legacyBehavior>
-          <a className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+          <a className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
             Back to Dashboard
           </a>
         </Link>
@@ -93,13 +92,13 @@ const ChatPage = () => {
       <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4">
         <div className="space-y-4">
           {messages.length === 0 && !sendMessageMutation.isPending ? (
-             <div className="text-center text-gray-500">
+             <div className="text-center text-gray-500 dark:text-gray-400">
                Chat messages will appear here. Start by typing a message below.
              </div>
           ) : (
             messages.map((message, index) => (
               <div key={index} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-lg rounded-lg px-4 py-2 ${message.sender === 'user' ? 'bg-purple-600 text-white' : 'bg-white text-black shadow-sm'}`}>
+                <div className={`max-w-lg rounded-lg px-4 py-2 ${message.sender === 'user' ? 'bg-purple-600 text-white' : 'bg-white text-black dark:bg-gray-700 dark:text-white shadow-sm'}`}>
                   {message.text}
                 </div>
               </div>
@@ -108,13 +107,13 @@ const ChatPage = () => {
         </div>
       </div>
       
-      <div className="border-t bg-white p-4">
+      <div className="border-t bg-white dark:bg-gray-800 dark:border-gray-700 p-4">
         <div className="flex items-center space-x-2">
           <input
             ref={inputValueRef}
             type="text"
             placeholder="Ask a question about the course..."
-            className="flex-1 rounded-md border border-gray-300 p-2 focus:border-purple-500 focus:ring-purple-500"
+            className="flex-1 rounded-md border border-gray-300 p-2 focus:border-purple-500 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}

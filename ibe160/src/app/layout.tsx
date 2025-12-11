@@ -2,6 +2,8 @@ import "~/styles/globals.css";
 
 import { headers } from "next/headers";
 import { TRPCReactProvider } from "~/utils/api";
+import { Providers } from "./providers";
+import { Header } from "./components/Header";
 
 export const metadata = {
   title: "IBE400 Machine Learning Chatbot",
@@ -9,7 +11,7 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -17,7 +19,12 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <TRPCReactProvider headers={await headers()}>{children}</TRPCReactProvider>
+        <TRPCReactProvider headers={headers()}>
+          <Providers>
+            <Header />
+            {children}
+          </Providers>
+        </TRPCReactProvider>
       </body>
     </html>
   );
